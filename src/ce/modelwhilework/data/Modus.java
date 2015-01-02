@@ -1,7 +1,7 @@
 package ce.modelwhilework.data;
 
 public abstract class Modus {
-
+	
 	private String title;
 	   
 	public Modus(String title) {

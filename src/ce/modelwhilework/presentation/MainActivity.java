@@ -1,10 +1,20 @@
 package ce.modelwhilework.presentation;
 
+import java.io.File;
+import java.io.StringWriter;
+
+import org.xmlpull.v1.XmlSerializer;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
+import ce.modelwhilework.data.Card;
+import ce.modelwhilework.data.Task;
+import ce.modelwhilework.data.Message;
+import ce.modelwhilework.data.Process;
 
 public class MainActivity extends FragmentActivity {
 
@@ -21,6 +31,26 @@ public class MainActivity extends FragmentActivity {
 		adapter.addProcess("Process 2");
 		adapter.addProcess("Process 3");
 		viewPager.setAdapter(adapter);
+		
+		//ToDo:Test XML
+		Card card;
+		Process test = new  Process("Test");
+		card = new Message("message");
+		test.addCard(card);
+		card = new Task("task");
+		StringWriter writer = new StringWriter();
+		XmlSerializer xmlSerializer = Xml.newSerializer();
+			
+		try {
+			xmlSerializer.setOutput(writer);
+			//test.writeXML(xmlSerializer);
+			String s = writer.toString();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

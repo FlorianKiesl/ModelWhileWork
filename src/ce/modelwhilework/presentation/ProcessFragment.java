@@ -217,7 +217,7 @@ public class ProcessFragment extends Fragment {
 						// todo: set alter
 					}
 				}
-
+				
 				updateView();
 
 				break;
