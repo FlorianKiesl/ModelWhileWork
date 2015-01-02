@@ -1,6 +1,5 @@
 package ce.modelwhilework.presentation;
 
-import java.io.File;
 import java.io.StringWriter;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -8,10 +7,12 @@ import org.xmlpull.v1.XmlSerializer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import ce.modelwhilework.data.Card;
+import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Task;
 import ce.modelwhilework.data.Message;
 import ce.modelwhilework.data.Process;
@@ -25,12 +26,27 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		viewPager = (CustomViewPager) this.findViewById(R.id.pager_process);
+		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				ProcessManager.getInstance().setCurrentProcess(position);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		FragmentManager fm = this.getSupportFragmentManager();
 		adapter = new ProcessFragmentStatePageAdapter(fm);
-		adapter.addProcess("Process 1");
-		adapter.addProcess("Process 2");
-		adapter.addProcess("Process 3");
-		viewPager.setAdapter(adapter);
 		
 		//ToDo:Test XML
 		Card card;
@@ -50,7 +66,6 @@ public class MainActivity extends FragmentActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,6 +79,17 @@ public class MainActivity extends FragmentActivity {
 			adapter.addProcess("Process " + (adapter.getCount() + 1));
 			viewPager.setAdapter(adapter);
 			viewPager.setCurrentItem(adapter.getCount());
+		}
+		else if (id == R.id.action_close){
+			adapter.closeProcess(viewPager.getCurrentItem());
+			viewPager.removeViewAt(viewPager.getCurrentItem());
+			viewPager.setAdapter(adapter);
+			viewPager.setCurrentItem(adapter.getCount());
+		}
+		else if (id == R.id.action_closeall){
+			adapter.clossAllProcesses();
+			viewPager.removeAllViews();
+			viewPager.setAdapter(adapter);
 		}
 		return super.onOptionsItemSelected(item);
 	}

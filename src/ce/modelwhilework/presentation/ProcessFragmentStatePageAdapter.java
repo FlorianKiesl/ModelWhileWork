@@ -1,40 +1,63 @@
 package ce.modelwhilework.presentation;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.data.Process;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 	
-	private List<String> processList;
+	private ProcessManager processManager;
 	
 	public ProcessFragmentStatePageAdapter(FragmentManager fm) {
 		super(fm);
-		processList = new ArrayList<String>();
+		processManager = ProcessManager.getInstance();
 	}
 
 	@Override
-	public Fragment getItem(int arg0) {
-		return new ProcessFragment();
+	public Fragment getItem(int position) {
+		Fragment fragment = new ProcessFragment();
+		
+		Bundle processData = new Bundle();
+		processData.putInt("page_postion", position);
+		processData.putString("ProcessName", this.processManager.getProcess(position).getTitle());
+		fragment.setArguments(processData);
+		
+		return fragment;
 	}
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		
-		return this.processList.get(position);
+		Process process = this.processManager.getProcess(position);
+		if (process != null){
+			return process.getTitle().toString();
+		}
+		else{
+			return "";
+		}
+	}
+
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		super.destroyItem(container, position, object);
+	}
+
+	@Override
+	public int getItemPosition(Object object) {
+		return super.getItemPosition(object);
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return this.processList.size();
+		return this.processManager.getProcesses().size();
 	}
 	
 	public void addProcess(String name){
-		this.processList.add(name);
+		Process newProcess = new Process(name);
+		this.processManager.addProcess(newProcess);
 	}
 	
 	public void openProcess(){
@@ -45,11 +68,13 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 		return;
 	}
 	
-	public void closeProcess(String name){
+	public void closeProcess(int position){
+		this.processManager.closeProcess(position);
 		return;
 	}
 	
 	public void clossAllProcesses(){
+		this.processManager.closeAllProcesses();
 		return;
 	}
 }

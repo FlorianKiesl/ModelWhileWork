@@ -1,27 +1,47 @@
 package ce.modelwhilework.data;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Iterator;
 
 import ce.modelwhilework.data.Process;
 
 public class ProcessManager {
 
 	private static ProcessManager instance;
-	private HashSet<Process> listprocess;
+	private LinkedHashSet<Process> linkedhashSetProcess;
+	private Process curProcess;
 	
 	private ProcessManager(){
-		this.listprocess = new HashSet<Process>();
+		this.linkedhashSetProcess = new LinkedHashSet<Process>();
 	}
 	
-	public ProcessManager getInstance(){
+	public static ProcessManager getInstance(){
 		if (instance == null){
 			instance = new ProcessManager();
 		}
 		return instance;
 	}
 	
-	public boolean addNewProcess(Process process){
-		return this.listprocess.add(process);
+	public LinkedHashSet<Process> getProcesses() {
+		return linkedhashSetProcess;
+	}
+	
+	public Process getCurrentProcess(){
+		return this.curProcess;
+	}
+	
+	public boolean addProcess(Process process){
+		boolean ret = this.linkedhashSetProcess.add(process);
+		this.curProcess = this.getProcess(process.getTitle());
+		return ret;
+	}
+	
+	/*
+	 * Set the current Process to the given title.
+	 */
+	public Process setCurrentProcess(int position){
+		this.curProcess = this.getProcess(position);
+		return curProcess;
 	}
 	
 	//ToDo: XML Zurückgeben (Unseres)
@@ -38,12 +58,34 @@ public class ProcessManager {
 		return true;
 	}
 	
-	public boolean closeProcess(String title){
-		return true;
+	public boolean closeProcess(int position){
+		return this.linkedhashSetProcess.remove(this.getProcess(position));
 	}
 	
 	public boolean closeAllProcesses(){
-		return true;
+		return this.linkedhashSetProcess.removeAll(this.linkedhashSetProcess);
 	}
-
+	
+	public Process getProcess(String title){
+		Process process;
+		Iterator<Process> iterator = this.linkedhashSetProcess.iterator();
+		while(iterator.hasNext()){
+			process = iterator.next();
+			if (process.getTitle().compareTo(title)==0){
+				return process;
+			}
+		}
+		return null;
+	}
+	
+	public Process getProcess(int position){
+		Process process = null;
+		int iPos = 0;
+		Iterator<Process> iterator = this.linkedhashSetProcess.iterator();
+		while(iterator.hasNext() && iPos <= position){
+			process = iterator.next();
+			iPos++;
+		}
+		return process;
+	}
 }

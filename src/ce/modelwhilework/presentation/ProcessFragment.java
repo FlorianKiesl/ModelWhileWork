@@ -5,8 +5,8 @@ package ce.modelwhilework.presentation;
 import ce.modelwhilework.data.Card;
 import ce.modelwhilework.data.Message;
 import ce.modelwhilework.data.Process;
+import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Task;
-
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.content.ClipData;
@@ -29,11 +29,12 @@ public class ProcessFragment extends Fragment {
 
 	final String MAINSTACK = "MAINSTACK", SIDESTACK = "SIDESTACK",
 			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
-	private Process process;
+	
 	private View fragment;
 	RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
 				   rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
 	
+	Process process;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -58,9 +59,11 @@ public class ProcessFragment extends Fragment {
 		rl_MainStack.setTag(MAINSTACK);
 		rl_SideStack.setTag(SIDESTACK);
 
-		// create a new process
-		process = new Process("my test process");
-
+		// Current Process
+		Bundle args = this.getArguments();
+		args.getString("ProcessName");
+		process = ProcessManager.getInstance().getProcess(args.getString("ProcessName"));
+		
 		// set touch listeners
 		rl_TaskCard.setOnTouchListener(new ChoiceTouchListener());
 		rl_MsgCard.setOnTouchListener(new ChoiceTouchListener());
