@@ -81,14 +81,13 @@ public class MainActivity extends FragmentActivity {
 			viewPager.setCurrentItem(adapter.getCount());
 		}
 		else if (id == R.id.action_close){
-			adapter.closeProcess(viewPager.getCurrentItem());
-			viewPager.removeViewAt(viewPager.getCurrentItem());
+			int nitem = viewPager.getCurrentItem();
+			adapter.closeProcess(nitem);
 			viewPager.setAdapter(adapter);
 			viewPager.setCurrentItem(adapter.getCount());
 		}
 		else if (id == R.id.action_closeall){
 			adapter.clossAllProcesses();
-			viewPager.removeAllViews();
 			viewPager.setAdapter(adapter);
 		}
 		return super.onOptionsItemSelected(item);

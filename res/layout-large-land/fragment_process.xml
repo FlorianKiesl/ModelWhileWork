@@ -365,7 +365,7 @@
                         android:text="What I do" />
 
                     <ImageButton
-                        android:id="@+id/imageButton1"
+                        android:id="@+id/fragment_process_imageButton_ContextInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/context32" />

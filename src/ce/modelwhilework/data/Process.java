@@ -1,25 +1,25 @@
 package ce.modelwhilework.data;
 
-import java.io.StringWriter;
-import java.io.Writer;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Stack;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import android.R.xml;
-import android.util.Xml;
+import ce.modelwhilework.data.contextinfo.*;;
 
 public class Process extends Modus implements Comparable<Process>{
 	
 	private Stack<Card> mainStack;
 	private Stack<Card> sideStack;
 	
+
 	public Process(String title) {
 		super(title);
 		
 		mainStack = new Stack<Card>();
-		sideStack = new Stack<Card>();		
+		sideStack = new Stack<Card>();	
+		
 	}
 	
 	public Process(String title, String mxlFilePath) {

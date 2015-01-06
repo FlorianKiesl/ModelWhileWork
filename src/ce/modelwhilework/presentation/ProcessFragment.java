@@ -1,15 +1,13 @@
 package ce.modelwhilework.presentation;
 
-
-
 import ce.modelwhilework.data.Card;
 import ce.modelwhilework.data.Message;
 import ce.modelwhilework.data.Process;
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Task;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.content.ClipData;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -19,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -71,6 +70,17 @@ public class ProcessFragment extends Fragment {
 		// set drag listeners
 		rl_MainStack.setOnDragListener(new ChoiceDragListener());
 		iv_bin.setOnDragListener(new BinDragListener());
+		
+		ImageButton imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfo);
+		imgButtonContext.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			    startActivity(intent);
+			}
+		});
 		
 		updateView();
 		

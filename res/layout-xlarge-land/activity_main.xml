@@ -5,7 +5,7 @@
     android:layout_width="match_parent">
 
     <android.support.v4.view.PagerTitleStrip 
-        android:id="@+id/title"
+        android:id="@+id/title1"
         android:layout_width="match_parent" 
         android:layout_height="wrap_content"
         android:layout_gravity="top"
