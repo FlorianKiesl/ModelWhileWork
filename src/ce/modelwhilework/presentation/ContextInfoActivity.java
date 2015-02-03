@@ -2,6 +2,7 @@ package ce.modelwhilework.presentation;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -32,11 +33,16 @@ public class ContextInfoActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch(item.getItemId()){
-		case android.R.id.home:
-			finish();
-			return true;
+		int id = item.getItemId();
+		if (id == R.id.action_newDescription){
+		}
+		else if (id == R.id.action_newPicture){
+			
+			Intent intent = new Intent(this, CameraActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		    startActivity(intent);
+		}
+		else if (id == R.id.action_newAudio){			
 		}
 		return super.onOptionsItemSelected(item);
 	}

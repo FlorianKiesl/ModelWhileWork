@@ -14,13 +14,6 @@ public abstract class Card extends Modus {
 	public boolean isMessage() { return this.type == CardType.Message; }
 	public boolean isTask() { return this.type == CardType.Task; }
 
-	protected XmlSerializer writeXMLElem(XmlSerializer xmlSerializer, String namespace) throws Exception{
-		xmlSerializer.startTag(namespace, "Card");
-		xmlSerializer.attribute(namespace, "type", this.type.toString());
-		this.writeXMLConcreteElem(xmlSerializer, namespace);
-		xmlSerializer.endTag(namespace, "Card");
-		return xmlSerializer;
-	}
-	
-	protected abstract XmlSerializer writeXMLConcreteElem(XmlSerializer xmlSerializer, String namespace) throws Exception;
+	protected CardType getCardType() { return this.type; }
+	protected abstract XmlSerializer getXML(XmlSerializer xmlSerializer, int id) throws Exception;
 }

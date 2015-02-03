@@ -6,38 +6,54 @@ import ce.modelwhilework.data.Process;
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Task;
 import android.os.Bundle;
+import android.os.Handler;
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-public class ProcessFragment extends Fragment {
+public class ProcessFragment<TitlePageIndicator> extends Fragment implements DialogInterface.OnClickListener {
 
 	final String MAINSTACK = "MAINSTACK", SIDESTACK = "SIDESTACK",
 			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
 	
+	private final int autoSaveTime = 5000;
+	private Handler customHandler;
 	private View fragment;
-	RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
-				   rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
-	
+	private RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
+				           rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
+	private CheckBox cb_Sender, cb_Reciver, cb_SenderMainStack, cb_ReciverMainStack, cb_SenderSideStack, cb_ReciverSideStack;
+	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
+					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver;
+	private TextView tv_Main, tv_Side, tv_processTitle;
 	Process process;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
 		fragment = inflater.inflate(R.layout.fragment_process, container, false);
+		
+		customHandler = new Handler();
 		
 		rl_TaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutTaskCard);
 		rl_MsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMsgCard);
@@ -82,30 +98,196 @@ public class ProcessFragment extends Fragment {
 			}
 		});
 		
+		tv_Main = (TextView) fragment.findViewById(R.id.textViewMainStack);
+		tv_Side = (TextView) fragment.findViewById(R.id.textViewSideStack);
+		tv_processTitle = (TextView) fragment.findViewById(R.id.textViewProcessTitle);	
+		
+		te_TaskTitle = (EditText) fragment.findViewById (R.id.editTextWorkCardTitle);
+		te_MsgTitle = (EditText) fragment.findViewById (R.id.editTextMsgCardTitle);
+		te_MsgSenderReciver = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSender);
+		
+		te_MainStackTaskTitle = (EditText) fragment.findViewById (R.id.editTextWorkCardTitleMainStack);
+		te_SideStackTaskTitle = (EditText) fragment.findViewById (R.id.editTextWorkCardTitleSideStack);
+		te_MainStackMsgTitle = (EditText) fragment.findViewById (R.id.editTextMsgCardTitleMainStack);
+		te_SideStackMsgTitle = (EditText) fragment.findViewById (R.id.editTextMsgCardTitleSideStack);
+		te_MainStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderMainStack);
+		te_SideStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderSideStack);
+		
+		cb_Sender = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSend);
+		cb_Reciver = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardRecive);
+		
+		cb_SenderMainStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSendMainstack);
+		cb_ReciverMainStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardReciveMainStack);
+		cb_SenderSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSendSideStack);
+		cb_ReciverSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardReciveSideStack);
+
+		cb_Sender.setChecked(true);
+		
+		cb_Sender.setOnClickListener(new OnClickListener() {
+
+		      @Override
+		      public void onClick(View v) {
+
+		        if (((CheckBox) v).isChecked()) {
+		        	cb_Reciver.setChecked(false);
+		        }
+		        else 
+		        	cb_Reciver.setChecked(true);
+		      }
+		  });
+		
+		cb_Reciver.setOnClickListener(new OnClickListener() {
+
+		      @Override
+		      public void onClick(View v) {
+
+		        if (((CheckBox) v).isChecked()) {
+		        	cb_Sender.setChecked(false);
+		        }
+		        else 
+		        	cb_Sender.setChecked(true);
+		      }
+		  });
+
+		cb_SenderMainStack.setOnClickListener(new OnClickListener() {
+
+		      @Override
+		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+		  });
+		
+		cb_ReciverMainStack.setOnClickListener(new OnClickListener() {
+
+			 @Override
+		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+		  });
+		
+		cb_SenderSideStack.setOnClickListener(new OnClickListener() {
+
+			 @Override
+		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+		  });
+		
+		cb_ReciverSideStack.setOnClickListener(new OnClickListener() {
+
+			 @Override
+		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+		  });
+	
+		te_MainStackTaskTitle.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 			
+		});
+		
+		te_SideStackTaskTitle.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+		});
+		
+		te_MainStackMsgTitle.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+		});
+		
+		te_SideStackMsgTitle.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+		});
+		
+		te_MainStackMsgPerson.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+		});
+		
+		te_SideStackMsgPerson.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+		});				
+		
 		updateView();
 		
 		return fragment;
 	}
 	
-	public void addContextInformation(View v) {
-
-	}
-	
-	public void showContextInformation(View v) {
-
-	}
+	 public void onPause() {
+		   super.onPause();	   
+		   customHandler.removeCallbacks(autoSave);
+		   autoSave();
+	};  
 
 	private final class ChoiceTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-				/*
-				 * Drag details: we only need default behavior - clip data could
-				 * be set to pass data as part of drag - shadow can be tailored
-				 */
+	
 				ClipData data = ClipData.newPlainText("", "");
 				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
 						view);
-				// start dragging the item touched
+
 				view.startDrag(data, shadowBuilder, view, 0);
 				return true;
 			} else {
@@ -130,6 +312,8 @@ public class ProcessFragment extends Fragment {
 
 	private final class ChoiceDragListener implements OnDragListener {
 
+		boolean bChanged = false;
+		
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
 			switch (event.getAction()) {
@@ -157,15 +341,53 @@ public class ProcessFragment extends Fragment {
 				if (dropTag.equals(MSGCARD) || dropTag.equals(TASKCARD)) {
 
 					// new card
-					Card dataCard;
-					if (dropTag.equals(MSGCARD)) {
-						dataCard = new Message("a message");
+					Card dataCard = null;
+					String title = "";
+					if (dropTag.equals(MSGCARD)) {			
+						
+						title = te_MsgTitle.getText().toString();
+						String senderReciver = te_MsgSenderReciver.getText().toString();
+						boolean sender = cb_Sender.isChecked();
+						boolean reciver = cb_Reciver.isChecked();
+												
+						if(title.length() == 0) {
+							showAlert("card has no title!");
+						}
+						else if(!sender && !reciver) {
+							showAlert("please select a sender or a reciver!");
+						}
+						else if(senderReciver.length() == 0) {
+							if(sender) { showAlert("card has no sender!"); }
+							else { showAlert("card has no reciver!"); }
+						}
+						else {
+							dataCard = new Message(title, senderReciver, sender);	
+							bChanged = true;
+						}						
 					} else {
-						dataCard = new Task("a simple task");
+						
+						title = te_TaskTitle.getText().toString();
+						
+						if(title.length() == 0) {
+							showAlert("card has no title!");
+						}
+						else {
+							dataCard = new Task(title);			
+							bChanged = true;
+						}
 					}
 
-					if (!process.addCard(dataCard)) {
-						// todo: set alert
+					if(dataCard != null) {
+						if ( !process.addCard(dataCard)) {
+							showAlert("add card to stack fail!!!");
+						}
+						else {
+							te_TaskTitle.setText("");
+							te_MsgTitle.setText("");
+							te_MsgSenderReciver.setText("");
+							cb_Sender.setChecked(true);
+							cb_Reciver.setChecked(false);
+						}
 					}
 
 				} else if (dropTag.equals(MAINSTACK)
@@ -173,17 +395,24 @@ public class ProcessFragment extends Fragment {
 
 					// card from main stack --> move it to side stack
 					if (!process.putCardAside()) {
-						// todo: set alter
+						showAlert("move card fail!!!");
 					}
+					else
+						bChanged = true;
 				} else if (dropTag.equals(SIDESTACK)
 						&& targetTag.equals(MAINSTACK)) {
 
 					// card from main stack --> move it to side stack
 					if (!process.putBackFromAside()) {
-						// todo: set alter
+						showAlert("move card fail!!!");
 					}
+					else
+						bChanged = true;
 				}
 
+				if(bChanged)
+					customHandler.postDelayed(autoSave, autoSaveTime);
+				
 				updateView();
 
 				break;
@@ -217,21 +446,9 @@ public class ProcessFragment extends Fragment {
 				View view = (View) event.getLocalState();
 				RelativeLayout dropElement = (RelativeLayout) view;
 
-				//todo: set question: do you really want to delete the card?
+				//set question: do you really want to delete the card?
 				String dropTag = (String) dropElement.getTag();
-				if (dropTag.equals(MAINSTACK)) {
-
-					if (!process.removeCardFromMainStack()) {
-						// todo: set alter
-					}
-				} else if (dropTag.equals(SIDESTACK)) {
-
-					if (!process.removeCardFromSideStack()) {
-						// todo: set alter
-					}
-				}
-				
-				updateView();
+				showDeleteQuestion("Are you positive to delete the card?", dropTag);
 
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
@@ -240,40 +457,41 @@ public class ProcessFragment extends Fragment {
 			default:
 				break;
 			}
+			
 			return true;
 		}
 	}
 
 	private void updateView() {
-
-		TextView tv_processTitle = (TextView) fragment.findViewById(R.id.textViewProcessTitle);
+		
 		tv_processTitle.setText(process.getTitle());
 
-		// display main and side stack
-
-		TextView tv_Main = (TextView) fragment.findViewById(R.id.textViewMainStack);
-		TextView tv_Side = (TextView) fragment.findViewById(R.id.textViewSideStack);
-		
+		// display main and side stack		
 		Card card = process.getTopCardMainStack();
 		if (card != null) {
 
-			if(card.isMessage()) {
+			if(card instanceof Message) {
 				rl_MainStackTaskCard.setVisibility(View.INVISIBLE);
 				rl_MainStackMsgCard.setVisibility(View.VISIBLE);
-				tv_Main.setVisibility(View.INVISIBLE);
-			} else if(card.isTask()) {
+				tv_Main.setVisibility(View.INVISIBLE);			
+				
+				te_MainStackMsgTitle.setText(card.getTitle());
+				te_MainStackMsgPerson.setText(((Message)card).getSenderReciver());
+				cb_SenderMainStack.setChecked(((Message)card).isSender());
+				cb_ReciverMainStack.setChecked(!((Message)card).isSender());				
+			} else if(card instanceof Task) {
 				rl_MainStackTaskCard.setVisibility(View.VISIBLE);
 				rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
 				tv_Main.setVisibility(View.INVISIBLE);
+				te_MainStackTaskTitle.setText(card.getTitle());		
 			} else {
-				//todo: error
+				showAlert("invalid card type!!!");
 			}
 			
 			rl_MainStack.setOnTouchListener(new ChoiceTouchListener());
 			rl_SideStack.setOnDragListener(new ChoiceDragListener());			
 			
 		} else {
-
 			rl_MainStackTaskCard.setVisibility(View.INVISIBLE);
 			rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
 			tv_Main.setVisibility(View.VISIBLE);			
@@ -284,16 +502,23 @@ public class ProcessFragment extends Fragment {
 		card = process.getTopCardSideStack();
 		if (card != null) {
 
-			if(card.isMessage()) {
+			if(card instanceof Message) {
 				rl_SideStackTaskCard.setVisibility(View.INVISIBLE);
 				rl_SideStackMsgCard.setVisibility(View.VISIBLE);
 				tv_Side.setVisibility(View.INVISIBLE);
-			} else if(card.isTask()) {
+				
+				te_SideStackMsgTitle.setText(card.getTitle());
+				te_SideStackMsgPerson.setText(((Message)card).getSenderReciver());
+				cb_SenderSideStack.setChecked(((Message)card).isSender());
+				cb_ReciverSideStack.setChecked(!((Message)card).isSender());				
+			} else if(card instanceof Task) {
 				rl_SideStackTaskCard.setVisibility(View.VISIBLE);
 				rl_SideStackMsgCard.setVisibility(View.INVISIBLE);
 				tv_Side.setVisibility(View.INVISIBLE);
+				
+				te_SideStackTaskTitle.setText(card.getTitle());				
 			} else {
-				//todo: error
+				showAlert("invalid card type!!!");
 			}
 			
 			rl_SideStack.setOnTouchListener(new ChoiceTouchListener());	
@@ -305,5 +530,68 @@ public class ProcessFragment extends Fragment {
 			tv_Side.setVisibility(View.VISIBLE);			
 			rl_SideStack.setOnTouchListener(new DoNothingTouchListener());
 		}
+	}
+	
+	private Runnable autoSave = new Runnable() {
+	   	 
+		   public void run() {
+			   customHandler.removeCallbacks(autoSave);
+			   autoSave();			   
+		   }
+	 };
+	 
+	private void autoSave() {
+		
+		if(!process.storeXML(ProcessManager.getInstance().getInternalStoreage()))
+			showAlert("auto save failed!!!");
+	}
+	
+	private void showAlert(String msg) {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+		alertDialog.setTitle("error");
+		alertDialog.setNegativeButton("OK", this);
+		alertDialog.setMessage(msg);
+		alertDialog.show();	
+	}
+	
+	private void showDeleteQuestion(String msg, final String dropTag) {
+	
+		AlertDialog.Builder alertDialog =	new AlertDialog.Builder(getActivity());
+		alertDialog.setTitle("question");
+		alertDialog.setMessage(msg);
+		alertDialog.setNegativeButton("cancel",
+				   new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int whichButton) {
+                     	 updateView();
+                      }
+                }
+		);
+		alertDialog.setPositiveButton("OK",
+									   new DialogInterface.OnClickListener() {
+			                                 public void onClick(DialogInterface dialog, int whichButton) {			                                	 
+			                                	 if (dropTag.equals(MAINSTACK)) {
+			                     					if (!process.removeCardFromMainStack()) {
+			                     						showAlert("card remove fail!!!");
+			                     					}
+			                     				} else if (dropTag.equals(SIDESTACK)) {
+
+			                     					if (!process.removeCardFromSideStack()) {
+			                     						showAlert("card remove fail!!!");
+			                     					}
+			                     				}
+			                                	 
+			                         			customHandler.postDelayed(autoSave, autoSaveTime);			                         				
+			                                	updateView();
+			                                 }
+			                           }
+	    );	    
+	    alertDialog.show();
+	}
+	
+	
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		// TODO Auto-generated method stub
+		
 	}
 }

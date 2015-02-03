@@ -11,7 +11,14 @@ public class Task extends Card{
 	}
 
 	@Override
-	protected XmlSerializer writeXMLConcreteElem(XmlSerializer xmlSerializer, String namespace) throws IllegalArgumentException, IllegalStateException, IOException {
+	protected XmlSerializer getXML(XmlSerializer xmlSerializer, int id) throws Exception {
+		xmlSerializer.text("    ");
+		xmlSerializer.startTag("", "Card");
+		xmlSerializer.attribute("", "ID", Integer.toString(id));
+		xmlSerializer.attribute("", "type", this.getCardType().toString());
+		xmlSerializer.attribute("", "title", this.getTitle());
+		xmlSerializer.endTag("", "Card");
+		xmlSerializer.text("\n");
 		
 		return xmlSerializer;
 	}

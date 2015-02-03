@@ -16,7 +16,6 @@
             android:id="@+id/imageButtonAddContext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="addContextInformation"
             android:src="@drawable/context64" />
 
         <TextView
@@ -69,14 +68,12 @@
                     android:id="@+id/LayoutMainStackTaskCard"
                     android:layout_width="380dp"
                     android:layout_height="150dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
                     android:background="@drawable/task"
                     android:gravity="top"
                     android:orientation="vertical" >
 
                     <EditText
-                        android:id="@+id/EditText01"
+                        android:id="@+id/editTextWorkCardTitleMainStack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/LinearLayout01"
@@ -119,8 +116,6 @@
                     android:id="@+id/LayoutMainStackMsgCard"
                     android:layout_width="380dp"
                     android:layout_height="150dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
                     android:background="@drawable/message"
                     android:gravity="center"
                     android:orientation="vertical" >
@@ -137,7 +132,7 @@
                             android:src="@drawable/msg32" />
 
                         <EditText
-                            android:id="@+id/EditText03"
+                            android:id="@+id/editTextMsgCardTitleMainStack"
                             android:layout_width="290dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -158,20 +153,20 @@
                         android:layout_below="@+id/LinearLayout03" >
 
                         <CheckBox
-                            android:id="@+id/CheckBox01"
+                            android:id="@+id/checkBoxMsgCardSendMainstack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="send to:" />
 
                         <CheckBox
-                            android:id="@+id/CheckBox02"
+                            android:id="@+id/checkBoxMsgCardReciveMainStack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="recive from:" />
                     </LinearLayout>
 
                     <EditText
-                        android:id="@+id/EditText04"
+                        android:id="@+id/editTextMsgCardReciverSenderMainStack"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/LinearLayout04"
@@ -202,14 +197,12 @@
                     android:id="@+id/LayoutSideStackTaskCard"
                     android:layout_width="380dp"
                     android:layout_height="150dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
                     android:background="@drawable/task"
                     android:gravity="top"
                     android:orientation="vertical" >
 
                     <EditText
-                        android:id="@+id/EditText02"
+                        android:id="@+id/editTextWorkCardTitleSideStack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/LinearLayout02"
@@ -252,8 +245,6 @@
                     android:id="@+id/LayoutSideStackMsgCard"
                     android:layout_width="380dp"
                     android:layout_height="150dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
                     android:background="@drawable/message"
                     android:gravity="center"
                     android:orientation="vertical" >
@@ -270,7 +261,7 @@
                             android:src="@drawable/msg32" />
 
                         <EditText
-                            android:id="@+id/EditText05"
+                            android:id="@+id/editTextMsgCardTitleSideStack"
                             android:layout_width="290dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -291,20 +282,20 @@
                         android:layout_below="@+id/LinearLayout05" >
 
                         <CheckBox
-                            android:id="@+id/CheckBox03"
+                            android:id="@+id/checkBoxMsgCardSendSideStack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="send to:" />
 
                         <CheckBox
-                            android:id="@+id/CheckBox04"
+                            android:id="@+id/checkBoxMsgCardReciveSideStack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="recive from:" />
                     </LinearLayout>
 
                     <EditText
-                        android:id="@+id/EditText06"
+                        android:id="@+id/editTextMsgCardReciverSenderSideStack"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/LinearLayout06"
@@ -394,7 +385,7 @@
                         android:src="@drawable/msg32" />
 
                     <EditText
-                        android:id="@+id/editTextMsgCardName"
+                        android:id="@+id/editTextMsgCardTitle"
                         android:layout_width="290dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -431,7 +422,7 @@
                 </LinearLayout>
 
                 <EditText
-                    android:id="@+id/editTextMsgCardTitle"
+                    android:id="@+id/editTextMsgCardReciverSender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/linearLayout3"

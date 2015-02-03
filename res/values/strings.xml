@@ -6,8 +6,8 @@
     
     <string name="action_new">New Process</string>
     <string name="action_open">Open Process</string>
-    <string name="action_export">Export Process</string>
-    <string name="action_close">Close Process</string>
+    <string name="action_export">Export Process SD Card</string>
+    <string name="action_import">Import Process</string><string name="action_close">Close Process</string>
     <string name="action_closeall">Close All Processes</string>
     <string name="action_settings">Settings</string>
     
@@ -23,5 +23,8 @@
     <string name="task_title">What i do Nr: 1</string>
     <string name="msg_title">exchange of information Nr: 1</string>
     <string name="process_title">the name of the process</string>
+    <string name="title_activity_picture">PictureActivity</string>
+    <string name="action_makePicutre">make picture</string>
     
+
 </resources>

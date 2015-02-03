@@ -1,8 +1,13 @@
 package ce.modelwhilework.data;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
 
+import android.content.Context;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import ce.modelwhilework.data.Process;
 
 public class ProcessManager {
@@ -10,6 +15,7 @@ public class ProcessManager {
 	private static ProcessManager instance;
 	private LinkedHashSet<Process> linkedhashSetProcess;
 	private Process curProcess;
+	private File dirInternal, dirExternal;
 	
 	private ProcessManager(){
 		this.linkedhashSetProcess = new LinkedHashSet<Process>();
@@ -21,6 +27,18 @@ public class ProcessManager {
 		}
 		return instance;
 	}
+	
+	public void setInternalDir(File dir) {
+		this.dirInternal = dir;
+	}
+	
+	public void setExternalDir(File dir) {
+		this.dirExternal = dir;
+	}
+	
+	public File getInternalStoreage() { return this.dirInternal; }
+	
+	public File getExternalStoreage() { return this.dirExternal; }
 	
 	public LinkedHashSet<Process> getProcesses() {
 		return linkedhashSetProcess;
@@ -44,19 +62,19 @@ public class ProcessManager {
 		return curProcess;
 	}
 	
-	//ToDo: XML Zurückgeben (Unseres)
-	public boolean saveProcess(String title){
-		return true;
-	}
-	
-	public boolean saveAllProcesses(){
-		return true;
+	//ToDo: XML Zurückgeben (mwyw)
+	public boolean exportProcess(String name){
+		Process p = getProcess(name);
+		if(p == null)
+			return false;
+		
+		return p.storeXML(getExternalStoreage());
 	}
 	
 	//ToDo: XML Zurückgeben (Metasonic)
-	public boolean exportProcess(){
-		return true;
-	}
+		public boolean exportProcessMetasonic(){
+			return true;
+		}
 	
 	public boolean closeProcess(int position){
 		return this.linkedhashSetProcess.remove(this.getProcess(position));

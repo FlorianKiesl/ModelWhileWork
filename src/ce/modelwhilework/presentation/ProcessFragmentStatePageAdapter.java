@@ -64,8 +64,8 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 		return;
 	}
 	
-	public void exportProcess(String name){
-		return;
+	public boolean exportProcess(String name){
+		return this.processManager.exportProcess(name);
 	}
 	
 	public void closeProcess(int position){

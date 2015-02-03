@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="contextinfo_action_new">New Contextinformation</string>
-    <string name="test">Model while Work</string>
+    <string name="contextinfo_picture">add picture</string>
+    <string name="contextinfo_description">add desription</string>
+    <string name="contextinfo_audio">add audio</string>
 </resources>
