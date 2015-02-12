@@ -103,7 +103,10 @@ public class ProcessManager {
 	
 	//ToDo: XML Zurückgeben (Metasonic)
 		public boolean exportProcessMetasonic(){
-			return true;
+			if (curProcess != null){
+				return curProcess.uploadData(getInternalStoreage());
+			}
+			return false;
 		}
 	
 	public boolean closeProcess(int position){

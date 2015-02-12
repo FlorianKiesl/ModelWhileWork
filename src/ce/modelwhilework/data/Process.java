@@ -2,8 +2,10 @@ package ce.modelwhilework.data;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -17,6 +19,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -228,13 +232,18 @@ public class Process extends Modus implements Comparable<Process>{
 		return true;			
 	}
 	
-	public boolean uploadData(byte[] data){
+	public boolean uploadData(File filepath){
 		try{
+			File file = new File(filepath, getTitle() + ".mwyw");
+			InputStream inputStream = new FileInputStream(file);
+
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload1.php");
-			InputStreamBody inputStreamBody = new InputStreamBody(new ByteArrayInputStream(data), "test.txt");
+			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload_xml.php");
+
 			MultipartEntity multipartEntity = new MultipartEntity();
-			multipartEntity.addPart("file", inputStreamBody);
+			ContentBody cbFile = new FileBody(file);
+			
+			multipartEntity.addPart("file", cbFile);
 			httpPost.setEntity(multipartEntity);
 
   			HttpResponse httpResponse = httpClient.execute(httpPost);
