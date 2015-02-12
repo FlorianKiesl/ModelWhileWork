@@ -1,5 +1,6 @@
 package ce.modelwhilework.data;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +13,13 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 import org.xml.sax.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.w3c.dom.*;
 
 
@@ -218,5 +226,31 @@ public class Process extends Modus implements Comparable<Process>{
 	    }
 		
 		return true;			
+	}
+	
+	public boolean uploadData(byte[] data){
+		try{
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload1.php");
+			InputStreamBody inputStreamBody = new InputStreamBody(new ByteArrayInputStream(data), "test.txt");
+			MultipartEntity multipartEntity = new MultipartEntity();
+			multipartEntity.addPart("file", inputStreamBody);
+			httpPost.setEntity(multipartEntity);
+
+  			HttpResponse httpResponse = httpClient.execute(httpPost);
+  			
+		    if(httpResponse != null) {
+		    	String response = EntityUtils.toString(httpResponse.getEntity());
+		    	return true;
+		    } else { // Error, no response.
+		    	return false;
+		    }
+			
+		}catch(IOException exc){
+			exc.printStackTrace();
+		}catch(Exception exc){
+			exc.printStackTrace();
+		} 
+		return false;
 	}
 }
