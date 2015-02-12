@@ -2,6 +2,7 @@ package ce.modelwhilework.presentation;
 
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Process;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -65,6 +66,7 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 	}
 	
 	public boolean exportProcess(String name){
+		new UploadMetasonicProcess().execute();
 		return this.processManager.exportProcess(name);
 	}
 	
@@ -76,5 +78,16 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 	public void clossAllProcesses(){
 		this.processManager.closeAllProcesses();
 		return;
+	}
+	
+	private class UploadMetasonicProcess extends AsyncTask<Void, Void, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			ProcessFragmentStatePageAdapter.this.processManager.exportProcessMetasonic();
+//			return 1L;
+			return null;
+		}
+		
 	}
 }
