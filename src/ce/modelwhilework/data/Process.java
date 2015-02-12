@@ -1,23 +1,20 @@
 package ce.modelwhilework.data;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.StringWriter;
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Stack;
 
-import org.xmlpull.v1.XmlSerializer;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Xml;
-import ce.modelwhilework.data.contextinfo.*;;
+import org.xml.sax.*;
+import org.w3c.dom.*;
+
+
 
 public class Process extends Modus implements Comparable<Process>{
 	
@@ -86,90 +83,139 @@ public class Process extends Modus implements Comparable<Process>{
 	
 	public boolean loadXML(File filePath) {
 		
-		try {  
-			File file = new File(filePath, getTitle() + ".mwyw");
-			FileReader reader = new FileReader(file);
-		    BufferedReader content = new BufferedReader(reader);
-		    
-		    String line;
-		    line = content.readLine();
-		    
-		    while(line != null) {
-		    	
-		    	//todo: xml auswerten und in aktuellen process schreiben
-		    	
-		    	line = content.readLine();
-		    }		     
-		    reader.close();  
-		}  
-		catch(Exception e) {
-		     e.printStackTrace();
-		     return false;
-		}
+		File file = new File(filePath, getTitle() + ".mwyw");
+		Document dom;
+		Element e;
+		NodeList childs;
+		Stack<Card> main, side;
 		
-		return true;
+		main = new Stack<Card>();
+		side = new Stack<Card>();
+		
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			
+			// parse  XML file
+			dom = db.parse(file);
+			
+			Element doc = dom.getDocumentElement();
+			NodeList nlStacks = doc.getElementsByTagName("Stack");
+			
+			for(int i = 0; i < nlStacks.getLength(); i++) {
+				
+				e = (Element)nlStacks.item(i);
+				
+				if(e.getAttribute("id").equals("Main")) {
+					
+					childs = e.getChildNodes();
+					for(int n = 0; n < childs.getLength(); n++) {
+						
+						if(!addElement2Stack(main, (Element)childs.item(n)))
+							return false;													
+					}	
+				}
+				else if(e.getAttribute("id").equals("Side")) {
+					
+					childs = e.getChildNodes();
+					for(int n = 0; n < childs.getLength(); n++) {
+						
+						if(!addElement2Stack(side, (Element)childs.item(n)))
+							return false;													
+					}					
+				}
+            }
+
+        } catch (ParserConfigurationException pce) {
+            System.out.println(pce.getMessage());
+        } catch (SAXException se) {
+            System.out.println(se.getMessage());
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
+
+		mainStack = main;
+		sideStack = side;
+		
+        return true;
+	}
+	
+	private boolean addElement2Stack(Stack<Card> s, Element e) {
+		
+		if(e.getAttribute("type").equals(CardType.Task.toString()))
+			return s.add(new Task(e.getAttribute("title")));
+		else if(e.getAttribute("type").equals(CardType.Message.toString()))
+			return s.add(new Message(e.getAttribute("title"), e.getAttribute("communicationPartner"), Boolean.parseBoolean(e.getAttribute("sender"))));
+
+		return false;
 	}
 	
 	public boolean storeXML(File filePath) {
+			
+		//http://stackoverflow.com/questions/7373567/java-how-to-read-and-write-xml-files
+		
+		Iterator<Card> stackIterator;
+		int id = 0;
+		Document dom;
+	    Element elStack = null, elProcess = null;
+
+	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	    
+	    try {
+
+	        DocumentBuilder db = dbf.newDocumentBuilder();
+	        dom = db.newDocument();
+
+	        elProcess = dom.createElement("Process");
+
+	        //add main stack
+	        elStack = dom.createElement("Stack");
+	        elStack.setAttribute("id", "Main");
+	        elProcess.appendChild(elStack);
+	        
+	        stackIterator = mainStack.iterator();
+			while(stackIterator.hasNext()){
 				
-		try {
-			File file = new File(filePath, getTitle() + ".mwyw");
-			if(file.exists()) {
-				if(!file.delete())
-					return false;
-			}
-			
-			FileWriter writer = new FileWriter(file ,true);    
-	        
-	        XmlSerializer xmlSerializer = Xml.newSerializer();
-	        xmlSerializer.setOutput(writer);
-	        
-			Iterator<Card> stackIterator;
-			int id = 0;
-			
-			xmlSerializer.startDocument("UTF-8", true);
-			xmlSerializer.text("\n");
-			xmlSerializer.startTag("", "Process");
-			xmlSerializer.text("\n");
-			
-			//store main stack
-			xmlSerializer.startTag("", "Stack");
-			xmlSerializer.attribute("", "ID", "Main");
-			xmlSerializer.text("\n");
-			
-			stackIterator = mainStack.iterator();
-			while(stackIterator.hasNext()){
-				xmlSerializer = stackIterator.next().getXML(xmlSerializer, id);
-				id++;
-			}
-			xmlSerializer.endTag("", "Stack");
-			
-			//store side stack
-			xmlSerializer.startTag("", "Stack");
-			xmlSerializer.attribute("", "ID", "Side");
-			xmlSerializer.text("\n");
-			
-			id = 0;
-			stackIterator = sideStack.iterator();
-			while(stackIterator.hasNext()){
-				xmlSerializer = stackIterator.next().getXML(xmlSerializer, id);
+				elStack.appendChild(stackIterator.next().getElementXML(dom, id));
 				id++;
 			}
 			
-			xmlSerializer.endTag("", "Stack");
-			xmlSerializer.text("\n");
-			
-			xmlSerializer.endTag("", "Process");
-			xmlSerializer.text("\n");
-			
-			xmlSerializer.endDocument();
-			
-			writer.close();
-		}
-		catch(Exception e) {
-		     e.printStackTrace();
-		     return false;
-		}
+			//add side stack
+	        elStack = dom.createElement("Stack");
+	        elStack.setAttribute("id", "Side");
+	        elProcess.appendChild(elStack);
+	        
+	        stackIterator = sideStack.iterator();
+			while(stackIterator.hasNext()){
+				
+				elStack.appendChild(stackIterator.next().getElementXML(dom, id));
+				id++;
+			}
+
+	        dom.appendChild(elProcess);
+
+	        try {
+	            Transformer tr = TransformerFactory.newInstance().newTransformer();
+	            tr.setOutputProperty(OutputKeys.INDENT, "yes");
+	            tr.setOutputProperty(OutputKeys.METHOD, "xml");
+	            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	            tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
+	            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+	            // write DOM to file
+	            File file = new File(filePath, getTitle() + ".mwyw");
+	            tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(file)));
+
+	        } catch (TransformerException te) {
+	        	te.printStackTrace();
+	        	return false;
+	        } catch (IOException ioe) {
+	        	ioe.printStackTrace();
+	        	return false;
+	        }
+	    } catch (ParserConfigurationException pce) {
+	        return false;
+	    }
 		
 		return true;			
 	}

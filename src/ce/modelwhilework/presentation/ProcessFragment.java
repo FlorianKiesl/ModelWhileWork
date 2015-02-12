@@ -16,7 +16,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;

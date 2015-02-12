@@ -48,10 +48,40 @@ public class ProcessManager {
 		return this.curProcess;
 	}
 	
+	public int getCurrentProcessPos(){
+
+		int pos = 0;
+		Iterator<Process> iterator = this.linkedhashSetProcess.iterator();
+		while(iterator.hasNext()){
+		   if(iterator.next().equals(this.curProcess))
+			   return pos;
+			pos++;
+		}
+		
+		return -1;
+	}
+	
 	public boolean addProcess(Process process){
-		boolean ret = this.linkedhashSetProcess.add(process);
-		this.curProcess = this.getProcess(process.getTitle());
-		return ret;
+		if(this.linkedhashSetProcess.add(process)) {
+			this.curProcess = this.getProcess(process.getTitle());
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean openProcess(String processName){
+		
+		Process p = new Process("defaultLoad");
+		File file = new File(getInternalStoreage(), processName);
+		if(p.loadXML(file)) {
+			
+			if(this.linkedhashSetProcess.add(p)) {
+				this.curProcess = this.getProcess(p.getTitle());
+				return true;
+			}
+		}
+		return false;		
 	}
 	
 	/*

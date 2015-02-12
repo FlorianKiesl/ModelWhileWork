@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -62,6 +63,15 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 		adapter = new ProcessFragmentStatePageAdapter(fm);
 	}
 	
+	protected void onResume() {
+		super.onResume();
+		viewPager.setAdapter(adapter);
+		
+		int lastItem = ProcessManager.getInstance().getCurrentProcessPos();
+		if(lastItem >= 0 && lastItem < adapter.getCount())
+			viewPager.setCurrentItem(lastItem);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		this.getMenuInflater().inflate(R.menu.main, menu);
@@ -88,8 +98,15 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 		}
 		else if (id == R.id.action_export){
 			if(!adapter.exportProcess(ProcessManager.getInstance().getCurrentProcess().getTitle()))
-				showAlert("expot file failed!");
+				showAlert("export file failed!");
 		}
+		else if (id == R.id.action_open){
+			
+			Intent intent = new Intent(getBaseContext(), OpenProcessActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		    startActivity(intent);
+		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	@Override

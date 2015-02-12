@@ -1,6 +1,6 @@
 package ce.modelwhilework.data;
 
-import org.xmlpull.v1.XmlSerializer;
+import org.w3c.dom.*;
 
 public abstract class Card extends Modus {
 
@@ -15,5 +15,13 @@ public abstract class Card extends Modus {
 	public boolean isTask() { return this.type == CardType.Task; }
 
 	protected CardType getCardType() { return this.type; }
-	protected abstract XmlSerializer getXML(XmlSerializer xmlSerializer, int id) throws Exception;
+	protected Element getElementXML(Document dom, int id) {
+		
+		Element card = dom.createElement("Card");
+
+		card.setAttribute("pos", Integer.toString(id));
+		card.setAttribute("type", this.getCardType().toString());
+		card.setAttribute("title", this.getTitle());
+		return card;
+	}
 }
