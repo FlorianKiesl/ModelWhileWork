@@ -1,8 +1,7 @@
 package ce.modelwhilework.data;
 
-import java.io.IOException;
+import org.w3c.dom.*;
 
-import org.xmlpull.v1.XmlSerializer;
 
 public class Message extends Card {
 
@@ -19,18 +18,12 @@ public class Message extends Card {
 	public boolean isSender() { return this.sender; }
 
 	@Override
-	protected XmlSerializer getXML(XmlSerializer xmlSerializer, int id) throws Exception {
+	protected Element getElementXML(Document dom, int id) {
 		
-		xmlSerializer.text("    ");
-		xmlSerializer.startTag("", "Card");
-		xmlSerializer.attribute("", "ID", Integer.toString(id));
-		xmlSerializer.attribute("", "type", this.getCardType().toString());
-		xmlSerializer.attribute("", "title", this.getTitle());
-		xmlSerializer.attribute("", "communicationPartner", this.getSenderReciver());
-		xmlSerializer.attribute("", "sender", Boolean.toString(this.isSender()));
-		xmlSerializer.endTag("", "Card");
-		xmlSerializer.text("\n");
+		Element card = super.getElementXML(dom, id);
+		card.setAttribute("communicationPartner", this.getSenderReciver());
+		card.setAttribute("sender", Boolean.toString(this.isSender()));
 		
-		return xmlSerializer;
+		return card;
 	}	
 }

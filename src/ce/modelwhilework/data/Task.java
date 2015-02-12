@@ -1,26 +1,18 @@
 package ce.modelwhilework.data;
 
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlSerializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class Task extends Card{
 
 	public Task(String title) {
 		super(title, CardType.Task);
 	}
-
+	
 	@Override
-	protected XmlSerializer getXML(XmlSerializer xmlSerializer, int id) throws Exception {
-		xmlSerializer.text("    ");
-		xmlSerializer.startTag("", "Card");
-		xmlSerializer.attribute("", "ID", Integer.toString(id));
-		xmlSerializer.attribute("", "type", this.getCardType().toString());
-		xmlSerializer.attribute("", "title", this.getTitle());
-		xmlSerializer.endTag("", "Card");
-		xmlSerializer.text("\n");
+	protected Element getElementXML(Document dom, int id) {
 		
-		return xmlSerializer;
+		return super.getElementXML(dom, id);
 	}
-
+	
 }
