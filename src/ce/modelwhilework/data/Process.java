@@ -123,8 +123,10 @@ public class Process extends Modus implements Comparable<Process>{
 					childs = e.getChildNodes();
 					for(int n = 0; n < childs.getLength(); n++) {
 						
-						if(!addElement2Stack(main, (Element)childs.item(n)))
-							return false;													
+						if (childs.item(n).getNodeType() == Node.ELEMENT_NODE) {
+							if(!addElement2Stack(main, (Element)childs.item(n)))
+								return false;		
+						}										
 					}	
 				}
 				else if(e.getAttribute("id").equals("Side")) {
@@ -132,18 +134,23 @@ public class Process extends Modus implements Comparable<Process>{
 					childs = e.getChildNodes();
 					for(int n = 0; n < childs.getLength(); n++) {
 						
-						if(!addElement2Stack(side, (Element)childs.item(n)))
-							return false;													
+						if (childs.item(n).getNodeType() == Node.ELEMENT_NODE) {
+							if(!addElement2Stack(side, (Element)childs.item(n)))
+								return false;	
+						}																			
 					}					
 				}
             }
 
         } catch (ParserConfigurationException pce) {
             System.out.println(pce.getMessage());
+            return false;
         } catch (SAXException se) {
             System.out.println(se.getMessage());
+            return false;
         } catch (IOException ioe) {
             System.err.println(ioe.getMessage());
+            return false;
         }
 
 		mainStack = main;

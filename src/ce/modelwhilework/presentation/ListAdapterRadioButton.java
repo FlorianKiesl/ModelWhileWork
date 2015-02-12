@@ -11,14 +11,14 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RadioButtonListAdapter extends ArrayAdapter<String> {
+public class ListAdapterRadioButton extends ArrayAdapter<String> {
 	
 	LayoutInflater inflater;
 	int resourceId;
 	Context ctx;
 	String selectedItem;
 	
-	public RadioButtonListAdapter(Context context, int resourceId,
+	public ListAdapterRadioButton(Context context, int resourceId,
 			ArrayList<String> title) {
 		super(context, resourceId, title);
 		inflater = LayoutInflater.from(context);

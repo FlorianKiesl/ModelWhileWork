@@ -102,7 +102,13 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 		}
 		else if (id == R.id.action_open){
 			
-			Intent intent = new Intent(getBaseContext(), OpenProcessActivity.class);
+			Intent intent = new Intent(getBaseContext(), LoadProcessActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		    startActivity(intent);
+		}
+		else if (id == R.id.action_delete){
+			
+			Intent intent = new Intent(getBaseContext(), DeleteProcessActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		    startActivity(intent);
 		}

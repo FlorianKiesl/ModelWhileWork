@@ -72,8 +72,8 @@ public class ProcessManager {
 	
 	public boolean openProcess(String processName){
 		
-		Process p = new Process("defaultLoad");
-		File file = new File(getInternalStoreage(), processName);
+		Process p = new Process(processName);
+		File file = new File(getInternalStoreage().toString());
 		if(p.loadXML(file)) {
 			
 			if(this.linkedhashSetProcess.add(p)) {

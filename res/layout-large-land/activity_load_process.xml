@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ce.modelwhilework.presentation.OpenProcessActivity"
+    tools:context="ce.modelwhilework.presentation.LoadProcessActivity"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -16,20 +16,20 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/activity_open_process_load"
+            android:id="@+id/activity_load_process_load"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/load" />
+            android:text="@string/open" />
 
         <Button
-            android:id="@+id/activity_open_process_cancel"
+            android:id="@+id/activity_load_process_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel" />
     </LinearLayout>
 
     <ListView
-        android:id="@+id/activity_open_process_listView"
+        android:id="@+id/activity_load_process_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </ListView>

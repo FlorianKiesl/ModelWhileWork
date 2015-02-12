@@ -15,9 +15,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
     
-    <uses-permission
-       android:name="android.permission.WRITE_EXTERNAL_STORAGE">
-        
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
     </uses-permission>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -45,6 +43,15 @@
             android:name=".CameraActivity"
             android:label="@string/title_activity_picture"
             android:screenOrientation="landscape"  >
+        </activity>
+        <activity
+            android:name=".LoadProcessActivity"
+            android:label="@string/title_activity_open_process"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".DeleteProcessActivity"
+            android:label="@string/title_activity_delete_process" >
         </activity>
     </application>
 
