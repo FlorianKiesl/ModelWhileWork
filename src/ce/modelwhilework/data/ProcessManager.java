@@ -102,12 +102,28 @@ public class ProcessManager {
 	}
 	
 	//ToDo: XML Zurückgeben (Metasonic)
-		public boolean exportProcessMetasonic(){
-			if (curProcess != null){
-				return curProcess.uploadData(getInternalStoreage());
+	public boolean exportProcessMetasonic(String name){
+		Process p = getProcess(name);
+		if (p != null){
+			try{
+				File file = new File(this.getInternalStoreage().getPath() + "/metasonicExport.xml");
+//				if(!file.exists()){
+//					file.mkdir();
+//				}
+				boolean erg = p.storeMetasonicXML(file);
+				
+				if (erg) {
+					erg = p.uploadData(file);
+				}
+				file.delete();
+				
+				return erg;	
+			}catch(Exception exc){
+				exc.printStackTrace();
 			}
-			return false;
 		}
+		return false;
+	}
 	
 	public boolean closeProcess(int position){
 		return this.linkedhashSetProcess.remove(this.getProcess(position));

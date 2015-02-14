@@ -6,8 +6,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
+import java.util.UUID;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -18,13 +24,17 @@ import org.xml.sax.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.*;
+
+import ce.modelwhilework.business.XmlHelper;
 
 
 
@@ -212,8 +222,9 @@ public class Process extends Modus implements Comparable<Process>{
 			}
 
 	        dom.appendChild(elProcess);
-
-	        try {
+	        return this.writeXML(dom, new File(filePath, getTitle() + ".mwyw"));
+	        
+	        /*try {
 	            Transformer tr = TransformerFactory.newInstance().newTransformer();
 	            tr.setOutputProperty(OutputKeys.INDENT, "yes");
 	            tr.setOutputProperty(OutputKeys.METHOD, "xml");
@@ -231,27 +242,130 @@ public class Process extends Modus implements Comparable<Process>{
 	        } catch (IOException ioe) {
 	        	ioe.printStackTrace();
 	        	return false;
-	        }
+	        }*/
+	        
 	    } catch (ParserConfigurationException pce) {
+	    	pce.printStackTrace();
 	        return false;
-	    }
-		
-		return true;			
+	    }			
 	}
 	
-	public boolean uploadData(File filepath){
+	protected boolean storeMetasonicXML(File file){
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	    Document dom;
+	    Element elProcess;
+	    Element elSubject;
+	    Element elCard;
+	    ArrayList<Card> alCards;
 		try{
-			File file = new File(filepath, getTitle() + ".mwyw");
-			InputStream inputStream = new FileInputStream(file);
+	        DocumentBuilder db = dbf.newDocumentBuilder();
+	        dom = db.newDocument();
+	        elProcess = dom.createElement("EntireModel");
+	        elProcess.setAttribute("Version", "1.3.3");
+	        elProcess.setAttribute("ProcessName", this.getTitle());
+	        
+	        elSubject = dom.createElement("Subject");
+	        elSubject.setAttribute("RealName", "[UserName]");
+	        elSubject.setAttribute("SubjectName", "[UserName]");
 
+	        alCards = this.getCardsAsList();
+	        Iterator<Card> iteratorCards = alCards.iterator();
+	        int id = 1;
+	        while (iteratorCards.hasNext()){
+	        	elSubject.appendChild(iteratorCards.next().getMetasonicElementXML(dom, id, "Element"));
+	        	id++;
+	        }
+
+	        if (alCards.size() > 1){
+	        	Element connectionElem;
+	        	id = 0;
+	        	while (id < alCards.size()-1){
+		        	connectionElem = dom.createElement("Connection");
+		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "UUID", UUID.randomUUID().toString()));
+		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "Name",
+		        			alCards.get(id).getTitle() + " - " + alCards.get(id+1).getTitle()));
+		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "directed1", "false"));
+		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "directed2", "true"));
+		        	
+		        	connectionElem.appendChild(alCards.get(id).getMetasonicElementXML(dom, id +1, "endPoint1"));
+		        	connectionElem.appendChild(alCards.get(id+1).getMetasonicElementXML(dom, id + 2, "endPoint2"));
+		        	elSubject.appendChild(connectionElem);	 
+		        	id++;
+	        	}
+	        }
+	        
+	        elProcess.appendChild(elSubject);
+	        
+	        dom.appendChild(elProcess);
+	        return writeXML(dom, file);
+	    }catch (ParserConfigurationException pce) {
+	        return false;
+	    }
+	}
+	
+	private boolean writeXML(Document dom, File file){
+        try {
+            Transformer tr = TransformerFactory.newInstance().newTransformer();
+            tr.setOutputProperty(OutputKeys.INDENT, "yes");
+            tr.setOutputProperty(OutputKeys.METHOD, "xml");
+            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
+            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+            // write DOM to file
+            tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(file)));
+            return true;
+
+        } catch (TransformerException te) {
+        	te.printStackTrace();
+        	return false;
+        } catch (IOException ioe) {
+        	ioe.printStackTrace();
+        	return false;
+        }		
+	}
+	
+	private ArrayList<Card> getCardsAsList(){
+		ArrayList<Card> alCards = new ArrayList<Card>();
+		Object[] arrCards;
+//		alCards = new ArrayList<Card>(Arrays.asList((Card[]) mainStack.toArray()));
+		int i = 0;
+        arrCards = mainStack.toArray();
+        if (arrCards != null){
+        	i = 0;
+        	while (i <= arrCards.length - 1){
+        		alCards.add((Card) arrCards[i]);
+        		i++;
+        	}
+        }
+        
+        arrCards = sideStack.toArray();
+        if (arrCards != null){
+        	i = arrCards.length - 1;
+        	while (i >= 0){
+        		alCards.add((Card) arrCards[i]);
+        		i--;
+        	}
+        }		
+        
+        return alCards;
+	}
+	
+	public boolean uploadData(File file){
+		try{
+//			OutputStream 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload_xml.php");
 
-			MultipartEntity multipartEntity = new MultipartEntity();
-			ContentBody cbFile = new FileBody(file);
-			
-			multipartEntity.addPart("file", cbFile);
-			httpPost.setEntity(multipartEntity);
+			MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+//			multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			FileBody fb = new FileBody(file);
+//			ToDo: Mit Inputstream funktioniert upload nicht, nur mit FileBody
+//			InputStream in = new FileInputStream(file);
+//			InputStreamBody inb = new InputStreamBody(in, getTitle() + ".mwyw");
+			multipartEntity.addPart("file", fb);
+
+			httpPost.setEntity(multipartEntity.build());
 
   			HttpResponse httpResponse = httpClient.execute(httpPost);
   			
