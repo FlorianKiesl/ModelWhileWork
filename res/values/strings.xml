@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_new">New Process</string>
     <string name="action_open">Open Process</string>
-    <string name="action_export">Export Process SD Card</string>
+    <string name="action_export">Export</string>
     <string name="action_import">Import Process</string>
     <string name="action_close">Close Process</string>
     <string name="action_closeall">Close All Processes</string>
@@ -29,5 +29,5 @@
     <string name="title_activity_delete_process">DeleteProcessActivity</string>
     <string name="delete">delete</string>
     <string name="action_delete">Delete Process</string>
-
+	<string name="title_activity_export_process">ExportProcessActivity</string>
 </resources>

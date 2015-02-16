@@ -1,6 +1,7 @@
 package ce.modelwhilework.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
@@ -10,12 +11,24 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import ce.modelwhilework.data.Process;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 public class ProcessManager {
 
 	private static ProcessManager instance;
 	private LinkedHashSet<Process> linkedhashSetProcess;
 	private Process curProcess;
-	private File dirInternal, dirExternal;
+	private File dirInternal, dirExternal, dirExternalCache;
 	
 	private ProcessManager(){
 		this.linkedhashSetProcess = new LinkedHashSet<Process>();
@@ -35,10 +48,17 @@ public class ProcessManager {
 	public void setExternalDir(File dir) {
 		this.dirExternal = dir;
 	}
+	public void setExternalCacheDir(File dir){
+		this.dirExternalCache = dir;
+	}
 	
 	public File getInternalStoreage() { return this.dirInternal; }
 	
 	public File getExternalStoreage() { return this.dirExternal; }
+
+	public File getExternalCacheStorage(){
+		return this.dirExternalCache;
+	}
 	
 	public LinkedHashSet<Process> getProcesses() {
 		return linkedhashSetProcess;
@@ -106,14 +126,14 @@ public class ProcessManager {
 		Process p = getProcess(name);
 		if (p != null){
 			try{
-				File file = new File(this.getInternalStoreage().getPath() + "/metasonicExport.xml");
+				File file = new File(this.getExternalCacheStorage().getPath() + "/metasonicExportMWYW.xml");
 //				if(!file.exists()){
 //					file.mkdir();
 //				}
 				boolean erg = p.storeMetasonicXML(file);
 				
 				if (erg) {
-					erg = p.uploadData(file);
+					erg = this.uploadData(file);
 				}
 				file.delete();
 				
@@ -122,6 +142,39 @@ public class ProcessManager {
 				exc.printStackTrace();
 			}
 		}
+		return false;
+	}
+	
+	public boolean uploadData(File file){
+		try{
+//			OutputStream 
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload_xml.php");
+
+			MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+//			multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			FileBody fb = new FileBody(file);
+//			ToDo: Mit Inputstream funktioniert upload nicht, nur mit FileBody
+//			InputStream in = new FileInputStream(file);
+//			InputStreamBody inb = new InputStreamBody(in, getTitle() + ".mwyw");
+			multipartEntity.addPart("file", fb);
+
+			httpPost.setEntity(multipartEntity.build());
+
+  			HttpResponse httpResponse = httpClient.execute(httpPost);
+  			
+		    if(httpResponse != null) {
+		    	String response = EntityUtils.toString(httpResponse.getEntity());
+		    	return true;
+		    } else { // Error, no response.
+		    	return false;
+		    }
+			
+		}catch(IOException exc){
+			exc.printStackTrace();
+		}catch(Exception exc){
+			exc.printStackTrace();
+		} 
 		return false;
 	}
 	

@@ -53,6 +53,13 @@
             android:name=".DeleteProcessActivity"
             android:label="@string/title_activity_delete_process" >
         </activity>
+        <activity 
+            android:name=".ExportProcessActivity"
+            android:label="@string/title_activity_export_process"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            android:screenOrientation="landscape" >
+        </activity>
+        
     </application>
 
 </manifest>

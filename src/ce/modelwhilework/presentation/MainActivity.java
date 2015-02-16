@@ -97,8 +97,16 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 			viewPager.setAdapter(adapter);
 		}
 		else if (id == R.id.action_export){
-			if(!adapter.exportProcess(ProcessManager.getInstance().getCurrentProcess().getTitle()))
-				showAlert("export file failed!");
+			if(adapter.getCount() <= 0) {
+				showAlert("Please open a process first!");
+			}
+			else{
+				Intent intent = new Intent(getBaseContext(), ExportProcessActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			    startActivity(intent);
+			}
+//			if(!adapter.exportProcess(ProcessManager.getInstance().getCurrentProcess().getTitle()))
+//				showAlert("export file failed!");
 		}
 		else if (id == R.id.action_open){
 			

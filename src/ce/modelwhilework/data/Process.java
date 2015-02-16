@@ -21,17 +21,6 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 import org.xml.sax.*;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.w3c.dom.*;
 
 import ce.modelwhilework.business.XmlHelper;
@@ -328,7 +317,6 @@ public class Process extends Modus implements Comparable<Process>{
 	private ArrayList<Card> getCardsAsList(){
 		ArrayList<Card> alCards = new ArrayList<Card>();
 		Object[] arrCards;
-//		alCards = new ArrayList<Card>(Arrays.asList((Card[]) mainStack.toArray()));
 		int i = 0;
         arrCards = mainStack.toArray();
         if (arrCards != null){
@@ -351,36 +339,5 @@ public class Process extends Modus implements Comparable<Process>{
         return alCards;
 	}
 	
-	public boolean uploadData(File file){
-		try{
-//			OutputStream 
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload_xml.php");
 
-			MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
-//			multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-			FileBody fb = new FileBody(file);
-//			ToDo: Mit Inputstream funktioniert upload nicht, nur mit FileBody
-//			InputStream in = new FileInputStream(file);
-//			InputStreamBody inb = new InputStreamBody(in, getTitle() + ".mwyw");
-			multipartEntity.addPart("file", fb);
-
-			httpPost.setEntity(multipartEntity.build());
-
-  			HttpResponse httpResponse = httpClient.execute(httpPost);
-  			
-		    if(httpResponse != null) {
-		    	String response = EntityUtils.toString(httpResponse.getEntity());
-		    	return true;
-		    } else { // Error, no response.
-		    	return false;
-		    }
-			
-		}catch(IOException exc){
-			exc.printStackTrace();
-		}catch(Exception exc){
-			exc.printStackTrace();
-		} 
-		return false;
-	}
 }
