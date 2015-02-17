@@ -38,7 +38,8 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 		ProcessManager pm = ProcessManager.getInstance();
 		pm.setInternalDir(getFilesDir());
 		pm.setExternalDir(getExternalFilesDir(null));
-
+		pm.setExternalCacheDir(getExternalCacheDir());
+		
 		viewPager = (CustomViewPager) this.findViewById(R.id.pager_process);
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			

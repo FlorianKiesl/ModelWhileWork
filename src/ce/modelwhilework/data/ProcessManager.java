@@ -113,7 +113,7 @@ public class ProcessManager {
 	}
 	
 	//ToDo: XML Zurückgeben (mwyw)
-	public boolean exportProcess(String name){
+	public boolean exportProcessExternal(String name){
 		Process p = getProcess(name);
 		if(p == null)
 			return false;
@@ -121,8 +121,33 @@ public class ProcessManager {
 		return p.storeXML(getExternalStoreage());
 	}
 	
+	public boolean exportProcessMetasonicExternal(String name){
+		Process p = getProcess(name);
+		if(p == null)
+			return false;
+		return p.storeMetasonicXML(new File(getExternalStoreage(), p.getTitle() + ".xml"));
+	}
+	
+	public boolean uploadProcess(String name){
+		Process p = getProcess(name);
+		if(p == null)
+			return false;
+		try{
+			boolean erg = p.storeXML(this.getExternalCacheStorage());
+			File file = new File(this.getExternalCacheStorage(), p.getTitle() + ".mwyw");
+			if (erg){
+				erg = this.uploadData(file);
+			}
+			file.delete();
+			return erg;
+		} catch (Exception exc){
+			exc.printStackTrace();
+		}
+		return false;
+	}
+	
 	//ToDo: XML Zurückgeben (Metasonic)
-	public boolean exportProcessMetasonic(String name){
+	public boolean uploadProcessMetasonic(String name){
 		Process p = getProcess(name);
 		if (p != null){
 			try{
@@ -147,7 +172,6 @@ public class ProcessManager {
 	
 	public boolean uploadData(File file){
 		try{
-//			OutputStream 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload_xml.php");
 

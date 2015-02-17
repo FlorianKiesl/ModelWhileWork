@@ -65,11 +65,6 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 		return;
 	}
 	
-	public boolean exportProcess(String name){
-		new UploadMetasonicProcess().execute(name);
-		return this.processManager.exportProcess(name);
-	}
-	
 	public void closeProcess(int position){
 		this.processManager.closeProcess(position);
 		return;
@@ -79,19 +74,5 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 		this.processManager.closeAllProcesses();
 		return;
 	}
-	
-	private class UploadMetasonicProcess extends AsyncTask<String, Void, Void>{
 
-		@Override
-		protected Void doInBackground(String... params) {
-			String name = ProcessFragmentStatePageAdapter.this.processManager.getCurrentProcess().getTitle();
-			if (params[0] != null) {
-				name = params[0];
-			}
-			ProcessFragmentStatePageAdapter.this.processManager.exportProcessMetasonic(name);
-//			return 1L;
-			return null;
-		}
-		
-	}
 }

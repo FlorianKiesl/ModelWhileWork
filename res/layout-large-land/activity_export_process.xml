@@ -11,6 +11,13 @@
         android:layout_margin="20dp" />
 	<ListView android:id="@+id/activity_export_process_exportPath"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_margin="40dp"></ListView>
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:layout_margin="30dp"></ListView>
+	<Button 
+	    android:id="@+id/activity_export_process_btnSenden"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/activity_export_process_btnSenden"
+	    android:layout_margin="20dp"/>
 </LinearLayout>
