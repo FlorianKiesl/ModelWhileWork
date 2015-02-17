@@ -1,5 +1,6 @@
 package ce.modelwhilework.presentation;
 
+import ce.modelwhilework.data.ProcessManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.widget.GridView;
 
 public class ContextInfoActivity extends Activity {
 
+	private String card_id = "";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,6 +23,10 @@ public class ContextInfoActivity extends Activity {
 		GridView grid = (GridView) this.findViewById(R.id.grid);
 		grid.setAdapter(adapter);
 		
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			card_id = bundle.getString("CARD_ID");
+		}
 	}
 
 	@Override
@@ -40,6 +47,8 @@ public class ContextInfoActivity extends Activity {
 			
 			Intent intent = new Intent(this, CameraActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			if(card_id.length() > 0)
+				intent.putExtra("CARD_ID", card_id);
 		    startActivity(intent);
 		}
 		else if (id == R.id.action_newAudio){			

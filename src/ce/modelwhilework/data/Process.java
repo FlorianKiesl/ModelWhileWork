@@ -31,14 +31,16 @@ public class Process extends Modus implements Comparable<Process>{
 	
 	private Stack<Card> mainStack;
 	private Stack<Card> sideStack;
+	private Task taskCard;
+	private Message messageCard; 
 	
-
 	public Process(String title) {
 		super(title);
 		
 		mainStack = new Stack<Card>();
 		sideStack = new Stack<Card>();	
-		
+		taskCard = new Task("");
+		messageCard = new Message("", "", true);
 	}
 	
 	public boolean addCard(Card card) { return mainStack.add(card);	}
@@ -85,6 +87,28 @@ public class Process extends Modus implements Comparable<Process>{
 	public Card getTopCardSideStack() { 
 		if(isSideStackEmpty()) { return null; }
 		return sideStack.peek();
+	}
+	
+	public Task getTaskCard() { 
+		return taskCard;
+	}
+	
+	public Message getMessageCard() { 
+		return messageCard;
+	}
+	
+	public Card getTopCard(String title) {
+		
+		if(messageCard.getTitle().equals(title))
+			return messageCard;
+		else if(taskCard.getTitle().equals(title))
+			return taskCard;
+		else if(getTopCardMainStack() != null && getTopCardMainStack().getTitle().equals(title))
+			return getTopCardMainStack();
+		else if(getTopCardSideStack() != null && getTopCardSideStack().getTitle().equals(title))
+			return getTopCardSideStack();
+
+		return null;
 	}
 
 	@Override

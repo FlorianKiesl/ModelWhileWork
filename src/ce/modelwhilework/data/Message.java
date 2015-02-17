@@ -14,7 +14,10 @@ public class Message extends Card {
 		this.sender = sender;
 	}
 	
+	public void setSenderReciver(String sr) { this.senderReciver = sr; }
 	public String getSenderReciver() { return this.senderReciver; }
+	
+	public void setSender(boolean sender) { this.sender = sender; }
 	public boolean isSender() { return this.sender; }
 
 	@Override

@@ -1,41 +1,55 @@
 package ce.modelwhilework.presentation;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
+import ce.modelwhilework.data.Modus;
 import ce.modelwhilework.data.ProcessManager;
-import ce.modelwhilework.data.contextinfo.Picture;
 import android.app.Activity;
-import android.content.ContentValues;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore.Images.ImageColumns;
-import android.provider.MediaStore.Images.Media;
-import android.provider.MediaStore.MediaColumns;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
-public class CameraActivity extends Activity implements SurfaceHolder.Callback,
-		Camera.PictureCallback {
+public class CameraActivity extends Activity implements SurfaceHolder.Callback, DialogInterface.OnClickListener, Camera.PictureCallback {
 	
 	private Camera camera = null;
 	private Camera.PictureCallback cameraCallbackPreView;
 	private Camera.ShutterCallback cameraCallbackShutter;
 	private SurfaceHolder cameraViewHolder;
 	private boolean bFrontCamera = false;
+	private Modus modus;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
+		
+		modus = ProcessManager.getInstance().getCurrentProcess();
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			String title = bundle.getString("CARD_ID");
+			if (title!= null) {
+				modus = ProcessManager.getInstance().getCurrentProcess().getTopCard(title);
+			}
+		}
+		
+		if(modus == null)
+			this.finish();
+		   
+		ImageButton imgButtonMakePic = (ImageButton) this.findViewById(R.id.activity_camera_imageButton_makePricture);
+		imgButtonMakePic.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				make_picture();
+			}
+		});		
 	}
 
 	protected void onPause() {
@@ -65,25 +79,12 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback,
 
 	@Override
 	public void onPictureTaken(byte[] data, Camera camera) {
-		try {
-			
-			//todo: die daten in die kontextinformation aufnehmen und visuaöisieren!!!
-			SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
-			String name = "foto_" + df.format(new Date());
-			ContentValues werte = new ContentValues();
-			werte.put(MediaColumns.TITLE, name);
-			werte.put(ImageColumns.DESCRIPTION, "Aufgenommen mit CameraDemo");
-			Uri uri = getContentResolver().insert(Media.EXTERNAL_CONTENT_URI,
-					werte);
-			OutputStream ausgabe = getContentResolver().openOutputStream(uri);
-			ausgabe.write(data);
-			ausgabe.close();
+		if(!ProcessManager.getInstance().getCurrentProcess().addContextInformationPicture(data)) {
+			showAlert("Save picture fail!");
 			camera.startPreview();
-			
-			ProcessManager.getInstance().getCurrentProcess().addContextInformationPicture(data);
-			
-		} catch (Exception ex) {
 		}
+		else
+			this.finish();	
 	}
 
 	@Override
@@ -139,10 +140,25 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback,
 
 	}
 	
-	public void make_picture(View v) {
+	private void make_picture() {
 		if (camera != null) {
 			camera.takePicture(this.cameraCallbackShutter,
 					           this.cameraCallbackPreView, this);
-		}
+		} else
+			showAlert("no camera available!");			
+	}
+	
+	private void showAlert(String msg) {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("error");
+		alertDialog.setNegativeButton("OK", this);
+		alertDialog.setMessage(msg);
+		alertDialog.show();	
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		// TODO Auto-generated method stub
+		
 	}
 }

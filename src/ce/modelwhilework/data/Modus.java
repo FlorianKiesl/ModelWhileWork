@@ -15,11 +15,12 @@ public abstract class Modus {
 	private String title;
 	private TreeSet<ContextInformation> contextInformations;
 	
-	public Modus(String title) {
+	public Modus(String title) {  //todo: unique check
 		this.title = title;
 		this.contextInformations = new TreeSet<ContextInformation>();
 	}
 	
+	public void setTitle(String title) { this.title = title; } //todo: unique check
 	public String getTitle() { return this.title; }
 
 	public TreeSet<ContextInformation> getContextInformations() {
