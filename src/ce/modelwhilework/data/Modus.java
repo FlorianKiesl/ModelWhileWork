@@ -1,27 +1,69 @@
 package ce.modelwhilework.data;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 import ce.modelwhilework.data.contextinfo.ContextInformation;
+import ce.modelwhilework.data.contextinfo.Picture;
 
 public abstract class Modus {
 	
 	private String title;
-	private HashSet<ContextInformation> contextInformations;
+	private TreeSet<ContextInformation> contextInformations;
 	
 	public Modus(String title) {
 		this.title = title;
-		this.contextInformations = new HashSet<ContextInformation>();
+		this.contextInformations = new TreeSet<ContextInformation>();
 	}
 	
 	public String getTitle() { return this.title; }
 
-	public HashSet<ContextInformation> getContextInformations() {
+	public TreeSet<ContextInformation> getContextInformations() {
 		return contextInformations;
 	}
 
 	public void setContextInformations(
-			HashSet<ContextInformation> contextInformations) {
+			TreeSet<ContextInformation> contextInformations) {
 		this.contextInformations = contextInformations;
+	}
+	
+	abstract protected String getTypeID();
+	
+	private int getFreeID() {
+		
+		if(contextInformations.size() == 0)
+			return 0;
+		
+		return  contextInformations.last().getID() + 1;
+	}
+
+	public boolean addContextInformationPicture(byte[] data) {
+		
+		int id = getFreeID();
+		
+		String path = ProcessManager.getInstance().getInternalStoreage() + "\\" + ProcessManager.getInstance().getCurrentProcess().getTitle() + "\\CI_" + getTypeID() + "_" + id;
+		
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(path);
+			fos.write(data);			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		contextInformations.add(new Picture(id, path));		
+		return true;
 	}
 }

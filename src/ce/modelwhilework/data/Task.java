@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 public class Task extends Card{
 
 	public Task(String title) {
-		super(title, CardType.Task);
+		super(title);
 	}
 	
 	@Override
@@ -14,5 +14,9 @@ public class Task extends Card{
 		
 		return super.getElementXML(dom, id);
 	}
-	
+
+	@Override
+	protected CardType getCardType() {
+		return CardType.Message;
+	}	
 }

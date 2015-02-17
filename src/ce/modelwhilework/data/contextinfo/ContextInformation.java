@@ -1,18 +1,24 @@
 package ce.modelwhilework.data.contextinfo;
 
 public abstract class ContextInformation implements Comparable<ContextInformation> {
-	protected String title;
+	private int id;
+	private String path;
 
-	public String getTitle() {
-		return title;
+	public ContextInformation(int id, String path) {
+		this.id = id;
+		this.path = path;
 	}
-
-	public void setTitle(String name) {
-		this.title = name;
+	
+	public int getID() {
+		return id;
+	}
+	
+	public String getPath() {
+		return path;
 	}
 
 	@Override
 	public int compareTo(ContextInformation another) {
-		return this.title.compareTo(another.getTitle());
+		return this.id - another.getID();
 	}
 }

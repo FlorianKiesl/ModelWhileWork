@@ -6,17 +6,15 @@ import ce.modelwhilework.business.XmlHelper;
 
 public abstract class Card extends Modus {
 
-	private CardType type;
-
-	public Card(String title, CardType type) {
+	public Card(String title) {
 		super(title);
-		this.type = type;
 	}
 	
 	public boolean isMessage() { return this instanceof Message; }
 	public boolean isTask() { return this instanceof Task; }
 
-	protected CardType getCardType() { return this.type; }
+	abstract protected CardType getCardType();
+	
 	protected Element getElementXML(Document dom, int id) {
 		
 		Element card = dom.createElement("Card");
@@ -70,5 +68,9 @@ public abstract class Card extends Modus {
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "sender", sender));
 		return msgElem;
 	}
-
+	
+	protected String getTypeID() {
+		
+		return "CARD_" + this.getTitle();
+	}
 }

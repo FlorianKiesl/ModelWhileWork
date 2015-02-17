@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.data.contextinfo.Picture;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.hardware.Camera;
@@ -77,6 +79,9 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback,
 			ausgabe.write(data);
 			ausgabe.close();
 			camera.startPreview();
+			
+			ProcessManager.getInstance().getCurrentProcess().addContextInformationPicture(data);
+			
 		} catch (Exception ex) {
 		}
 	}

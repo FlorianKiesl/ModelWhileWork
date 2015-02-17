@@ -9,7 +9,7 @@ public class Message extends Card {
 	private boolean sender;
 	
 	public Message(String title, String senderReciver, boolean sender) {
-		super(title, CardType.Message);
+		super(title);
 		this.senderReciver = senderReciver;
 		this.sender = sender;
 	}
@@ -25,5 +25,10 @@ public class Message extends Card {
 		card.setAttribute("sender", Boolean.toString(this.isSender()));
 		
 		return card;
+	}
+
+	@Override
+	protected CardType getCardType() {
+		return CardType.Task;
 	}	
 }

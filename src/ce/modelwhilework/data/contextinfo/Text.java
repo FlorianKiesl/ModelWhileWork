@@ -11,7 +11,8 @@ public class Text extends ContextInformation {
 		this.text = text;
 	}
 
-	public Text(){
+	public Text(int id, String path) {
+		super(id, path);
 		this.text = new StringBuffer();
 	}
 }

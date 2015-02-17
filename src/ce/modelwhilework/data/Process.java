@@ -338,6 +338,12 @@ public class Process extends Modus implements Comparable<Process>{
         
         return alCards;
 	}
+
+	@Override
+	protected String getTypeID() {
+		
+		return "PROCESS_" + this.getTitle();
+	}
 	
 
 }
