@@ -86,7 +86,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		rl_MainStack.setOnDragListener(new ChoiceDragListener());
 		iv_bin.setOnDragListener(new BinDragListener());
 		
-		ImageButton imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfo);
+		ImageButton imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoProcess);
 		imgButtonContext.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
