@@ -52,7 +52,6 @@ public class ExportProcessActivity extends Activity {
 		ListView lvExportPath = (ListView) ExportProcessActivity.this.findViewById(R.id.activity_export_process_exportPath);
 		File sdCard = Environment.getExternalStorageDirectory();
 
-		
 		final ListAdapterRadioButton adapterLv = new ListAdapterRadioButton(getBaseContext(),
 				R.layout.list_radiobutton);
 		if (sdCard.exists() && sdCard.canWrite()){

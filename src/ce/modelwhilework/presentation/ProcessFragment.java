@@ -475,7 +475,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 				tv_Main.setVisibility(View.INVISIBLE);			
 				
 				te_MainStackMsgTitle.setText(card.getTitle());
-				te_MainStackMsgPerson.setText(((Message)card).getSenderReciver());
+				te_MainStackMsgPerson.setText(((Message)card).getSenderReiciver());
 				cb_SenderMainStack.setChecked(((Message)card).isSender());
 				cb_ReciverMainStack.setChecked(!((Message)card).isSender());				
 			} else if(card instanceof Task) {
@@ -507,7 +507,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 				tv_Side.setVisibility(View.INVISIBLE);
 				
 				te_SideStackMsgTitle.setText(card.getTitle());
-				te_SideStackMsgPerson.setText(((Message)card).getSenderReciver());
+				te_SideStackMsgPerson.setText(((Message)card).getSenderReiciver());
 				cb_SenderSideStack.setChecked(((Message)card).isSender());
 				cb_ReciverSideStack.setChecked(!((Message)card).isSender());				
 			} else if(card instanceof Task) {

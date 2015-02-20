@@ -162,7 +162,7 @@
                             android:id="@+id/checkBoxMsgCardReciveMainStack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="recive from:" />
+                            android:text="receive from:" />
                     </LinearLayout>
 
                     <EditText
@@ -291,7 +291,7 @@
                             android:id="@+id/checkBoxMsgCardReciveSideStack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="recive from:" />
+                            android:text="receive from:" />
                     </LinearLayout>
 
                     <EditText
@@ -418,7 +418,7 @@
                         android:id="@+id/checkBoxMsgCardRecive"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="recive from:" />
+                        android:text="receive from:" />
                 </LinearLayout>
 
                 <EditText

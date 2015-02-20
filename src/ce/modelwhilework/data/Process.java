@@ -1,17 +1,10 @@
 package ce.modelwhilework.data;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 import java.util.UUID;
 
@@ -268,7 +261,6 @@ public class Process extends Modus implements Comparable<Process>{
 	    Document dom;
 	    Element elProcess;
 	    Element elSubject;
-	    Element elCard;
 	    ArrayList<Card> alCards;
 		try{
 	        DocumentBuilder db = dbf.newDocumentBuilder();
@@ -295,13 +287,19 @@ public class Process extends Modus implements Comparable<Process>{
 	        	while (id < alCards.size()-1){
 		        	connectionElem = dom.createElement("Connection");
 		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "UUID", UUID.randomUUID().toString()));
-		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "Name",
-		        			alCards.get(id).getTitle() + " - " + alCards.get(id+1).getTitle()));
+		        	String name = "";
+		        	if (alCards.get(id).isTask()){
+		        		name = alCards.get(id).getTitle() + " erledigt";
+		        	}
+		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "Name", name));
 		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "directed1", "false"));
 		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "directed2", "true"));
 		        	
 		        	connectionElem.appendChild(alCards.get(id).getMetasonicElementXML(dom, id +1, "endPoint1"));
 		        	connectionElem.appendChild(alCards.get(id+1).getMetasonicElementXML(dom, id + 2, "endPoint2"));
+		        	if (alCards.get(id).isMessage()){
+		        		connectionElem.appendChild(alCards.get(id).getMsgXMLElement(dom));
+		        	}
 		        	elSubject.appendChild(connectionElem);	 
 		        	id++;
 	        	}

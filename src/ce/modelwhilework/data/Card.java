@@ -31,38 +31,52 @@ public abstract class Card extends Modus {
 		card.appendChild(XmlHelper.createXMLTextNode(dom, "UUID", Integer.toString(id)));
 		card.appendChild(XmlHelper.createXMLTextNode(dom, "name", this.getTitle()));
 		//ToDo: ContextInfo Location (Was ist angle)
-		card.appendChild(XmlHelper.createXMLTextNode(dom, "x", ""));	
-		card.appendChild(XmlHelper.createXMLTextNode(dom, "y", ""));
-		card.appendChild(XmlHelper.createXMLTextNode(dom, "angle", ""));
+		card.appendChild(XmlHelper.createXMLTextNode(dom, "x", "0.0"));	
+		card.appendChild(XmlHelper.createXMLTextNode(dom, "y", "0.0"));
+		card.appendChild(XmlHelper.createXMLTextNode(dom, "angle", "0.0"));
 
 		if(this.isMessage()){
 			Message messageObj = (Message) this;
 			card.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 			if(messageObj.isSender()){
 				card.setAttribute("xsi:type", "XmlSendElement");
+				if (elemName.compareToIgnoreCase("endPoint1") != 0 ){
+					card.appendChild(this.getMsgXMLElement(dom));
+				}
 			}
 			else{
 				card.setAttribute("xsi:type", "XmlReceiveElement");
+				if (elemName.compareToIgnoreCase("endPoint1") != 0){
+					card.appendChild(this.getMessagesXMLElement(dom));
+				}
+				else{
+					card.appendChild(dom.createElement("messages"));
+				}
 			}
-			card.appendChild(this.getMsgXMLElement(dom));
 		}
 		
 		return card;
 	}
 	
-	private Element getMsgXMLElement(Document dom){
+	private Element getMessagesXMLElement(Document dom){
+		Element messagesElem = dom.createElement("messages");
+		messagesElem.appendChild(this.getMsgXMLElement(dom));
+		return messagesElem;
+	}
+	
+	protected Element getMsgXMLElement(Document dom){
 		Message messageObj = (Message) this;
 		Element msgElem = dom.createElement("msg");
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "message", messageObj.getTitle()));
 		String recipient = "";
 		String sender = "";
 		if (messageObj.isSender()){
-			recipient = messageObj.getSenderReciver();
+			recipient = messageObj.getSenderReiciver();
 			sender = "[UserName]";
 		}
 		else{
 			recipient = "[UserName]";
-			sender = messageObj.getSenderReciver();
+			sender = messageObj.getSenderReiciver();
 		}
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "recipient", recipient));
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "sender", sender));
