@@ -41,7 +41,7 @@
             android:screenOrientation="landscape"  />
         <activity
             android:name=".CameraActivity"
-            android:label="@string/title_activity_picture"
+            android:label="@string/title_activity_camera"
             android:screenOrientation="landscape"  >
         </activity>
         <activity
@@ -59,7 +59,10 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog"
             android:screenOrientation="landscape" >
         </activity>
-        
+                <activity
+            android:name=".PictureActivity"
+            android:label="@string/title_activity_picture" >
+        </activity>
     </application>
 
 </manifest>

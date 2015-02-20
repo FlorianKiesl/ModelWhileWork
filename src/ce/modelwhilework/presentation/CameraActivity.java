@@ -7,14 +7,12 @@ import ce.modelwhilework.data.ProcessManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 
 public class CameraActivity extends Activity implements SurfaceHolder.Callback, DialogInterface.OnClickListener, Camera.PictureCallback {
 	
@@ -65,7 +63,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 		SurfaceView cameraView = (SurfaceView) findViewById(R.id.surfaceviewCamera);
 		cameraViewHolder = cameraView.getHolder();
 		cameraViewHolder.addCallback(this);
-		// setType() ist ab Android 4.x überflüssig und wird ignoriert
+		// setType() ist ab Android 4.x ï¿½berflï¿½ssig und wird ignoriert
 		cameraViewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		cameraCallbackPreView = new Camera.PictureCallback() {
 			public void onPictureTaken(byte[] data, Camera c) {

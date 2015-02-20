@@ -22,6 +22,7 @@
     <string name="msg_title">exchange of information Nr: 1</string>
     <string name="process_title">the name of the process</string>
     <string name="title_activity_picture">PictureActivity</string>
+    <string name="title_activity_camera">PictureActivity</string>
     <string name="action_makePicutre">make picture</string>
     <string name="title_activity_open_process">OpenProcessActivity</string>
     <string name="cancel">cancel</string>
