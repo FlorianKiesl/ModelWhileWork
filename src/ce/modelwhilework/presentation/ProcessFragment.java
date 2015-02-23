@@ -430,18 +430,18 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 		});				
 		
-		updateViewNow();
-		
 		return fragment;
 	}
 	
 	public void onPause() {
 		   super.onPause();	   
 		   updateViewHandler.removeCallbacks(updateViewThread);
+		   process.storeXML(ProcessManager.getInstance().getInternalStoreage());
 	};  
 
 	public void onResume() {
 		   super.onResume();	   
+		   updateViewNow();
 	};  
 	
 	private void addtOnClickListener4Card(ImageButton imgButtonContext, final Card card) {
@@ -632,6 +632,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 	   	 
 		   public void run() {
 			   updateViewHandler.removeCallbacks(updateViewThread); //remove existing runnable
+			   process.storeXML(ProcessManager.getInstance().getInternalStoreage());
 			   updateViewNow();			   
 		   }
 	 };

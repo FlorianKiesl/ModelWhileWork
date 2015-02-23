@@ -32,6 +32,6 @@ public class Message extends Card {
 
 	@Override
 	protected CardType getCardType() {
-		return CardType.Task;
+		return CardType.Message;
 	}	
 }

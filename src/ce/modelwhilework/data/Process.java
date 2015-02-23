@@ -86,8 +86,16 @@ public class Process extends Modus implements Comparable<Process>{
 		return taskCard;
 	}
 	
+	public void setTaskCard(Task t) { 
+		taskCard = t;
+	}
+	
 	public Message getMessageCard() { 
 		return messageCard;
+	}
+	
+	public void setMessageCard(Message m) { 
+		messageCard = m;
 	}
 	
 	public Card getTopCard(String title) {

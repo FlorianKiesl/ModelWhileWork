@@ -17,6 +17,6 @@ public class Task extends Card{
 
 	@Override
 	protected CardType getCardType() {
-		return CardType.Message;
-	}
+		return CardType.Task;
+	}	
 }

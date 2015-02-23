@@ -55,24 +55,4 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 	public int getCount() {
 		return this.processManager.getProcesses().size();
 	}
-	
-	public void addProcess(String name){
-		Process newProcess = new Process(name);
-		this.processManager.addProcess(newProcess);
-	}
-	
-	public void openProcess(){
-		return;
-	}
-	
-	public void closeProcess(int position){
-		this.processManager.closeProcess(position);
-		return;
-	}
-	
-	public void clossAllProcesses(){
-		this.processManager.closeAllProcesses();
-		return;
-	}
-
 }

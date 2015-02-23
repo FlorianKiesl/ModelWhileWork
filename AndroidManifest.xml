@@ -72,6 +72,12 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
+        <activity
+            android:name=".NewProcessActivity"
+            android:label="@string/title_activity_new_process"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+        </activity>
     </application>
 
 </manifest>

@@ -46,7 +46,9 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 				if((pos = processName.indexOf(".")) > 0)
 					processName = processName.substring(0, pos);
 				
-				if(ProcessManager.getInstance().openProcess(processName))
+				if(ProcessManager.getInstance().getProcess(processName) != null)
+					showAlert("Process is already open!!!");				
+				else if(ProcessManager.getInstance().openProcess(processName))
 					activity.finish();
 				else
 					showAlert("Load process fail!!!");

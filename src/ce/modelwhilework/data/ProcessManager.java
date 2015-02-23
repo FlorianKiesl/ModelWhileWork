@@ -46,11 +46,11 @@ public class ProcessManager {
 		favoriteTasks.add(new Task("default favorite 4"));
 		favoriteTasks.add(new Task("default favorite 5"));
 		
-		favoriteMessages.add(new Message("default faforite msg 1", "person", true));
-		favoriteMessages.add(new Message("default faforite msg 2", "person", false));
-		favoriteMessages.add(new Message("default faforite msg 3", "person", true));
-		favoriteMessages.add(new Message("default faforite msg 4", "person", false));
-		favoriteMessages.add(new Message("default faforite msg 5", "person", true));
+		favoriteMessages.add(new Message("default favorite msg 1", "person", true));
+		favoriteMessages.add(new Message("default favorite msg 2", "person", false));
+		favoriteMessages.add(new Message("default favorite msg 3", "person", true));
+		favoriteMessages.add(new Message("default favorite msg 4", "person", false));
+		favoriteMessages.add(new Message("default favorite msg 5", "person", true));
 	}
 	
 	public static ProcessManager getInstance(){
@@ -253,5 +253,26 @@ public class ProcessManager {
 	}
 	
 	public ArrayList<Task> getFavoriteTasks() { return new ArrayList<Task>(this.favoriteTasks); }
+	
+	public Task getFavoriteTask(String title) { 
+		
+		for(Task t : favoriteTasks) {
+			if(t.getTitle().equals(title))
+				return t;
+		}
+		
+		return null;
+	}
+	
 	public ArrayList<Message> getFavoriteMessages() { return new ArrayList<Message>(this.favoriteMessages); }
+	
+	public Message getFavoriteMessage(String title) { 
+		
+		for(Message m : favoriteMessages) {
+			if(m.getTitle().equals(title))
+				return m;
+		}
+		
+		return null;
+	}
 }

@@ -1,29 +1,15 @@
 package ce.modelwhilework.presentation;
 
-import java.io.File;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import org.xmlpull.v1.XmlSerializer;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
-import ce.modelwhilework.data.Card;
 import ce.modelwhilework.data.ProcessManager;
-import ce.modelwhilework.data.Task;
-import ce.modelwhilework.data.Message;
-import ce.modelwhilework.data.Process;
 
 public class MainActivity extends FragmentActivity implements DialogInterface.OnClickListener {
 
@@ -83,18 +69,21 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_new){
-			adapter.addProcess("Process " + (adapter.getCount() + 1));
-			viewPager.setAdapter(adapter);
-			viewPager.setCurrentItem(adapter.getCount());
+			
+			Intent intent = new Intent(getBaseContext(), NewProcessActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		    startActivity(intent);
 		}
 		else if (id == R.id.action_close){
-			int nitem = viewPager.getCurrentItem();
-			adapter.closeProcess(nitem);
+			
+			ProcessManager.getInstance().closeProcess(viewPager.getCurrentItem());
 			viewPager.setAdapter(adapter);
-			viewPager.setCurrentItem(adapter.getCount());
+			int nextItem = ProcessManager.getInstance().getCurrentProcessPos();			
+			if(nextItem >= 0 && nextItem < adapter.getCount())
+				viewPager.setCurrentItem(nextItem);
 		}
 		else if (id == R.id.action_closeall){
-			adapter.clossAllProcesses();
+			ProcessManager.getInstance().closeAllProcesses();
 			viewPager.setAdapter(adapter);
 		}
 		else if (id == R.id.action_export){

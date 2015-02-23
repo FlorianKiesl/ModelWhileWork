@@ -2,27 +2,28 @@ package ce.modelwhilework.presentation;
 
 import java.util.ArrayList;
 
-import ce.modelwhilework.data.Task;
+import ce.modelwhilework.data.Message;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class ListAdapterTask extends ArrayAdapter<Task> {
+public class ListAdapterMsg extends ArrayAdapter<Message> {
 	
 	LayoutInflater inflater;
 	int resourceId;
 	Context ctx;
 	String selectedItem;
 	
-	public ListAdapterTask(Context context, int resourceId,
-			ArrayList<Task> task) {
-		super(context, resourceId, task);
+	public ListAdapterMsg(Context context, int resourceId,
+			ArrayList<Message> msg) {
+		super(context, resourceId, msg);
 		inflater = LayoutInflater.from(context);
 		this.resourceId = resourceId;	
 		this.ctx = context;
@@ -36,12 +37,21 @@ public class ListAdapterTask extends ArrayAdapter<Task> {
 		
 		convertView = ( LinearLayout ) inflater.inflate( resourceId, null );
         
-        Task task = getItem( position );
+		Message msg = getItem( position );
         
-        EditText et = (EditText) convertView.findViewById(R.id.activity_favorite_task_editTextWorkCardTitle);
-        et.setText(task.getTitle());
+		EditText et = (EditText) convertView.findViewById(R.id.activity_favorite_msg_editTextCardTitle);
+        et.setText(msg.getTitle());
         
-        RadioButton rb = (RadioButton) convertView.findViewById(R.id.activity_favorite_task_RadioButtont);
+        et = (EditText) convertView.findViewById(R.id.activity_favorite_msg_editTextCardReciverSender);
+        et.setText(msg.getSenderReceiver());
+        
+        CheckBox cb = (CheckBox) convertView.findViewById(R.id.activity_favorite_msg_checkBoxCardSend);
+        cb.setChecked(msg.isSender());
+        
+        cb = (CheckBox) convertView.findViewById(R.id.activity_favorite_msg_checkBoxCardReceive);
+        cb.setChecked(!msg.isSender());
+        
+        RadioButton rb = (RadioButton) convertView.findViewById(R.id.activity_favorite_msg_RadioButtont);
         rb.setOnClickListener(new View.OnClickListener() {
 			
         	@Override
@@ -64,9 +74,13 @@ public class ListAdapterTask extends ArrayAdapter<Task> {
 							
 							for(int y = 0; y < ((ViewGroup)v1).getChildCount(); y++) {
 								View v2 = ((ViewGroup)v1).getChildAt(y);
-								if(v2 instanceof TextView) {
-									TextView tv = (TextView)v2;
-									selectedItem = tv.getText().toString();
+								
+								for(int z = 0; z < ((ViewGroup)v2).getChildCount(); z++) {
+									View v3 = ((ViewGroup)v2).getChildAt(z);
+									if(v3 instanceof TextView) {
+										TextView tv = (TextView)v2;
+										selectedItem = tv.getText().toString();
+									}
 								}
 							}
 						}
@@ -74,10 +88,9 @@ public class ListAdapterTask extends ArrayAdapter<Task> {
 		        }
 			}
 		});
-        
+
         return convertView;
 	}
 	
 	public String getSelectedItem() { return selectedItem; }
-	
 }
