@@ -9,6 +9,7 @@ import java.util.TreeSet;
 
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
+import ce.modelwhilework.data.contextinfo.Video;
 
 public abstract class Modus {
 	
@@ -91,7 +92,7 @@ public abstract class Modus {
 			}
 		}
 		
-		contextInformations.add(new Picture(id, path));		
+		contextInformations.add(new Video(id, path));		
 		return true;
 	}
 	

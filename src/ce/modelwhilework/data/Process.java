@@ -16,7 +16,7 @@ import javax.xml.transform.stream.*;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 
-import ce.modelwhilework.business.XmlHelper;
+import ce.modelwhilework.data.xml.XmlHelper;
 
 
 

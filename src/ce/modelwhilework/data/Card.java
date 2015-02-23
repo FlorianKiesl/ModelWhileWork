@@ -2,7 +2,7 @@ package ce.modelwhilework.data;
 
 import org.w3c.dom.*;
 
-import ce.modelwhilework.business.XmlHelper;
+import ce.modelwhilework.data.xml.XmlHelper;
 
 public abstract class Card extends Modus {
 

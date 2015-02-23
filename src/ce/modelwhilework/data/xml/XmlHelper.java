@@ -1,4 +1,4 @@
-package ce.modelwhilework.business;
+package ce.modelwhilework.data.xml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

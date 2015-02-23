@@ -69,7 +69,8 @@ public class ContextInfoGridAdapter extends BaseAdapter {
 				imgButton.setImageResource(R.drawable.contextinfo_picture48);
 			}
 			else if (curContextInfo instanceof Video){
-				
+				text.setText("Video");
+				imgButton.setImageResource(R.drawable.contextfile_video48);
 			}
 			else if (curContextInfo instanceof Audio){
 				
