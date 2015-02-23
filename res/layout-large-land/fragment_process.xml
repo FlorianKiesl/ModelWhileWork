@@ -18,11 +18,18 @@
             android:layout_height="wrap_content"
             android:src="@drawable/context64" />
 
+        <ImageButton
+            android:id="@+id/fragment_process_imageButton_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/favorite" />
+
         <TextView
             android:id="@+id/textViewProcessTitle"
-            android:layout_width="640dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
             android:maxHeight="30dp"
             android:minHeight="30dp"

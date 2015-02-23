@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/FaforteActivity_LayoutMsgCard"
+        android:layout_width="380dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/message"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/FaforteActivity_linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/FaforteActivity_imageViewMsgCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/msg32" />
+
+            <EditText
+                android:id="@+id/FaforteActivity_editTextMsgCardTitle"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10" >
+
+                <requestFocus />
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/FaforteActivity_imageButton_ContextInfoCardMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/context32" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/FaforteActivity_linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/FaforteActivity_linearLayout2"
+            android:layout_below="@+id/FaforteActivity_linearLayout2" >
+
+            <CheckBox
+                android:id="@+id/FaforteActivity_checkBoxMsgCardSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="send to:" />
+
+            <CheckBox
+                android:id="@+id/FaforteActivity_checkBoxMsgCardRecive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="receive from:" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/FaforteActivity_editTextMsgCardReciverSender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/FaforteActivity_linearLayout3"
+            android:layout_below="@+id/FaforteActivity_linearLayout3"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </RelativeLayout>
+
+</RelativeLayout>

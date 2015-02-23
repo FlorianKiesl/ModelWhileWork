@@ -44,15 +44,6 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 				showDeleteQuestion("Do you really want to delete the selected processes from the device?");
 			}
 		});
-		
-		Button button_cancle = (Button) this.findViewById(R.id.activity_delete_process_cancel);
-		button_cancle.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				activity.finish();
-			}
-		});
 	}
 
 	private void loadProcesses() {

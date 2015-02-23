@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Model while Work</string>
+    <string name="app_name">Model while you work</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_new">New Process</string>
     <string name="action_open">Open Process</string>
@@ -30,6 +30,8 @@
     <string name="title_activity_delete_process">DeleteProcessActivity</string>
     <string name="delete">delete</string>
     <string name="action_delete">Delete Process</string>
-	<string name="title_activity_export_process">ExportProcessActivity</string>
-	<string name="activity_export_process_btnSenden">Senden</string>
+    <string name="title_activity_export_process">ExportProcessActivity</string>
+    <string name="activity_export_process_btnSenden">Senden</string>
+    <string name="title_activity_favorite">FavoriteActivity</string>
+
 </resources>

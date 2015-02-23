@@ -9,6 +9,13 @@
     tools:context="ce.modelwhilework.presentation.LoadProcessActivity"
     android:orientation="vertical" >
 
+    <ListView
+        android:id="@+id/activity_load_process_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </ListView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,21 +24,10 @@
 
         <Button
             android:id="@+id/activity_load_process_load"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/open" />
 
-        <Button
-            android:id="@+id/activity_load_process_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/activity_load_process_listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
 
 </LinearLayout>

@@ -71,12 +71,12 @@ public abstract class Card extends Modus {
 		String recipient = "";
 		String sender = "";
 		if (messageObj.isSender()){
-			recipient = messageObj.getSenderReiciver();
+			recipient = messageObj.getSenderReceiver();
 			sender = "[UserName]";
 		}
 		else{
 			recipient = "[UserName]";
-			sender = messageObj.getSenderReiciver();
+			sender = messageObj.getSenderReceiver();
 		}
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "recipient", recipient));
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "sender", sender));

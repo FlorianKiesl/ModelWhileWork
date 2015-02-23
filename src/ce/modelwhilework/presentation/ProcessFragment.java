@@ -36,8 +36,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 	final String MAINSTACK = "MAINSTACK", SIDESTACK = "SIDESTACK",
 			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
 	
-	private final int autoSaveTime = 5000;
-	private Handler customHandler;
+	private final int updateViewTime = 1000;
+	private Handler updateViewHandler;
 	private View fragment;
 	private RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
 				           rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
@@ -52,7 +52,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		
 		fragment = inflater.inflate(R.layout.fragment_process, container, false);
 		
-		customHandler = new Handler();
+		updateViewHandler = new Handler();
 		
 		rl_TaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutTaskCard);
 		rl_MsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMsgCard);
@@ -97,6 +97,35 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 		});
 		
+		ImageButton imgButtonFavorite = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_favorite);
+		imgButtonFavorite.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), FavoriteActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			    startActivity(intent);
+			}
+		});
+		
+		imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg_MainStack);		
+		addtOnClickListener4Card(imgButtonContext, process.getTopCardMainStack());
+		
+		imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardTask_MainStack);
+		addtOnClickListener4Card(imgButtonContext, process.getTopCardMainStack());
+		
+		imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg_SideStack);
+		addtOnClickListener4Card(imgButtonContext, process.getTopCardSideStack());
+		
+		imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardTask_SideStack);
+		addtOnClickListener4Card(imgButtonContext, process.getTopCardSideStack());
+		
+		imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg);
+		addtOnClickListener4Card(imgButtonContext, process.getMessageCard());
+		
+		imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardTask);
+		addtOnClickListener4Card(imgButtonContext, process.getTaskCard());
+		
 		tv_Main = (TextView) fragment.findViewById(R.id.textViewMainStack);
 		tv_Side = (TextView) fragment.findViewById(R.id.textViewSideStack);
 		tv_processTitle = (TextView) fragment.findViewById(R.id.textViewProcessTitle);	
@@ -113,25 +142,21 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		te_SideStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderSideStack);
 		
 		cb_Sender = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSend);
-		cb_Reciver = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardRecive);
-		
+		cb_Reciver = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardRecive);		
 		cb_SenderMainStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSendMainstack);
 		cb_ReciverMainStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardReciveMainStack);
 		cb_SenderSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSendSideStack);
 		cb_ReciverSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardReciveSideStack);
-
-		cb_Sender.setChecked(true);
 		
 		cb_Sender.setOnClickListener(new OnClickListener() {
 
 		      @Override
 		      public void onClick(View v) {
-
-		        if (((CheckBox) v).isChecked()) {
-		        	cb_Reciver.setChecked(false);
-		        }
-		        else 
-		        	cb_Reciver.setChecked(true);
+		    	  if(cb_Sender.isChecked() != process.getMessageCard().isSender()) {
+		    		  process.getMessageCard().setSender(cb_Sender.isChecked());
+			    	  updateViewNow();
+		    	  }
+		    			 
 		      }
 		  });
 		
@@ -139,39 +164,128 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 
 		      @Override
 		      public void onClick(View v) {
-
-		        if (((CheckBox) v).isChecked()) {
-		        	cb_Sender.setChecked(false);
-		        }
-		        else 
-		        	cb_Sender.setChecked(true);
+		    	  if(cb_Reciver.isChecked() == process.getMessageCard().isSender()) {
+		    		  process.getMessageCard().setSender(!cb_Reciver.isChecked());
+		    		  updateViewNow();
+		    	  }
 		      }
 		  });
 
 		cb_SenderMainStack.setOnClickListener(new OnClickListener() {
 
 		      @Override
-		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+		      public void onClick(View v) { 
+		    	  
+		    	  if(cb_SenderMainStack.isChecked() != ((Message)process.getTopCardMainStack()).isSender()) {
+		    		  ((Message)process.getTopCardMainStack()).setSender(cb_SenderMainStack.isChecked());
+		    		  updateViewNow();
+		    	  }
+		      }
 		  });
 		
 		cb_ReciverMainStack.setOnClickListener(new OnClickListener() {
 
 			 @Override
-		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+			 public void onClick(View v) {
+				 if(cb_ReciverMainStack.isChecked() == ((Message)process.getTopCardMainStack()).isSender()) {
+					 ((Message)process.getTopCardMainStack()).setSender(!cb_ReciverMainStack.isChecked());
+					 updateViewNow();
+				 }
+			 }
 		  });
 		
 		cb_SenderSideStack.setOnClickListener(new OnClickListener() {
 
 			 @Override
-		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+			 public void onClick(View v) { 
+				 if(cb_SenderSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
+					 ((Message)process.getTopCardSideStack()).setSender(cb_SenderSideStack.isChecked());
+					 updateViewNow();
+				 }				 
+			 }
 		  });
 		
 		cb_ReciverSideStack.setOnClickListener(new OnClickListener() {
 
 			 @Override
-		      public void onClick(View v) { customHandler.postDelayed(autoSave, autoSaveTime); }
+			 public void onClick(View v) {
+				 
+				 if(cb_ReciverSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
+					 ((Message)process.getTopCardSideStack()).setSender(!cb_ReciverSideStack.isChecked());
+					 updateViewNow();
+				 }				 
+			 }
 		  });
-	
+		
+		te_TaskTitle.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+				
+				if(!te_TaskTitle.getText().toString().equals(process.getTaskCard().getTitle())) {
+					process.getTaskCard().setTitle(te_TaskTitle.getText().toString());
+					updateView();
+				}
+			}
+		});
+		
+		te_MsgTitle.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+				
+				if(!te_MsgTitle.getText().toString().equals(process.getMessageCard().getTitle())) {
+					process.getMessageCard().setTitle(te_MsgTitle.getText().toString());
+					updateView();
+				}
+			}
+		});
+		
+		te_MsgSenderReciver.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+				
+				if(!te_MsgSenderReciver.getText().toString().equals(process.getMessageCard().getSenderReceiver())) {
+					process.getMessageCard().setSenderReceiver(te_MsgSenderReciver.getText().toString());
+					updateView();
+				}
+			}
+		});
+		
 		te_MainStackTaskTitle.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -185,7 +299,15 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 			
+			public void afterTextChanged(Editable s) {
+				
+				if(process.getTopCardMainStack() != null) {
+					if(!te_MainStackTaskTitle.getText().toString().equals(process.getTopCardMainStack().getTitle())) {
+						process.getTopCardMainStack().setTitle(te_MainStackTaskTitle.getText().toString());
+						updateView();
+					}
+				}
+			}
 		});
 		
 		te_SideStackTaskTitle.addTextChangedListener(new TextWatcher() {
@@ -201,7 +323,15 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+			public void afterTextChanged(Editable s) {
+				
+				if(process.getTopCardSideStack() != null) {
+					if(!te_SideStackTaskTitle.getText().toString().equals(process.getTopCardSideStack().getTitle())) {
+						process.getTopCardSideStack().setTitle(te_SideStackTaskTitle.getText().toString());
+						updateView();
+					}
+				}				
+			}
 		});
 		
 		te_MainStackMsgTitle.addTextChangedListener(new TextWatcher() {
@@ -217,7 +347,15 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+			public void afterTextChanged(Editable s) {
+				
+				if(process.getTopCardMainStack() != null) {
+					if(!te_MainStackMsgTitle.getText().toString().equals(process.getTopCardMainStack().getTitle())) {
+						process.getTopCardMainStack().setTitle(te_MainStackMsgTitle.getText().toString());
+						updateView();
+					}					
+				}
+			}
 		});
 		
 		te_SideStackMsgTitle.addTextChangedListener(new TextWatcher() {
@@ -233,7 +371,15 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+			public void afterTextChanged(Editable s) {
+				
+				if(process.getTopCardSideStack() != null) {
+					if(!te_SideStackMsgTitle.getText().toString().equals(process.getTopCardSideStack().getTitle())) {
+						process.getTopCardSideStack().setTitle(te_SideStackMsgTitle.getText().toString());
+						updateView();
+					}
+				}				
+			}
 		});
 		
 		te_MainStackMsgPerson.addTextChangedListener(new TextWatcher() {
@@ -249,7 +395,15 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+			public void afterTextChanged(Editable s) {
+				
+				if(process.getTopCardMainStack() != null) {
+					if(!te_MainStackMsgPerson.getText().toString().equals(((Message)process.getTopCardMainStack()).getSenderReceiver())) {
+						((Message)process.getTopCardMainStack()).setSenderReceiver(te_MainStackMsgPerson.getText().toString());
+						updateView();
+					}
+				}				
+			}	
 		});
 		
 		te_SideStackMsgPerson.addTextChangedListener(new TextWatcher() {
@@ -265,20 +419,46 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) { customHandler.postDelayed(autoSave, autoSaveTime); } 	
+			public void afterTextChanged(Editable s) { 
+				
+				if(process.getTopCardSideStack() != null) {
+					if(!te_SideStackMsgPerson.getText().toString().equals(((Message)process.getTopCardSideStack()).getSenderReceiver())) {
+						((Message)process.getTopCardSideStack()).setSenderReceiver(te_SideStackMsgPerson.getText().toString());
+						updateView();
+					}
+				}				
+			}
 		});				
 		
-		updateView();
+		updateViewNow();
 		
 		return fragment;
 	}
 	
-	 public void onPause() {
+	public void onPause() {
 		   super.onPause();	   
-		   customHandler.removeCallbacks(autoSave);
-		   autoSave();
+		   updateViewHandler.removeCallbacks(updateViewThread);
 	};  
 
+	public void onResume() {
+		   super.onResume();	   
+	};  
+	
+	private void addtOnClickListener4Card(ImageButton imgButtonContext, final Card card) {
+	
+		imgButtonContext.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				intent.putExtra("CARD_ID", card.getTitle());
+			    startActivity(intent);
+			}
+		});
+	}
+	
+	
 	private final class ChoiceTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
 			if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
@@ -310,8 +490,6 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 	}
 
 	private final class ChoiceDragListener implements OnDragListener {
-
-		boolean bChanged = false;
 		
 		@Override
 		public boolean onDrag(View v, DragEvent event) {
@@ -359,10 +537,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 							if(sender) { showAlert("card has no sender!"); }
 							else { showAlert("card has no reciver!"); }
 						}
-						else {
-							dataCard = new Message(title, senderReciver, sender);	
-							bChanged = true;
-						}						
+						else
+							dataCard = new Message(title, senderReciver, sender);						
 					} else {
 						
 						title = te_TaskTitle.getText().toString();
@@ -370,10 +546,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 						if(title.length() == 0) {
 							showAlert("card has no title!");
 						}
-						else {
+						else
 							dataCard = new Task(title);			
-							bChanged = true;
-						}
 					}
 
 					if(dataCard != null) {
@@ -396,8 +570,6 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 					if (!process.putCardAside()) {
 						showAlert("move card fail!!!");
 					}
-					else
-						bChanged = true;
 				} else if (dropTag.equals(SIDESTACK)
 						&& targetTag.equals(MAINSTACK)) {
 
@@ -405,14 +577,9 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 					if (!process.putBackFromAside()) {
 						showAlert("move card fail!!!");
 					}
-					else
-						bChanged = true;
 				}
-
-				if(bChanged)
-					customHandler.postDelayed(autoSave, autoSaveTime);
 				
-				updateView();
+				updateViewNow();
 
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
@@ -460,8 +627,22 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			return true;
 		}
 	}
+	
+	private Runnable updateViewThread = new Runnable() {
+	   	 
+		   public void run() {
+			   updateViewHandler.removeCallbacks(updateViewThread); //remove existing runnable
+			   updateViewNow();			   
+		   }
+	 };
 
 	private void updateView() {
+		
+		updateViewHandler.removeCallbacks(updateViewThread); //remove existing runnable
+		updateViewHandler.postDelayed(updateViewThread, updateViewTime); //start new runnable
+	}
+	
+	private void updateViewNow() {
 		
 		tv_processTitle.setText(process.getTitle());
 
@@ -475,7 +656,9 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 				tv_Main.setVisibility(View.INVISIBLE);			
 				
 				te_MainStackMsgTitle.setText(card.getTitle());
-				te_MainStackMsgPerson.setText(((Message)card).getSenderReiciver());
+				te_MainStackMsgTitle.setSelection(te_MainStackMsgTitle.getText().length());
+				te_MainStackMsgPerson.setText(((Message)card).getSenderReceiver());
+				te_MainStackMsgPerson.setSelection(te_MainStackMsgPerson.getText().length());
 				cb_SenderMainStack.setChecked(((Message)card).isSender());
 				cb_ReciverMainStack.setChecked(!((Message)card).isSender());				
 			} else if(card instanceof Task) {
@@ -483,6 +666,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 				rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
 				tv_Main.setVisibility(View.INVISIBLE);
 				te_MainStackTaskTitle.setText(card.getTitle());		
+				te_MainStackTaskTitle.setSelection(te_MainStackTaskTitle.getText().length());
 			} else {
 				showAlert("invalid card type!!!");
 			}
@@ -507,15 +691,17 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 				tv_Side.setVisibility(View.INVISIBLE);
 				
 				te_SideStackMsgTitle.setText(card.getTitle());
-				te_SideStackMsgPerson.setText(((Message)card).getSenderReiciver());
+				te_SideStackMsgTitle.setSelection(te_SideStackMsgTitle.getText().length());
+				te_SideStackMsgPerson.setText(((Message)card).getSenderReceiver());
+				te_SideStackMsgPerson.setSelection(te_SideStackMsgPerson.getText().length());
 				cb_SenderSideStack.setChecked(((Message)card).isSender());
 				cb_ReciverSideStack.setChecked(!((Message)card).isSender());				
 			} else if(card instanceof Task) {
 				rl_SideStackTaskCard.setVisibility(View.VISIBLE);
 				rl_SideStackMsgCard.setVisibility(View.INVISIBLE);
 				tv_Side.setVisibility(View.INVISIBLE);
-				
-				te_SideStackTaskTitle.setText(card.getTitle());				
+				te_SideStackTaskTitle.setText(card.getTitle());		
+				te_SideStackTaskTitle.setSelection(te_SideStackTaskTitle.getText().length());
 			} else {
 				showAlert("invalid card type!!!");
 			}
@@ -529,20 +715,26 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			tv_Side.setVisibility(View.VISIBLE);			
 			rl_SideStack.setOnTouchListener(new DoNothingTouchListener());
 		}
-	}
-	
-	private Runnable autoSave = new Runnable() {
-	   	 
-		   public void run() {
-			   customHandler.removeCallbacks(autoSave);
-			   autoSave();			   
-		   }
-	 };
-	 
-	private void autoSave() {
 		
-		if(!process.storeXML(ProcessManager.getInstance().getInternalStoreage()))
-			showAlert("auto save failed!!!");
+		Task task = process.getTaskCard();
+		if (task != null) {
+			te_TaskTitle.setText(task.getTitle());
+			te_TaskTitle.setSelection(te_TaskTitle.getText().length());
+		} else {
+			showAlert("general error update view!!!");
+		}
+		
+		Message msg = process.getMessageCard();
+		if (msg != null) {			
+			te_MsgTitle.setText(msg.getTitle());
+			te_MsgTitle.setSelection(te_MsgTitle.getText().length());
+			te_MsgSenderReciver.setText(msg.getSenderReceiver());
+			te_MsgSenderReciver.setSelection(te_MsgSenderReciver.getText().length());			
+			cb_Sender.setChecked(msg.isSender());
+			cb_Reciver.setChecked(!msg.isSender());	
+		} else {
+			showAlert("general error update view!!!");
+		}
 	}
 	
 	private void showAlert(String msg) {
@@ -561,7 +753,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		alertDialog.setNegativeButton("cancel",
 				   new DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {
-                     	 updateView();
+                     	 updateViewNow();
                       }
                 }
 		);
@@ -578,9 +770,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			                     						showAlert("card remove fail!!!");
 			                     					}
 			                     				}
-			                                	 
-			                         			customHandler.postDelayed(autoSave, autoSaveTime);			                         				
-			                                	updateView();
+			                                	                         				
+			                                	updateViewNow();
 			                                 }
 			                           }
 	    );	    

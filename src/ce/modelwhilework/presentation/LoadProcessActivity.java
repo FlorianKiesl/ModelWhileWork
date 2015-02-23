@@ -52,15 +52,6 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 					showAlert("Load process fail!!!");
 			}
 		});
-		
-		Button button_cancle = (Button) this.findViewById(R.id.activity_load_process_cancel);
-		button_cancle.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				activity.finish();
-			}
-		});
 	}
 	
 	private void showAlert(String msg) {

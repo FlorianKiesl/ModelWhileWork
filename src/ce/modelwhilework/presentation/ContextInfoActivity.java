@@ -42,8 +42,6 @@ public class ContextInfoActivity extends Activity {
 				modus = ProcessManager.getInstance().getCurrentProcess().getTopCard(card_id);
 			}
 		}
-		modus.getContextInformations();
-
 	}
 	private ContextInfoGridAdapter adapterInfoGrid;
 	

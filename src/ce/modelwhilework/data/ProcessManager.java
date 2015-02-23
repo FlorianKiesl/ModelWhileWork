@@ -2,9 +2,11 @@ package ce.modelwhilework.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
@@ -27,11 +29,28 @@ public class ProcessManager {
 
 	private static ProcessManager instance;
 	private LinkedHashSet<Process> linkedhashSetProcess;
+	private LinkedHashSet<Task> favoriteTasks;
+	private LinkedHashSet<Message> favoriteMessages;
 	private Process curProcess;
 	private File dirInternal, dirExternal, dirExternalCache;
 	
 	private ProcessManager(){
 		this.linkedhashSetProcess = new LinkedHashSet<Process>();
+		this.favoriteTasks = new LinkedHashSet<Task>();
+		this.favoriteMessages = new LinkedHashSet<Message>();
+		
+		///only for testing!!!
+		favoriteTasks.add(new Task("default favorite 1"));
+		favoriteTasks.add(new Task("default favorite 2"));
+		favoriteTasks.add(new Task("default favorite 3"));
+		favoriteTasks.add(new Task("default favorite 4"));
+		favoriteTasks.add(new Task("default favorite 5"));
+		
+		favoriteMessages.add(new Message("default faforite msg 1", "person", true));
+		favoriteMessages.add(new Message("default faforite msg 2", "person", false));
+		favoriteMessages.add(new Message("default faforite msg 3", "person", true));
+		favoriteMessages.add(new Message("default faforite msg 4", "person", false));
+		favoriteMessages.add(new Message("default faforite msg 5", "person", true));
 	}
 	
 	public static ProcessManager getInstance(){
@@ -232,4 +251,7 @@ public class ProcessManager {
 		}
 		return process;
 	}
+	
+	public ArrayList<Task> getFavoriteTasks() { return new ArrayList<Task>(this.favoriteTasks); }
+	public ArrayList<Message> getFavoriteMessages() { return new ArrayList<Message>(this.favoriteMessages); }
 }

@@ -9,6 +9,13 @@
     tools:context="ce.modelwhilework.presentation.DeleteProcessActivity"
     android:orientation="vertical" >
 
+    <ListView
+        android:id="@+id/activity_delete_process_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </ListView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,21 +24,9 @@
 
         <Button
             android:id="@+id/activity_delete_process_delete"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/delete" />
-
-        <Button
-            android:id="@+id/activity_delete_process_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/activity_delete_process_listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
 
 </LinearLayout>
