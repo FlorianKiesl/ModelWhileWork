@@ -1,12 +1,21 @@
 package ce.modelwhilework.presentation;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+
 import ce.modelwhilework.data.Card;
 import ce.modelwhilework.data.Modus;
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,7 +97,35 @@ public class ContextInfoActivity extends Activity {
 		}
 		else if (id == R.id.action_newAudio){			
 		}
+		else if (id == R.id.action_newVideo){
+			Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, new File(ProcessManager.getInstance().getExternalCacheStorage(), "videoCache").toURI());
+			startActivityForResult(intent, 0);
+		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		File file = new File(data.getData().getPath());
+		Toast.makeText(getApplicationContext(), data.getData().getPath(), Toast.LENGTH_LONG).show();
+		if (file.exists()){
+			byte[] byteArrVideo = null;
+			try {
+				byteArrVideo = FileUtils.readFileToByteArray(file);
+				if (byteArrVideo != null){
+					if (this.modus.addContextInformationVideo(byteArrVideo)){
+						file.delete();
+						Toast.makeText(getApplicationContext(), "Video erfolgreich gespeichert", Toast.LENGTH_LONG).show();
+					}
+				}
+			} catch (IOException e) {
+				Toast.makeText(getApplicationContext(), "Video konnte nicht gespeichert werden!", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			}				
+		}
+
 	}
 
 }

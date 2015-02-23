@@ -46,7 +46,7 @@ public abstract class Modus {
 		
 		int id = getFreeID();
 		
-		String path = ProcessManager.getInstance().getInternalStoreage() + "\\" + ProcessManager.getInstance().getCurrentProcess().getTitle() + "\\CI_" + getTypeID() + "_" + id;
+		String path = this.getContextInfoFilePath(id);
 		
 		FileOutputStream fos = null;
 		try {
@@ -66,5 +66,37 @@ public abstract class Modus {
 		
 		contextInformations.add(new Picture(id, path));		
 		return true;
+	}
+	
+	//TODO: Eventuell mit Picture vereinen
+	public boolean addContextInformationVideo(byte[] data) {
+		
+		int id = getFreeID();
+		
+		String path = this.getContextInfoFilePath(id);
+		
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(path);
+			fos.write(data);			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		contextInformations.add(new Picture(id, path));		
+		return true;
+	}
+	
+	private String getContextInfoFilePath(int id){
+		
+		return ProcessManager.getInstance().getInternalStoreage() + "\\" + ProcessManager.getInstance().getCurrentProcess().getTitle() + "\\CI_" + getTypeID() + "_" + id;
 	}
 }

@@ -3,4 +3,5 @@
     <string name="contextinfo_picture">add picture</string>
     <string name="contextinfo_description">add desription</string>
     <string name="contextinfo_audio">add audio</string>
+    <string name="contextinfo_video">add video</string>
 </resources>

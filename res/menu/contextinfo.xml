@@ -5,7 +5,8 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/contextinfo_description">
-    </item>@+id/action_newDescription@+id/action_newDescription@+id/action_newDescription
+    </item>
     <item android:id="@+id/action_newPicture" android:title="@string/contextinfo_picture"></item>
     <item android:id="@+id/action_newAudio" android:title="@string/contextinfo_audio"></item>
+    <item android:id="@+id/action_newVideo" android:title="@string/contextinfo_video"></item>
 </menu>
