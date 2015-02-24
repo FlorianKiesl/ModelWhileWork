@@ -43,6 +43,7 @@ public class ContextInfoGridAdapter extends BaseAdapter {
 		ContextInformation erg = null;
 		while (iterator.hasNext() && idx <= position){
 			erg = iterator.next();
+			idx++;
 		}
 		return erg;
 	}
@@ -66,17 +67,19 @@ public class ContextInfoGridAdapter extends BaseAdapter {
 			imgButton.setTag(position);
 			if (curContextInfo instanceof Picture){
 				text.setText("Picture");
-				imgButton.setImageResource(R.drawable.contextinfo_picture48);
+				imgButton.setImageResource(R.drawable.contextfile_picture48);
 			}
 			else if (curContextInfo instanceof Video){
 				text.setText("Video");
 				imgButton.setImageResource(R.drawable.contextfile_video48);
 			}
 			else if (curContextInfo instanceof Audio){
-				
+				text.setText("Audio");
+				imgButton.setImageResource(R.drawable.contextfile_audio48);				
 			}
 			else if (curContextInfo instanceof Text){
-				
+				text.setText("Text");
+				imgButton.setImageResource(R.drawable.contextfile_text48);				
 			}
 			else{
 				text.setText("Title");

@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.TreeSet;
 
+import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
 import ce.modelwhilework.data.contextinfo.Video;
@@ -44,38 +45,39 @@ public abstract class Modus {
 	}
 
 	public boolean addContextInformationPicture(byte[] data) {
-		
 		int id = getFreeID();
-		
 		String path = this.getContextInfoFilePath(id);
-		
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(path);
-			fos.write(data);			
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} finally {
-			try {
-				fos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
+		if (writeByteArrFile(data, path, id)){
+			contextInformations.add(new Picture(id, path));		
+			return true;			
 		}
-		
-		contextInformations.add(new Picture(id, path));		
-		return true;
+		return false;
 	}
 	
 	//TODO: Eventuell mit Picture vereinen
 	public boolean addContextInformationVideo(byte[] data) {
 		
 		int id = getFreeID();
-		
 		String path = this.getContextInfoFilePath(id);
+		if (writeByteArrFile(data, path, id)){
+			contextInformations.add(new Video(id, path));		
+			return true;			
+		}
+		return false;
+	}
+	
+	public boolean addContextInformationAudio(byte[] data) {
 		
+		int id = getFreeID();
+		String path = this.getContextInfoFilePath(id);
+		if (writeByteArrFile(data, path, id)){
+			contextInformations.add(new Audio(id, path));		
+			return true;			
+		}
+		return false;
+	}
+	
+	private boolean writeByteArrFile(byte[] data, String path, int id){
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(path);
@@ -90,9 +92,7 @@ public abstract class Modus {
 				e.printStackTrace();
 				return false;
 			}
-		}
-		
-		contextInformations.add(new Video(id, path));		
+		}	
 		return true;
 	}
 	

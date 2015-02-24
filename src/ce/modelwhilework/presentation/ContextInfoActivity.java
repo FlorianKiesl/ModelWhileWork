@@ -9,12 +9,14 @@ import org.apache.commons.io.FileUtils;
 import ce.modelwhilework.data.Card;
 import ce.modelwhilework.data.Modus;
 import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
 import ce.modelwhilework.data.contextinfo.Video;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,7 +33,7 @@ import android.widget.VideoView;
 public class ContextInfoActivity extends Activity {
 
 	private Modus modus;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,27 +62,25 @@ public class ContextInfoActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				Bundle contextInfoBundle;
 				ContextInformation contextInfo = (ContextInformation) adapterInfoGrid.getItem(position);
 				if (contextInfo != null){
 					if (contextInfo instanceof Picture){
 						Intent intent = new Intent(ContextInfoActivity.this.getBaseContext(), PictureActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						Bundle contextInfoBundle = new Bundle();
-						contextInfoBundle.putString("Path", contextInfo.getPath());
 						intent.putExtra("Path", contextInfo.getPath());
 						startActivity(intent);
 					}
 					else if (contextInfo instanceof Video){
-//				        Uri fileUri = Uri.fromFile(new File(contextInfo.getPath()));
-//				        Intent intent = new Intent();
-//				        intent.setAction(Intent.ACTION_VIEW);      
-//				        intent.setDataAndType(fileUri, URLConnection.guessContentTypeFromName(fileUri.toString()));
-//				        startActivity(intent);
-//						VideoView video = new VideoView(null);
-//						video.setVideoPath(path);
-					}		
+						Intent intent = new Intent(ContextInfoActivity.this.getBaseContext(), VideoActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						intent.putExtra("Path", contextInfo.getPath());
+						startActivity(intent);
+					}	
+					else if (contextInfo instanceof Audio){
+						ContextInfoActivity.this.playAudio(contextInfo.getPath());
+					}
 				}
-
 			}
 		});
 	}
@@ -107,11 +107,17 @@ public class ContextInfoActivity extends Activity {
 				intent.putExtra("CARD_ID", ((Card) this.modus).getTitle());
 		    startActivity(intent);
 		}
-		else if (id == R.id.action_newAudio){			
+		else if (id == R.id.action_newAudio){		
+			Intent intent = new Intent(this, AudioRecordActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			if(this.modus instanceof Card)
+				intent.putExtra("CARD_ID", ((Card) this.modus).getTitle());
+		    startActivity(intent);
 		}
 		else if (id == R.id.action_newVideo){
 			Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, new File(ProcessManager.getInstance().getExternalCacheStorage(), "videoCache").toURI());
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//			intent.putExtra(MediaStore.EXTRA_OUTPUT, new File(ProcessManager.getInstance().getExternalCacheStorage(), "videoCache").toURI());
 			startActivityForResult(intent, 0);
 		}
 		return super.onOptionsItemSelected(item);
@@ -120,23 +126,26 @@ public class ContextInfoActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		File file = new File(this.getFilePathFromContentUri(data.getData()));
-		Toast.makeText(getApplicationContext(), data.getData().getPath(), Toast.LENGTH_LONG).show();
-		if (file.exists()){
-			byte[] byteArrVideo = null;
-			try {
-				byteArrVideo = FileUtils.readFileToByteArray(file);
-				if (byteArrVideo != null){
-					if (this.modus.addContextInformationVideo(byteArrVideo)){
-						file.delete();
-						Toast.makeText(getApplicationContext(), "Video erfolgreich gespeichert", Toast.LENGTH_LONG).show();
+		if (data.getData() != null){
+			File file = new File(this.getFilePathFromContentUri(data.getData()));
+			Toast.makeText(getApplicationContext(), data.getData().getPath(), Toast.LENGTH_LONG).show();
+			if (file.exists()){
+				byte[] byteArrVideo = null;
+				try {
+					byteArrVideo = FileUtils.readFileToByteArray(file);
+					if (byteArrVideo != null){
+						if (this.modus.addContextInformationVideo(byteArrVideo)){
+							file.delete();
+							Toast.makeText(getApplicationContext(), "Video erfolgreich gespeichert", Toast.LENGTH_LONG).show();
+						}
 					}
-				}
-			} catch (IOException e) {
-				Toast.makeText(getApplicationContext(), "Video konnte nicht gespeichert werden!", Toast.LENGTH_LONG).show();
-				e.printStackTrace();
-			}				
+				} catch (IOException e) {
+					Toast.makeText(getApplicationContext(), "Video konnte nicht gespeichert werden!", Toast.LENGTH_LONG).show();
+					e.printStackTrace();
+				}				
+			}			
 		}
+
 
 	}
 	
@@ -152,5 +161,25 @@ public class ContextInfoActivity extends Activity {
 	    cursor.close();
 	    return filePath;
 	}
-
+	
+	private void playAudio(String path){
+		MediaPlayer myPlayer = new MediaPlayer();
+		try {
+			myPlayer.setDataSource(path);
+			myPlayer.prepare();
+			myPlayer.start();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

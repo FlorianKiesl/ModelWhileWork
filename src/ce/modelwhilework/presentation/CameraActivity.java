@@ -77,7 +77,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 
 	@Override
 	public void onPictureTaken(byte[] data, Camera camera) {
-		if(!ProcessManager.getInstance().getCurrentProcess().addContextInformationPicture(data)) {
+		if(!this.modus.addContextInformationPicture(data)) {
 			showAlert("Save picture fail!");
 			camera.startPreview();
 		}

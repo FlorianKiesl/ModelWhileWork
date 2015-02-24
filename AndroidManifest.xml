@@ -68,6 +68,16 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
+            android:name=".AudioRecordActivity"
+            android:label="@string/title_activity_audio"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:label="@string/title_activity_video"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name=".FavoriteActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
