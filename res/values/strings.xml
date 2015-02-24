@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_new">New Process</string>
     <string name="action_open">Open Process</string>
-    <string name="action_export">Export</string>
+    <string name="action_export">Export Process</string>
     <string name="action_import">Import Process</string>
     <string name="action_close">Close Process</string>
     <string name="action_closeall">Close All Processes</string>
@@ -30,10 +30,10 @@
     <string name="cancel">cancel</string>
     <string name="open">open</string>
     <string name="title_activity_delete_process">DeleteProcessActivity</string>
-    <string name="delete">delete</string>
+    <string name="delete">Delete Process</string>
     <string name="action_delete">Delete Process</string>
     <string name="title_activity_export_process">ExportProcessActivity</string>
-    <string name="activity_export_process_btnSenden">Senden</string>
+    <string name="activity_export_process_btnSenden">export</string>
     <string name="title_activity_favorite">FavoriteActivity</string>
     <string name="load_task_card">load task card</string>
     <string name="load_message_card">load message card</string>

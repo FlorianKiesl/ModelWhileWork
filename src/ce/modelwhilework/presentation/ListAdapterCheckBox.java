@@ -59,5 +59,6 @@ public class ListAdapterCheckBox extends ArrayAdapter<String> {
 	}
 	
 	public TreeSet<String> getSelectedItems() { return selectedItems; }
+	public void resetSelectedItems() { selectedItems.clear(); }
 	
 }

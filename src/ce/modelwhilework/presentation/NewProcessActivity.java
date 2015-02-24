@@ -31,15 +31,14 @@ public class NewProcessActivity extends Activity implements DialogInterface.OnCl
 			public void onClick(View v) {
 				
 				if(title.length() == 0)
-					showAlert("please enter a process title!!!");
-				else if(ProcessManager.getInstance().getProcess(title) != null)
-					showAlert("the process already exists");
+					showAlert("Please enter a process title!!!");
 				else {
-					ProcessManager.getInstance().addProcess(new Process(title));
-					activity.finish();
+					if(ProcessManager.getInstance().addProcess(new Process(title)))
+						activity.finish();
+					else
+						showAlert("Can't create process!!!\nUse a different name or load/delete the existing process.");
 				}					
 			}
-			
 		});
 		
 		final EditText et = (EditText) this.findViewById(R.id.activity_newprocess_editTextName);

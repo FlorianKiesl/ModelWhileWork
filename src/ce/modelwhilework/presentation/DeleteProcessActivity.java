@@ -3,6 +3,7 @@ package ce.modelwhilework.presentation;
 import java.io.File;
 import java.util.ArrayList;
 
+import ce.modelwhilework.data.ProcessManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,21 +14,17 @@ import android.widget.ListView;
 
 public class DeleteProcessActivity extends Activity implements DialogInterface.OnClickListener  {
 
-	private Activity activity;
 	private ListAdapterCheckBox listAdapter;
-	ArrayList<String> processes;
+	private ArrayList<String> processes;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_delete_process);
 		
-		activity = this;
-		
 		ListView lv_processes = (ListView) this.findViewById(R.id.activity_delete_process_listView);
 		
 		processes = new ArrayList<String>();
-		
 		loadProcesses();
 		
 		listAdapter = new ListAdapterCheckBox(
@@ -41,7 +38,10 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 			@Override
 			public void onClick(View v) {
 				
-				showDeleteQuestion("Do you really want to delete the selected processes from the device?");
+				if(listAdapter.getSelectedItems().size() > 0)
+					showDeleteQuestion("Do you really want to delete the selected processes from the device?");
+				else
+					showAlert("Please select a file!");
 			}
 		});
 	}
@@ -49,11 +49,7 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 	private void loadProcesses() {
 		
 		processes.clear();
-		String[] files = fileList();
-		for(int i = 0; i < files.length; i++) {
-			if(files[i].endsWith(".mwyw"))
-				processes.add(files[i].toString());
-		}
+		processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage());
 	}
 	
 	private void showAlert(String msg) {
@@ -85,6 +81,7 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 			                                			 showAlert("Can't delete file: " + f);
 			                                	 }	
 			                                	 loadProcesses();
+			                                	 listAdapter.resetSelectedItems();
 			                                	 listAdapter.notifyDataSetChanged(); 
 			                                 }
 			                           }

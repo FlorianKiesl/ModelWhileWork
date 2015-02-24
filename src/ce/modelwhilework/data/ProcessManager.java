@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.TreeSet;
 
 import android.content.Context;
@@ -28,29 +29,29 @@ import org.apache.http.util.EntityUtils;
 public class ProcessManager {
 
 	private static ProcessManager instance;
-	private LinkedHashSet<Process> linkedhashSetProcess;
-	private LinkedHashSet<Task> favoriteTasks;
-	private LinkedHashSet<Message> favoriteMessages;
+	private TreeSet<Process> processSet;
+	private TreeSet<Task> favoriteTaskSet;
+	private TreeSet<Message> favoriteMessageSet;
 	private Process curProcess;
 	private File dirInternal, dirExternal, dirExternalCache;
 	
 	private ProcessManager(){
-		this.linkedhashSetProcess = new LinkedHashSet<Process>();
-		this.favoriteTasks = new LinkedHashSet<Task>();
-		this.favoriteMessages = new LinkedHashSet<Message>();
+		this.processSet = new TreeSet<Process>();
+		this.favoriteTaskSet = new TreeSet<Task>();
+		this.favoriteMessageSet = new TreeSet<Message>();
 		
 		///only for testing!!!
-		favoriteTasks.add(new Task("default favorite 1"));
-		favoriteTasks.add(new Task("default favorite 2"));
-		favoriteTasks.add(new Task("default favorite 3"));
-		favoriteTasks.add(new Task("default favorite 4"));
-		favoriteTasks.add(new Task("default favorite 5"));
+		favoriteTaskSet.add(new Task("default favorite 1"));
+		favoriteTaskSet.add(new Task("default favorite 2"));
+		favoriteTaskSet.add(new Task("default favorite 3"));
+		favoriteTaskSet.add(new Task("default favorite 4"));
+		favoriteTaskSet.add(new Task("default favorite 5"));
 		
-		favoriteMessages.add(new Message("default favorite msg 1", "person", true));
-		favoriteMessages.add(new Message("default favorite msg 2", "person", false));
-		favoriteMessages.add(new Message("default favorite msg 3", "person", true));
-		favoriteMessages.add(new Message("default favorite msg 4", "person", false));
-		favoriteMessages.add(new Message("default favorite msg 5", "person", true));
+		favoriteMessageSet.add(new Message("default favorite msg 1", "person", true));
+		favoriteMessageSet.add(new Message("default favorite msg 2", "person", false));
+		favoriteMessageSet.add(new Message("default favorite msg 3", "person", true));
+		favoriteMessageSet.add(new Message("default favorite msg 4", "person", false));
+		favoriteMessageSet.add(new Message("default favorite msg 5", "person", true));
 	}
 	
 	public static ProcessManager getInstance(){
@@ -79,8 +80,21 @@ public class ProcessManager {
 		return this.dirExternalCache;
 	}
 	
-	public LinkedHashSet<Process> getProcesses() {
-		return linkedhashSetProcess;
+	public TreeSet<Process> getProcesses() {
+		return processSet;
+	}
+	
+	public TreeSet<String> getProcessesFromInternalStoreage() {
+		
+		TreeSet<String> processes = new TreeSet<String>();
+		
+		File[] files = getInternalStoreage().listFiles();
+		for(File f : files) {
+			if(f.getName().endsWith(".mwyw"))
+				processes.add(f.getName());
+		}
+		
+		return processes;
 	}
 	
 	public Process getCurrentProcess(){
@@ -90,7 +104,7 @@ public class ProcessManager {
 	public int getCurrentProcessPos(){
 
 		int pos = 0;
-		Iterator<Process> iterator = this.linkedhashSetProcess.iterator();
+		Iterator<Process> iterator = this.processSet.iterator();
 		while(iterator.hasNext()){
 		   if(iterator.next().equals(this.curProcess))
 			   return pos;
@@ -101,7 +115,17 @@ public class ProcessManager {
 	}
 	
 	public boolean addProcess(Process process){
-		if(this.linkedhashSetProcess.add(process)) {
+		
+		String titleUC = process.getFileTitle();
+		titleUC = titleUC.toUpperCase(Locale.getDefault());
+		
+		File[] files = getInternalStoreage().listFiles();
+		for(File f : files) {
+			if(f.getName().toUpperCase(Locale.getDefault()).equals(titleUC))
+				return false;
+		}
+		 
+		if(this.processSet.add(process)) {
 			this.curProcess = this.getProcess(process.getTitle());
 			return true;
 		}
@@ -115,7 +139,7 @@ public class ProcessManager {
 		File file = new File(getInternalStoreage().toString());
 		if(p.loadXML(file)) {
 			
-			if(this.linkedhashSetProcess.add(p)) {
+			if(this.processSet.add(p)) {
 				this.curProcess = this.getProcess(p.getTitle());
 				return true;
 			}
@@ -153,7 +177,7 @@ public class ProcessManager {
 			return false;
 		try{
 			boolean erg = p.storeXML(this.getExternalCacheStorage());
-			File file = new File(this.getExternalCacheStorage(), p.getTitle() + ".mwyw");
+			File file = new File(this.getExternalCacheStorage(), p.getFileTitle());
 			if (erg){
 				erg = this.uploadData(file);
 			}
@@ -199,7 +223,7 @@ public class ProcessManager {
 			FileBody fb = new FileBody(file);
 //			ToDo: Mit Inputstream funktioniert upload nicht, nur mit FileBody
 //			InputStream in = new FileInputStream(file);
-//			InputStreamBody inb = new InputStreamBody(in, getTitle() + ".mwyw");
+//			InputStreamBody inb = new InputStreamBody(in, getFileTitle());
 			multipartEntity.addPart("file", fb);
 
 			httpPost.setEntity(multipartEntity.build());
@@ -222,16 +246,17 @@ public class ProcessManager {
 	}
 	
 	public boolean closeProcess(int position){
-		return this.linkedhashSetProcess.remove(this.getProcess(position));
+		if(this.getProcess(position) == null) { return false; }
+		return this.processSet.remove(this.getProcess(position));
 	}
 	
 	public boolean closeAllProcesses(){
-		return this.linkedhashSetProcess.removeAll(this.linkedhashSetProcess);
+		return this.processSet.removeAll(this.processSet);
 	}
 	
 	public Process getProcess(String title){
 		Process process;
-		Iterator<Process> iterator = this.linkedhashSetProcess.iterator();
+		Iterator<Process> iterator = this.processSet.iterator();
 		while(iterator.hasNext()){
 			process = iterator.next();
 			if (process.getTitle().compareTo(title)==0){
@@ -244,7 +269,7 @@ public class ProcessManager {
 	public Process getProcess(int position){
 		Process process = null;
 		int iPos = 0;
-		Iterator<Process> iterator = this.linkedhashSetProcess.iterator();
+		Iterator<Process> iterator = this.processSet.iterator();
 		while(iterator.hasNext() && iPos <= position){
 			process = iterator.next();
 			iPos++;
@@ -252,11 +277,11 @@ public class ProcessManager {
 		return process;
 	}
 	
-	public ArrayList<Task> getFavoriteTasks() { return new ArrayList<Task>(this.favoriteTasks); }
+	public ArrayList<Task> getFavoriteTasks() { return new ArrayList<Task>(this.favoriteTaskSet); }
 	
 	public Task getFavoriteTask(String title) { 
 		
-		for(Task t : favoriteTasks) {
+		for(Task t : favoriteTaskSet) {
 			if(t.getTitle().equals(title))
 				return t;
 		}
@@ -264,11 +289,11 @@ public class ProcessManager {
 		return null;
 	}
 	
-	public ArrayList<Message> getFavoriteMessages() { return new ArrayList<Message>(this.favoriteMessages); }
+	public ArrayList<Message> getFavoriteMessages() { return new ArrayList<Message>(this.favoriteMessageSet); }
 	
 	public Message getFavoriteMessage(String title) { 
 		
-		for(Message m : favoriteMessages) {
+		for(Message m : favoriteMessageSet) {
 			if(m.getTitle().equals(title))
 				return m;
 		}

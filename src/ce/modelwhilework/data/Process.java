@@ -20,12 +20,14 @@ import ce.modelwhilework.data.xml.XmlHelper;
 
 
 
-public class Process extends Modus implements Comparable<Process>{
+public class Process extends Modus {
+	
+	private final String fileExtension = ".mwyw";
 	
 	private Stack<Card> mainStack;
 	private Stack<Card> sideStack;
 	private Task taskCard;
-	private Message messageCard; 
+	private Message messageCard;
 	
 	public Process(String title) {
 		super(title);
@@ -35,6 +37,8 @@ public class Process extends Modus implements Comparable<Process>{
 		taskCard = new Task("");
 		messageCard = new Message("", "", true);
 	}
+	
+	public String getFileTitle() { return getTitle() + fileExtension; }
 	
 	public boolean addCard(Card card) { return mainStack.add(card);	}
 	
@@ -111,15 +115,10 @@ public class Process extends Modus implements Comparable<Process>{
 
 		return null;
 	}
-
-	@Override
-	public int compareTo(Process another) {
-		return this.getTitle().compareTo(another.getTitle());
-	}
 	
 	public boolean loadXML(File filePath) {
 		
-		File file = new File(filePath, getTitle() + ".mwyw");
+		File file = new File(filePath, getFileTitle());
 		Document dom;
 		Element e;
 		NodeList childs;
@@ -236,27 +235,7 @@ public class Process extends Modus implements Comparable<Process>{
 			}
 
 	        dom.appendChild(elProcess);
-	        return this.writeXML(dom, new File(filePath, getTitle() + ".mwyw"));
-	        
-	        /*try {
-	            Transformer tr = TransformerFactory.newInstance().newTransformer();
-	            tr.setOutputProperty(OutputKeys.INDENT, "yes");
-	            tr.setOutputProperty(OutputKeys.METHOD, "xml");
-	            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-	            tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
-	            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-	            // write DOM to file
-	            File file = new File(filePath, getTitle() + ".mwyw");
-	            tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(file)));
-
-	        } catch (TransformerException te) {
-	        	te.printStackTrace();
-	        	return false;
-	        } catch (IOException ioe) {
-	        	ioe.printStackTrace();
-	        	return false;
-	        }*/
+	        return this.writeXML(dom, new File(filePath, getFileTitle()));
 	        
 	    } catch (ParserConfigurationException pce) {
 	    	pce.printStackTrace();

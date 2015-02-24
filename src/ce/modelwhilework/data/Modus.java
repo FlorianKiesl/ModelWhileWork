@@ -12,7 +12,7 @@ import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
 import ce.modelwhilework.data.contextinfo.Video;
 
-public abstract class Modus {
+public abstract class Modus implements Comparable<Modus> {
 	
 	private String title;
 	private TreeSet<ContextInformation> contextInformations;
@@ -99,5 +99,10 @@ public abstract class Modus {
 	private String getContextInfoFilePath(int id){
 		
 		return ProcessManager.getInstance().getInternalStoreage() + "\\" + ProcessManager.getInstance().getCurrentProcess().getTitle() + "\\CI_" + getTypeID() + "_" + id;
+	}
+	
+	@Override
+	public int compareTo(Modus another) {
+		return this.getTitle().compareTo(another.getTitle());
 	}
 }

@@ -12,13 +12,12 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
@@ -31,13 +30,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-public class ProcessFragment<TitlePageIndicator> extends Fragment implements DialogInterface.OnClickListener {
+public class ProcessFragment extends Fragment implements DialogInterface.OnClickListener {
 
 	final String MAINSTACK = "MAINSTACK", SIDESTACK = "SIDESTACK",
 			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
 	
-	private final int updateViewTime = 1000;
-	private Handler updateViewHandler;
 	private View fragment;
 	private RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
 				           rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
@@ -45,14 +42,13 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
 					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver;
 	private TextView tv_Main, tv_Side, tv_processTitle;
+	private boolean keyboardVisible = false;
 	Process process;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+        
 		fragment = inflater.inflate(R.layout.fragment_process, container, false);
-		
-		updateViewHandler = new Handler();
 		
 		rl_TaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutTaskCard);
 		rl_MsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMsgCard);
@@ -154,7 +150,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		      public void onClick(View v) {
 		    	  if(cb_Sender.isChecked() != process.getMessageCard().isSender()) {
 		    		  process.getMessageCard().setSender(cb_Sender.isChecked());
-			    	  updateViewNow();
+		    		  process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    	  updateView();
 		    	  }
 		    			 
 		      }
@@ -166,7 +163,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		      public void onClick(View v) {
 		    	  if(cb_Reciver.isChecked() == process.getMessageCard().isSender()) {
 		    		  process.getMessageCard().setSender(!cb_Reciver.isChecked());
-		    		  updateViewNow();
+		    		  process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    	  updateView();
 		    	  }
 		      }
 		  });
@@ -176,9 +174,12 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		      @Override
 		      public void onClick(View v) { 
 		    	  
-		    	  if(cb_SenderMainStack.isChecked() != ((Message)process.getTopCardMainStack()).isSender()) {
-		    		  ((Message)process.getTopCardMainStack()).setSender(cb_SenderMainStack.isChecked());
-		    		  updateViewNow();
+		    	  if(process.getTopCardMainStack() != null) {
+		    		  if(cb_SenderMainStack.isChecked() != ((Message)process.getTopCardMainStack()).isSender()) {
+			    		  ((Message)process.getTopCardMainStack()).setSender(cb_SenderMainStack.isChecked());
+			    		  process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	  updateView();
+			    	  }
 		    	  }
 		      }
 		  });
@@ -187,9 +188,12 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 
 			 @Override
 			 public void onClick(View v) {
-				 if(cb_ReciverMainStack.isChecked() == ((Message)process.getTopCardMainStack()).isSender()) {
-					 ((Message)process.getTopCardMainStack()).setSender(!cb_ReciverMainStack.isChecked());
-					 updateViewNow();
+				 if(process.getTopCardMainStack() != null) {
+					 if(cb_ReciverMainStack.isChecked() == ((Message)process.getTopCardMainStack()).isSender()) {
+						 ((Message)process.getTopCardMainStack()).setSender(!cb_ReciverMainStack.isChecked());
+						 process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	  updateView();
+					 }
 				 }
 			 }
 		  });
@@ -198,10 +202,14 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 
 			 @Override
 			 public void onClick(View v) { 
-				 if(cb_SenderSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
-					 ((Message)process.getTopCardSideStack()).setSender(cb_SenderSideStack.isChecked());
-					 updateViewNow();
-				 }				 
+				 
+				 if(process.getTopCardSideStack() != null) {
+					 if(cb_SenderSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
+						 ((Message)process.getTopCardSideStack()).setSender(cb_SenderSideStack.isChecked());
+						 process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	  updateView();
+					 }		
+				 }		 
 			 }
 		  });
 		
@@ -212,236 +220,195 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 				 
 				 if(cb_ReciverSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
 					 ((Message)process.getTopCardSideStack()).setSender(!cb_ReciverSideStack.isChecked());
-					 updateViewNow();
+					 process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    	  updateView();
 				 }				 
 			 }
 		  });
-		
-		te_TaskTitle.addTextChangedListener(new TextWatcher() {
+
+		te_TaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				
-				if(!te_TaskTitle.getText().toString().equals(process.getTaskCard().getTitle())) {
+				if(!hasFocus) {
+					
 					process.getTaskCard().setTitle(te_TaskTitle.getText().toString());
-					updateView();
-				}
+					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    	updateView();
+				}				
 			}
-		});
+		}); 
 		
-		te_MsgTitle.addTextChangedListener(new TextWatcher() {
+		te_MsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				
-				if(!te_MsgTitle.getText().toString().equals(process.getMessageCard().getTitle())) {
+				if(!hasFocus) {
+					
 					process.getMessageCard().setTitle(te_MsgTitle.getText().toString());
-					updateView();
-				}
+					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    	updateView();
+				}				
 			}
-		});
+		}); 
 		
-		te_MsgSenderReciver.addTextChangedListener(new TextWatcher() {
+		
+		te_MsgSenderReciver.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
+				if(!hasFocus) {
 				
-				if(!te_MsgSenderReciver.getText().toString().equals(process.getMessageCard().getSenderReceiver())) {
 					process.getMessageCard().setSenderReceiver(te_MsgSenderReciver.getText().toString());
-					updateView();
-				}
+					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    	updateView();
+				}				
 			}
-		});
+		}); 
 		
-		te_MainStackTaskTitle.addTextChangedListener(new TextWatcher() {
+		te_MainStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				if(process.getTopCardMainStack() != null) {
-					if(!te_MainStackTaskTitle.getText().toString().equals(process.getTopCardMainStack().getTitle())) {
-						process.getTopCardMainStack().setTitle(te_MainStackTaskTitle.getText().toString());
-						updateView();
-					}
-				}
-			}
-		});
-		
-		te_SideStackTaskTitle.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				
-				if(process.getTopCardSideStack() != null) {
-					if(!te_SideStackTaskTitle.getText().toString().equals(process.getTopCardSideStack().getTitle())) {
-						process.getTopCardSideStack().setTitle(te_SideStackTaskTitle.getText().toString());
-						updateView();
+				if(!hasFocus) {
+					
+					if(process.getTopCardMainStack() instanceof Task) {
+						
+						if(te_MainStackTaskTitle.getText().length() > 0)
+							process.getTopCardMainStack().setTitle(te_MainStackTaskTitle.getText().toString());
+						else
+							showAlert("You have to enter a valid title!!!");
+						
+						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	updateView();
 					}
 				}				
 			}
-		});
+		}); 
 		
-		te_MainStackMsgTitle.addTextChangedListener(new TextWatcher() {
+		te_SideStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				if(process.getTopCardMainStack() != null) {
-					if(!te_MainStackMsgTitle.getText().toString().equals(process.getTopCardMainStack().getTitle())) {
-						process.getTopCardMainStack().setTitle(te_MainStackMsgTitle.getText().toString());
-						updateView();
+				if(!hasFocus) {
+					
+					if(process.getTopCardSideStack() instanceof Task) {
+					
+						if(te_SideStackTaskTitle.getText().length() > 0)
+							process.getTopCardSideStack().setTitle(te_SideStackTaskTitle.getText().toString());
+						else
+							showAlert("You have to enter a valid title!!!");
+						
+						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	updateView();
 					}					
-				}
+				}				
 			}
-		});
+		}); 
 		
-		te_SideStackMsgTitle.addTextChangedListener(new TextWatcher() {
+		te_MainStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				if(process.getTopCardSideStack() != null) {
-					if(!te_SideStackMsgTitle.getText().toString().equals(process.getTopCardSideStack().getTitle())) {
-						process.getTopCardSideStack().setTitle(te_SideStackMsgTitle.getText().toString());
-						updateView();
+				if(!hasFocus) {
+					
+					if(process.getTopCardMainStack() instanceof Message) {
+						if(te_MainStackMsgTitle.getText().length() > 0)
+							process.getTopCardMainStack().setTitle(te_MainStackMsgTitle.getText().toString());
+						else
+							showAlert("You have to enter a valid title!!!");
+						
+						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	updateView();
+					}
+				}				
+			}
+		}); 
+		
+		te_SideStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(!hasFocus) {
+					
+					if(process.getTopCardSideStack() instanceof Message) {
+						if(te_SideStackMsgTitle.getText().length() > 0)
+							process.getTopCardSideStack().setTitle(te_SideStackMsgTitle.getText().toString());
+						else
+							showAlert("You have to enter a valid title!!!");
+						
+						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	updateView();
+					}					
+				}				
+			}
+		}); 
+		
+		te_MainStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(!hasFocus) {
+					
+					if(process.getTopCardMainStack() instanceof Message) {
+						Message m = (Message)process.getTopCardMainStack();
+						if(!te_MainStackMsgPerson.getText().toString().equals(m.getSenderReceiver())) {
+							
+							if(te_MainStackMsgPerson.getText().length() > 0)
+								m.setSenderReceiver(te_MainStackMsgPerson.getText().toString());
+							else
+								showAlert("You have to enter a sender/receiver!!!");
+							
+						}
+						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	updateView();
 					}
 				}				
 			}
 		});
 		
-		te_MainStackMsgPerson.addTextChangedListener(new TextWatcher() {
+		te_SideStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				if(process.getTopCardMainStack() != null) {
-					if(!te_MainStackMsgPerson.getText().toString().equals(((Message)process.getTopCardMainStack()).getSenderReceiver())) {
-						((Message)process.getTopCardMainStack()).setSenderReceiver(te_MainStackMsgPerson.getText().toString());
-						updateView();
-					}
-				}				
-			}	
-		});
-		
-		te_SideStackMsgPerson.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {				
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) { 
-				
-				if(process.getTopCardSideStack() != null) {
-					if(!te_SideStackMsgPerson.getText().toString().equals(((Message)process.getTopCardSideStack()).getSenderReceiver())) {
-						((Message)process.getTopCardSideStack()).setSenderReceiver(te_SideStackMsgPerson.getText().toString());
-						updateView();
-					}
+				if(!hasFocus) {
+					
+					if(process.getTopCardSideStack() instanceof Message) {
+						Message m = (Message)process.getTopCardSideStack();
+						if(!te_SideStackMsgPerson.getText().toString().equals(m.getSenderReceiver())) {
+							if(te_SideStackMsgPerson.getText().length() > 0)
+								m.setSenderReceiver(te_SideStackMsgPerson.getText().toString());
+							else
+								showAlert("You have to enter a sender/receiver!!!");
+							
+						}
+						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				    	updateView();
+					}	
 				}				
 			}
-		});				
+		}); 
 		
 		return fragment;
 	}
 	
 	public void onPause() {
 		   super.onPause();	   
-		   updateViewHandler.removeCallbacks(updateViewThread);
 		   process.storeXML(ProcessManager.getInstance().getInternalStoreage());
 	};  
 
 	public void onResume() {
 		   super.onResume();	   
-		   updateViewNow();
+		   updateView();
 	};  
 	
 	private void addtOnClickListener4Card(ImageButton imgButtonContext, final Card card) {
@@ -450,10 +417,16 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-				intent.putExtra("CARD_ID", card.getTitle());
-			    startActivity(intent);
+				
+				if(card.getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", card.getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
 			}
 		});
 	}
@@ -551,16 +524,15 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 					}
 
 					if(dataCard != null) {
-						if ( !process.addCard(dataCard)) {
+						if (process.addCard(dataCard)) {
+							
+							if(dataCard instanceof Message)
+								process.setMessageCard(new Message("", "", true));
+							else if(dataCard instanceof Task)
+								process.setTaskCard(new Task(""));
+						}
+						else
 							showAlert("add card to stack fail!!!");
-						}
-						else {
-							te_TaskTitle.setText("");
-							te_MsgTitle.setText("");
-							te_MsgSenderReciver.setText("");
-							cb_Sender.setChecked(true);
-							cb_Reciver.setChecked(false);
-						}
 					}
 
 				} else if (dropTag.equals(MAINSTACK)
@@ -579,7 +551,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 					}
 				}
 				
-				updateViewNow();
+				process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+		    	updateView();
 
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
@@ -628,22 +601,7 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		}
 	}
 	
-	private Runnable updateViewThread = new Runnable() {
-	   	 
-		   public void run() {
-			   updateViewHandler.removeCallbacks(updateViewThread); //remove existing runnable
-			   process.storeXML(ProcessManager.getInstance().getInternalStoreage());
-			   updateViewNow();			   
-		   }
-	 };
-
 	private void updateView() {
-		
-		updateViewHandler.removeCallbacks(updateViewThread); //remove existing runnable
-		updateViewHandler.postDelayed(updateViewThread, updateViewTime); //start new runnable
-	}
-	
-	private void updateViewNow() {
 		
 		tv_processTitle.setText(process.getTitle());
 
@@ -754,7 +712,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 		alertDialog.setNegativeButton("cancel",
 				   new DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {
-                     	 updateViewNow();
+                    	process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+      			    	updateView();
                       }
                 }
 		);
@@ -772,7 +731,8 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 			                     					}
 			                     				}
 			                                	                         				
-			                                	updateViewNow();
+			                                	process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			                 			    	updateView();
 			                                 }
 			                           }
 	    );	    
@@ -782,7 +742,6 @@ public class ProcessFragment<TitlePageIndicator> extends Fragment implements Dia
 	
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		// TODO Auto-generated method stub
 		
 	}
 }

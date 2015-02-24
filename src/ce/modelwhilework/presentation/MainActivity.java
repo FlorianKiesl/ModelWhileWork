@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 	protected void onResume() {
 		super.onResume();
 		viewPager.setAdapter(adapter);
+		viewPager.getAdapter().notifyDataSetChanged();
 		
 		int lastItem = ProcessManager.getInstance().getCurrentProcessPos();
 		if(lastItem >= 0 && lastItem < adapter.getCount())

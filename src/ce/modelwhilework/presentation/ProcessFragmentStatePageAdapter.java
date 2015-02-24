@@ -2,7 +2,6 @@ package ce.modelwhilework.presentation;
 
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Process;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +10,8 @@ import android.view.ViewGroup;
 
 public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 	
-	private ProcessManager processManager;
-	
 	public ProcessFragmentStatePageAdapter(FragmentManager fm) {
 		super(fm);
-		processManager = ProcessManager.getInstance();
 	}
 
 	@Override
@@ -24,7 +20,7 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 		
 		Bundle processData = new Bundle();
 		processData.putInt("page_postion", position);
-		processData.putString("ProcessName", this.processManager.getProcess(position).getTitle());
+		processData.putString("ProcessName", ProcessManager.getInstance().getProcess(position).getTitle());
 		fragment.setArguments(processData);
 		
 		return fragment;
@@ -32,7 +28,7 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		Process process = this.processManager.getProcess(position);
+		Process process = ProcessManager.getInstance().getProcess(position);
 		if (process != null){
 			return process.getTitle().toString();
 		}
@@ -53,6 +49,6 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public int getCount() {
-		return this.processManager.getProcesses().size();
+		return ProcessManager.getInstance().getProcesses().size();
 	}
 }

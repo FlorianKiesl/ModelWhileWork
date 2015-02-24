@@ -1,6 +1,7 @@
 package ce.modelwhilework.presentation;
 
 import java.util.ArrayList;
+
 import ce.modelwhilework.data.ProcessManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +13,9 @@ import android.widget.ListView;
 
 public class LoadProcessActivity extends Activity implements DialogInterface.OnClickListener  {
 
-	Activity activity;
+	private ListAdapterRadioButton listAdapter;
+	private ArrayList<String> processes;
+	private Activity activity;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +25,10 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 		
 		ListView lv_processes = (ListView) this.findViewById(R.id.activity_load_process_listView);
 		
-		ArrayList<String> processes = new ArrayList<String>();
+		processes = new ArrayList<String>();
+		loadProcesses();
 		
-		String[] files = fileList();
-		for(int i = 0; i < files.length; i++) {
-			if(files[i].endsWith(".mwyw"))
-				processes.add(files[i].toString());
-		}
-		
-		final ListAdapterRadioButton listAdapter = new ListAdapterRadioButton(
-			this.getBaseContext(), R.layout.list_radiobutton, processes);
+		 listAdapter = new ListAdapterRadioButton(this.getBaseContext(), R.layout.list_radiobutton, processes);
 
 		lv_processes.setAdapter(listAdapter);
 		
@@ -46,7 +43,9 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 				if((pos = processName.indexOf(".")) > 0)
 					processName = processName.substring(0, pos);
 				
-				if(ProcessManager.getInstance().getProcess(processName) != null)
+				if(processName.length() == 0)
+					showAlert("Please select a file!");
+				else if(ProcessManager.getInstance().getProcess(processName) != null)
 					showAlert("Process is already open!!!");				
 				else if(ProcessManager.getInstance().openProcess(processName))
 					activity.finish();
@@ -56,6 +55,12 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 		});
 	}
 	
+	private void loadProcesses() {
+		
+		processes.clear();
+		processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage());
+	}
+
 	private void showAlert(String msg) {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("error");

@@ -57,36 +57,19 @@ public class ListAdapterMsg extends ArrayAdapter<Message> {
         	@Override
 			public void onClick(View v) {
 				
-				boolean checked;
-				for(int i = 0; i < viewGroup.getChildCount(); i++) {
-					checked = false;
-					for(int x = 0; x < ((ViewGroup) viewGroup.getChildAt(i)).getChildCount(); x++) {
-						View v1 = ((ViewGroup) viewGroup.getChildAt(i)).getChildAt(x);						
-						if(v1 instanceof RadioButton) {
-							if(v1 != v) {
-								RadioButton rb = (RadioButton) v1;
-								rb.setChecked(false);
-							}
-							else
-								checked = true;
-						}
-						else if(v1 instanceof LinearLayout && checked) {
-							
-							for(int y = 0; y < ((ViewGroup)v1).getChildCount(); y++) {
-								View v2 = ((ViewGroup)v1).getChildAt(y);
-								
-								for(int z = 0; z < ((ViewGroup)v2).getChildCount(); z++) {
-									View v3 = ((ViewGroup)v2).getChildAt(z);
-									if(v3 instanceof TextView) {
-										TextView tv = (TextView)v2;
-										selectedItem = tv.getText().toString();
-									}
-								}
-							}
-						}
-					}
-		        }
-			}
+        		for(int i = 0; i < viewGroup.getChildCount(); i++) {
+        			
+        			RadioButton rb1 = (RadioButton) viewGroup.getChildAt(i).findViewById(R.id.activity_favorite_msg_RadioButtont);
+        			EditText et = (EditText) viewGroup.getChildAt(i).findViewById(R.id.activity_favorite_msg_editTextCardTitle);
+        			
+        			if(rb1 == v) {
+        				rb1.setChecked(true);
+        				selectedItem = et.getText().toString();
+        			}
+        			else
+        				rb1.setChecked(false);
+        		}
+        	}
 		});
 
         return convertView;
