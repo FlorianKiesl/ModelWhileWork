@@ -6,7 +6,6 @@ import ce.modelwhilework.data.Process;
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Task;
 import android.os.Bundle;
-import android.os.Handler;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
@@ -26,7 +25,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -36,13 +34,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
 	
 	private View fragment;
-	private RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
-				           rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
+	private View l_MainStack, l_MainStackTaskCard, l_MainStackMsgCard, l_SideStack,
+				           l_SideStackTaskCard, l_SideStackMsgCard, l_TaskCard, l_MsgCard;
 	private CheckBox cb_Sender, cb_Reciver, cb_SenderMainStack, cb_ReciverMainStack, cb_SenderSideStack, cb_ReciverSideStack;
 	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
 					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver;
 	private TextView tv_Main, tv_Side, tv_processTitle;
-	private boolean keyboardVisible = false;
 	Process process;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,24 +47,24 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
         
 		fragment = inflater.inflate(R.layout.fragment_process, container, false);
 		
-		rl_TaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutTaskCard);
-		rl_MsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMsgCard);
+		l_TaskCard = (View) fragment.findViewById(R.id.LayoutTaskCard);
+		l_MsgCard = (View) fragment.findViewById(R.id.LayoutMsgCard);
 		
-		rl_MainStack = (RelativeLayout) fragment.findViewById(R.id.LayoutMainStack);
-		rl_MainStackTaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMainStackTaskCard);
-		rl_MainStackMsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMainStackMsgCard);		
+		l_MainStack = (View) fragment.findViewById(R.id.LayoutMainStack);
+		l_MainStackTaskCard = (View) fragment.findViewById(R.id.LayoutMainStackTaskCard);
+		l_MainStackMsgCard = (View) fragment.findViewById(R.id.LayoutMainStackMsgCard);		
 		
-		rl_SideStack = (RelativeLayout) fragment.findViewById(R.id.LayoutSideStack);
-		rl_SideStackTaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutSideStackTaskCard);
-		rl_SideStackMsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutSideStackMsgCard);
+		l_SideStack = (View) fragment.findViewById(R.id.LayoutSideStack);
+		l_SideStackTaskCard = (View) fragment.findViewById(R.id.LayoutSideStackTaskCard);
+		l_SideStackMsgCard = (View) fragment.findViewById(R.id.LayoutSideStackMsgCard);
 		
 		ImageView iv_bin = (ImageView) fragment.findViewById(R.id.imageViewBin);
 
 		// set tag definitions
-		rl_TaskCard.setTag(TASKCARD);
-		rl_MsgCard.setTag(MSGCARD);
-		rl_MainStack.setTag(MAINSTACK);
-		rl_SideStack.setTag(SIDESTACK);
+		l_TaskCard.setTag(TASKCARD);
+		l_MsgCard.setTag(MSGCARD);
+		l_MainStack.setTag(MAINSTACK);
+		l_SideStack.setTag(SIDESTACK);
 
 		// Current Process
 		Bundle args = this.getArguments();
@@ -75,11 +72,11 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		process = ProcessManager.getInstance().getProcess(args.getString("ProcessName"));
 		
 		// set touch listeners
-		rl_TaskCard.setOnTouchListener(new ChoiceTouchListener());
-		rl_MsgCard.setOnTouchListener(new ChoiceTouchListener());
+		l_TaskCard.setOnTouchListener(new ChoiceTouchListener());
+		l_MsgCard.setOnTouchListener(new ChoiceTouchListener());
 
 		// set drag listeners
-		rl_MainStack.setOnDragListener(new ChoiceDragListener());
+		l_MainStack.setOnDragListener(new ChoiceDragListener());
 		iv_bin.setOnDragListener(new BinDragListener());
 		
 		ImageButton imgButtonContext = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoProcess);
@@ -480,10 +477,10 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 
 				// get card (dragged element)
 				View view = (View) event.getLocalState();
-				RelativeLayout dropElement = (RelativeLayout) view;
+				View dropElement = (View) view;
 
 				// get the stack (drag target element)
-				RelativeLayout targetElement = (RelativeLayout) v;
+				View targetElement = (View) v;
 
 				// is this a card of a stack or a ney one?
 				String dropTag = (String) dropElement.getTag();
@@ -583,7 +580,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 
 				// get card (dragged element)
 				View view = (View) event.getLocalState();
-				RelativeLayout dropElement = (RelativeLayout) view;
+				View dropElement = (View) view;
 
 				//set question: do you really want to delete the card?
 				String dropTag = (String) dropElement.getTag();
@@ -610,8 +607,8 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		if (card != null) {
 
 			if(card instanceof Message) {
-				rl_MainStackTaskCard.setVisibility(View.INVISIBLE);
-				rl_MainStackMsgCard.setVisibility(View.VISIBLE);
+				l_MainStackTaskCard.setVisibility(View.INVISIBLE);
+				l_MainStackMsgCard.setVisibility(View.VISIBLE);
 				tv_Main.setVisibility(View.INVISIBLE);			
 				
 				te_MainStackMsgTitle.setText(card.getTitle());
@@ -621,8 +618,8 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				cb_SenderMainStack.setChecked(((Message)card).isSender());
 				cb_ReciverMainStack.setChecked(!((Message)card).isSender());				
 			} else if(card instanceof Task) {
-				rl_MainStackTaskCard.setVisibility(View.VISIBLE);
-				rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
+				l_MainStackTaskCard.setVisibility(View.VISIBLE);
+				l_MainStackMsgCard.setVisibility(View.INVISIBLE);
 				tv_Main.setVisibility(View.INVISIBLE);
 				te_MainStackTaskTitle.setText(card.getTitle());		
 				te_MainStackTaskTitle.setSelection(te_MainStackTaskTitle.getText().length());
@@ -630,23 +627,23 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				showAlert("invalid card type!!!");
 			}
 			
-			rl_MainStack.setOnTouchListener(new ChoiceTouchListener());
-			rl_SideStack.setOnDragListener(new ChoiceDragListener());			
+			l_MainStack.setOnTouchListener(new ChoiceTouchListener());
+			l_SideStack.setOnDragListener(new ChoiceDragListener());			
 			
 		} else {
-			rl_MainStackTaskCard.setVisibility(View.INVISIBLE);
-			rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
+			l_MainStackTaskCard.setVisibility(View.INVISIBLE);
+			l_MainStackMsgCard.setVisibility(View.INVISIBLE);
 			tv_Main.setVisibility(View.VISIBLE);			
-			rl_MainStack.setOnTouchListener(new DoNothingTouchListener());
-			rl_SideStack.setOnDragListener(new DoNothinDragListener());
+			l_MainStack.setOnTouchListener(new DoNothingTouchListener());
+			l_SideStack.setOnDragListener(new DoNothinDragListener());
 		}
 		
 		card = process.getTopCardSideStack();
 		if (card != null) {
 
 			if(card instanceof Message) {
-				rl_SideStackTaskCard.setVisibility(View.INVISIBLE);
-				rl_SideStackMsgCard.setVisibility(View.VISIBLE);
+				l_SideStackTaskCard.setVisibility(View.INVISIBLE);
+				l_SideStackMsgCard.setVisibility(View.VISIBLE);
 				tv_Side.setVisibility(View.INVISIBLE);
 				
 				te_SideStackMsgTitle.setText(card.getTitle());
@@ -656,8 +653,8 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				cb_SenderSideStack.setChecked(((Message)card).isSender());
 				cb_ReciverSideStack.setChecked(!((Message)card).isSender());				
 			} else if(card instanceof Task) {
-				rl_SideStackTaskCard.setVisibility(View.VISIBLE);
-				rl_SideStackMsgCard.setVisibility(View.INVISIBLE);
+				l_SideStackTaskCard.setVisibility(View.VISIBLE);
+				l_SideStackMsgCard.setVisibility(View.INVISIBLE);
 				tv_Side.setVisibility(View.INVISIBLE);
 				te_SideStackTaskTitle.setText(card.getTitle());		
 				te_SideStackTaskTitle.setSelection(te_SideStackTaskTitle.getText().length());
@@ -665,14 +662,14 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				showAlert("invalid card type!!!");
 			}
 			
-			rl_SideStack.setOnTouchListener(new ChoiceTouchListener());	
+			l_SideStack.setOnTouchListener(new ChoiceTouchListener());	
 			
 		} else {
 
-			rl_SideStackTaskCard.setVisibility(View.INVISIBLE);
-			rl_SideStackMsgCard.setVisibility(View.INVISIBLE);
+			l_SideStackTaskCard.setVisibility(View.INVISIBLE);
+			l_SideStackMsgCard.setVisibility(View.INVISIBLE);
 			tv_Side.setVisibility(View.VISIBLE);			
-			rl_SideStack.setOnTouchListener(new DoNothingTouchListener());
+			l_SideStack.setOnTouchListener(new DoNothingTouchListener());
 		}
 		
 		Task task = process.getTaskCard();

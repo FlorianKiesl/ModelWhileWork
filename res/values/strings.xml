@@ -21,6 +21,7 @@
     <string name="task_title">What i do Nr: 1</string>
     <string name="msg_title">exchange of information Nr: 1</string>
     <string name="process_title">the name of the process</string>
+    <string name="process_role">role:</string>
     <string name="title_activity_picture">PictureActivity</string>
     <string name="title_activity_video">VideoActivity</string>
     <string name="title_activity_audio">AudioActivity</string>
@@ -39,5 +40,14 @@
     <string name="load_message_card">load message card</string>
     <string name="what_i_do">What I do</string>
     <string name="title_activity_new_process">NewProcessActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="Settings_User">User:</string>
+    <string name="Settings_MetasonicPath">Metasonic Server Path:</string>
+    <string name="Settings_XOffset">Metasonic Offset X</string>
+    <string name="Settings_YOffset">Metasonic Offset Y</string>
+    <string name="Settings_Save">Save</string>
+    <string name="fragment_process_what_i_do">What I do</string>
+    <string name="fragment_process_send_to">send to:</string>
+    <string name="fragment_process_receive_from">receive from:</string>
 
 </resources>
