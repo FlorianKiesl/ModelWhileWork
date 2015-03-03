@@ -111,6 +111,11 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		    startActivity(intent);
 		}
+		else if (id == R.id.action_settings){
+			Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(intent);
+		}
 		
 		return super.onOptionsItemSelected(item);
 	}

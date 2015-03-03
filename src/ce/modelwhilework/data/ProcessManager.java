@@ -168,7 +168,9 @@ public class ProcessManager {
 		Process p = getProcess(name);
 		if(p == null)
 			return false;
-		return p.storeMetasonicXML(new File(getExternalStoreage(), p.getTitle() + ".xml"));
+		String fileName = Settings.getInstance().getUser() + "_" 
+			+ p.getUserRole() + "_" + p.getTitle() + ".xml";
+		return p.storeMetasonicXML(new File(getExternalStoreage(), fileName));
 	}
 	
 	public boolean uploadProcess(String name){
@@ -194,6 +196,8 @@ public class ProcessManager {
 		Process p = getProcess(name);
 		if (p != null){
 			try{
+				String fileName = Settings.getInstance().getUser() + "_" 
+						+ p.getUserRole() + "_" + p.getTitle() + ".xml";
 				File file = new File(this.getExternalCacheStorage().getPath() + "/metasonicExportMWYW.xml");
 //				if(!file.exists()){
 //					file.mkdir();

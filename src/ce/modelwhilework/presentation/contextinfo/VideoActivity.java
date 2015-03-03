@@ -1,8 +1,11 @@
-package ce.modelwhilework.presentation;
+package ce.modelwhilework.presentation.contextinfo;
 
 import java.io.File;
 
 import ce.modelwhilework.data.Modus;
+import ce.modelwhilework.presentation.R;
+import ce.modelwhilework.presentation.R.id;
+import ce.modelwhilework.presentation.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.MediaController;

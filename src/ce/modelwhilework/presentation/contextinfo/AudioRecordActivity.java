@@ -1,4 +1,4 @@
-package ce.modelwhilework.presentation;
+package ce.modelwhilework.presentation.contextinfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,9 @@ import org.apache.commons.io.FileUtils;
 
 import ce.modelwhilework.data.Modus;
 import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.presentation.R;
+import ce.modelwhilework.presentation.R.id;
+import ce.modelwhilework.presentation.R.layout;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;

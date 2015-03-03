@@ -1,5 +1,6 @@
 package ce.modelwhilework.data;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,8 +13,9 @@ public class Settings {
 	private Properties configuration;
     private String configurationFile;
 
-    private Settings(String configurationFile){
+    private Settings(String configurationPath){
 		configuration = new Properties();
+		this.configurationFile = configurationPath + "⁄Settings";
 	}
 	
 	public static Settings getInstance(){
@@ -27,7 +29,11 @@ public class Settings {
         boolean retval = false;
 
         try {
-            configuration.load(new FileInputStream(this.configurationFile));
+        	File configFile = new File(this.configurationFile);
+        	if (!configFile.exists()){
+        		retval = configFile.createNewFile();
+        	}
+            configuration.load(new FileInputStream(configFile));
             retval = true;
         } catch (IOException e) {
             System.out.println("Configuration error: " + e.getMessage());

@@ -5,6 +5,7 @@ import ce.modelwhilework.data.Message;
 import ce.modelwhilework.data.Process;
 import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.Task;
+import ce.modelwhilework.presentation.contextinfo.ContextInfoActivity;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.ClipData;

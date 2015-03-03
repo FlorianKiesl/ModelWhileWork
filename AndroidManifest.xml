@@ -36,11 +36,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ContextInfoActivity"
+            android:name="ce.modelwhilework.presentation.contextinfo.ContextInfoActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".CameraActivity"
+            android:name="ce.modelwhilework.presentation.contextinfo.CameraActivity"
             android:label="@string/title_activity_camera"
             android:screenOrientation="landscape" >
         </activity>
@@ -63,17 +63,17 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
-            android:name=".PictureActivity"
+            android:name="ce.modelwhilework.presentation.contextinfo.PictureActivity"
             android:label="@string/title_activity_picture"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".AudioRecordActivity"
+            android:name="ce.modelwhilework.presentation.contextinfo.AudioRecordActivity"
             android:label="@string/title_activity_audio"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".VideoActivity"
+            android:name="ce.modelwhilework.presentation.contextinfo.VideoActivity"
             android:label="@string/title_activity_video"
             android:screenOrientation="landscape" >
         </activity>

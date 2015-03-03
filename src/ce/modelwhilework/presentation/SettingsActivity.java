@@ -19,7 +19,18 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 		setContentView(R.layout.activity_settings);
 	
 		activity = this;
-	
+		TextView tv = (TextView) activity.findViewById(R.id.activity_settings_editText_user);
+		tv.setText(Settings.getInstance().getUser());
+		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_metasonic_server_path);
+		tv.setText(Settings.getInstance().getServerMetasonic());
+		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);
+		tv.setText(Settings.getInstance().getOffsetX());
+		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_yoffset);
+		tv.setText(Settings.getInstance().getOffsetY());
+		
 		Button buttonSave = (Button) this.findViewById(R.id.activity_settings_button_save);	
 		buttonSave.setOnClickListener(new View.OnClickListener() {
 			
@@ -45,6 +56,15 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 		});
 	}
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+//		Settings.getInstance().setOffsetX("0.3");
+//		Settings.getInstance().setOffsetY("0.4");
+//		Settings.getInstance().setUser("Florian");
+//		Settings.getInstance().setServerMetasonic("Server");
+	}
+
 	private void showAlert(String msg) {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("error");

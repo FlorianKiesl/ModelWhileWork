@@ -28,6 +28,7 @@ public class Process extends Modus {
 	private Stack<Card> sideStack;
 	private Task taskCard;
 	private Message messageCard;
+	private String userRole;
 	
 	public Process(String title) {
 		super(title);
@@ -36,6 +37,7 @@ public class Process extends Modus {
 		sideStack = new Stack<Card>();	
 		taskCard = new Task("");
 		messageCard = new Message("", "", true);
+		userRole = "";
 	}
 	
 	public String getFileTitle() { return getTitle() + fileExtension; }
@@ -86,6 +88,14 @@ public class Process extends Modus {
 		return sideStack.peek();
 	}
 	
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
 	public Task getTaskCard() { 
 		return taskCard;
 	}
@@ -235,7 +245,7 @@ public class Process extends Modus {
 			}
 
 	        dom.appendChild(elProcess);
-	        return this.writeXML(dom, new File(filePath, getFileTitle()));
+	        return this.writeXML(dom, new File(filePath, getFileTitle()), true);
 	        
 	    } catch (ParserConfigurationException pce) {
 	    	pce.printStackTrace();
@@ -257,8 +267,8 @@ public class Process extends Modus {
 	        elProcess.setAttribute("ProcessName", this.getTitle());
 	        
 	        elSubject = dom.createElement("Subject");
-	        elSubject.setAttribute("RealName", "[UserName]");
-	        elSubject.setAttribute("SubjectName", "[UserName]");
+	        elSubject.setAttribute("RealName", Settings.getInstance().getUser());
+	        elSubject.setAttribute("SubjectName", Settings.getInstance().getUser());
 
 	        alCards = this.getCardsAsList();
 	        Iterator<Card> iteratorCards = alCards.iterator();
@@ -274,11 +284,11 @@ public class Process extends Modus {
 	        	while (id < alCards.size()-1){
 		        	connectionElem = dom.createElement("Connection");
 		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "UUID", UUID.randomUUID().toString()));
-		        	String name = "";
+		        	String name = "<Name>";
 		        	if (alCards.get(id).isTask()){
 		        		name = alCards.get(id).getTitle() + " erledigt";
 		        	}
-		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "Name", name));
+		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "name", name));
 		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "directed1", "false"));
 		        	connectionElem.appendChild(XmlHelper.createXMLTextNode(dom, "directed2", "true"));
 		        	
@@ -295,19 +305,20 @@ public class Process extends Modus {
 	        elProcess.appendChild(elSubject);
 	        
 	        dom.appendChild(elProcess);
-	        return writeXML(dom, file);
+	        return writeXML(dom, file, false);
 	    }catch (ParserConfigurationException pce) {
 	        return false;
 	    }
 	}
 	
-	private boolean writeXML(Document dom, File file){
+	private boolean writeXML(Document dom, File file, boolean bDoctype){
         try {
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.setOutputProperty(OutputKeys.METHOD, "xml");
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
+            //TODO: FK: Könnten wir eventuell weglassen, Besprechen mit Johannes
+            if (bDoctype) tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
             tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
             // write DOM to file

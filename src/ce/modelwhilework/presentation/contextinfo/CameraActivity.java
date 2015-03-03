@@ -1,9 +1,12 @@
-package ce.modelwhilework.presentation;
+package ce.modelwhilework.presentation.contextinfo;
 
 import java.io.IOException;
 
 import ce.modelwhilework.data.Modus;
 import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.presentation.R;
+import ce.modelwhilework.presentation.R.id;
+import ce.modelwhilework.presentation.R.layout;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

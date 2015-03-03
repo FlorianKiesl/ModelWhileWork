@@ -1,4 +1,4 @@
-package ce.modelwhilework.presentation;
+package ce.modelwhilework.presentation.contextinfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,10 @@ import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
 import ce.modelwhilework.data.contextinfo.Video;
+import ce.modelwhilework.presentation.R;
+import ce.modelwhilework.presentation.R.id;
+import ce.modelwhilework.presentation.R.layout;
+import ce.modelwhilework.presentation.R.menu;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;

@@ -1,4 +1,4 @@
-package ce.modelwhilework.presentation;
+package ce.modelwhilework.presentation.contextinfo;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -9,6 +9,10 @@ import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
 import ce.modelwhilework.data.contextinfo.Text;
 import ce.modelwhilework.data.contextinfo.Video;
+import ce.modelwhilework.presentation.R;
+import ce.modelwhilework.presentation.R.drawable;
+import ce.modelwhilework.presentation.R.id;
+import ce.modelwhilework.presentation.R.layout;
 import android.content.Context;
 import android.support.v4.util.Pools.Pool;
 import android.view.LayoutInflater;

@@ -30,9 +30,23 @@ public abstract class Card extends Modus {
 		
 		card.appendChild(XmlHelper.createXMLTextNode(dom, "UUID", Integer.toString(id)));
 		card.appendChild(XmlHelper.createXMLTextNode(dom, "name", this.getTitle()));
-		//ToDo: ContextInfo Location (Was ist angle)
-		card.appendChild(XmlHelper.createXMLTextNode(dom, "x", "0.0"));	
-		card.appendChild(XmlHelper.createXMLTextNode(dom, "y", "0.0"));
+		
+		float x,y;
+		try{
+			x = (id-1) * Float.parseFloat(Settings.getInstance().getOffsetX());
+		} catch (NumberFormatException exc){
+			exc.printStackTrace();
+			x = 0.0F;
+		}
+		try{
+			y = (id-1) * Float.parseFloat(Settings.getInstance().getOffsetY());
+		} catch (NumberFormatException exc){
+			exc.printStackTrace();
+			y = 0.0F;
+		}
+		
+		card.appendChild(XmlHelper.createXMLTextNode(dom, "x", Float.toString(x)));	
+		card.appendChild(XmlHelper.createXMLTextNode(dom, "y", Float.toString(y)));
 		card.appendChild(XmlHelper.createXMLTextNode(dom, "angle", "0.0"));
 
 		if(this.isMessage()){
@@ -72,10 +86,10 @@ public abstract class Card extends Modus {
 		String sender = "";
 		if (messageObj.isSender()){
 			recipient = messageObj.getSenderReceiver();
-			sender = "[UserName]";
+			sender = Settings.getInstance().getUser();
 		}
 		else{
-			recipient = "[UserName]";
+			recipient = Settings.getInstance().getUser();
 			sender = messageObj.getSenderReceiver();
 		}
 		msgElem.appendChild(XmlHelper.createXMLTextNode(dom, "recipient", recipient));
