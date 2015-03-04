@@ -46,6 +46,7 @@
     <string name="Settings_XOffset">Metasonic Offset X</string>
     <string name="Settings_YOffset">Metasonic Offset Y</string>
     <string name="Settings_Save">Save</string>
+    <string name="Settings_editText_MetasonicPath">http://www.stefanoppl.net/fellner</string>
     <string name="fragment_process_what_i_do">What I do</string>
     <string name="fragment_process_send_to">send to:</string>
     <string name="fragment_process_receive_from">receive from:</string>

@@ -89,7 +89,7 @@ public class Settings {
     }
     
     public String getServerMetasonic() {
-    	return get("server", "Error");
+    	return get("server", "http://www.stefanoppl.net/fellner");
     }
     
     public boolean setOffsetX(String offset) {

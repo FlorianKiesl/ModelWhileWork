@@ -198,10 +198,7 @@ public class ProcessManager {
 			try{
 				String fileName = Settings.getInstance().getUser() + "_" 
 						+ p.getUserRole() + "_" + p.getTitle() + ".xml";
-				File file = new File(this.getExternalCacheStorage().getPath() + "/metasonicExportMWYW.xml");
-//				if(!file.exists()){
-//					file.mkdir();
-//				}
+				File file = new File(this.getExternalCacheStorage().getPath() + "/" + fileName);
 				boolean erg = p.storeMetasonicXML(file);
 				
 				if (erg) {
@@ -220,7 +217,7 @@ public class ProcessManager {
 	public boolean uploadData(File file){
 		try{
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost("http://www.stefanoppl.net/fellner/upload_xml.php");
+			HttpPost httpPost = new HttpPost(Settings.getInstance().getServerMetasonic() + "/upload_xml.php");
 
 			MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
 //			multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);

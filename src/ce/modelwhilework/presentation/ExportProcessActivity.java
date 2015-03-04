@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.data.Settings;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,18 +59,17 @@ public class ExportProcessActivity extends Activity {
 		if (sdCard.exists() && sdCard.canWrite()){
 			adapterLv.add(new AbstractMap.SimpleEntry<String,String>("SDExt", "External SD-Card"));
 		}
-		adapterLv.add(new AbstractMap.SimpleEntry<String,String>("Webserver", "PHP-Server (http://stefanoppl.net)"));
+		adapterLv.add(new AbstractMap.SimpleEntry<String,String>("Webserver", "PHP-Server (" + Settings.getInstance().getServerMetasonic() + ")"));
 		lvExportPath.setAdapter(adapterLv);
 		
-		Button btnSenden = (Button) this.findViewById(R.id.activity_export_process_btnSenden);
-		btnSenden.setOnClickListener(new OnClickListener() {
+		Button btnExport = (Button) this.findViewById(R.id.activity_export_process_btnSenden);
+		btnExport.setOnClickListener(new OnClickListener() {
 			
 			
 			@Override
 			public void onClick(View v) {
 				try{
 					Spinner spinner = (Spinner) ExportProcessActivity.this.findViewById(R.id.activity_export_process_exportType);
-//					ListView lvExportPath = (ListView) ExportProcessActivity.this.findViewById(R.id.activity_export_process_exportPath);
 					@SuppressWarnings("unchecked")
 					Entry<String,String> selectedType = (Entry<String,String>)spinner.getSelectedItem();
 					Entry<String,String> selectedPath = adapterLv.getSelectedItem();
@@ -165,9 +166,9 @@ public class ExportProcessActivity extends Activity {
 		LayoutInflater inflater;
 		int resourceId;
 		Context ctx;
-		private int selectedPos;
+		private int selectedPos = -1;
 //		String selectedItem;
-		
+
 		public ListAdapterRadioButton(Context context, int resourceId) {
 			super(context, resourceId);
 			inflater = LayoutInflater.from(context);
@@ -179,9 +180,10 @@ public class ExportProcessActivity extends Activity {
 		public Entry<String, String> getSelectedItem(){
 			return super.getItem(this.selectedPos);
 		}
-		
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+//			super.getView(position, convertView, parent);
 			
 			final ViewGroup viewGroup = parent;
 
@@ -195,14 +197,16 @@ public class ExportProcessActivity extends Activity {
 	        tv.setText(title);
 	        
 	        RadioButton rb = (RadioButton) convertView.findViewById(R.id.activity_list_radioButton_radioButton);
+	        if (this.selectedPos == -1 && position == 0){
+		        rb.setChecked(true);
+		        notifyDataSetChanged();
+		        this.selectedPos = 0;
+	        }
 	        rb.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					boolean checked;
-					int pos = 0;
 					for(int i = 0; i < viewGroup.getChildCount(); i++) {
-						checked = false;
 						for(int x = 0; x < ((ViewGroup) viewGroup.getChildAt(i)).getChildCount(); x++) {
 							View v1 = ((ViewGroup) viewGroup.getChildAt(i)).getChildAt(x);						
 							if(v1 instanceof RadioButton) {
@@ -212,7 +216,6 @@ public class ExportProcessActivity extends Activity {
 								}
 								else
 									ListAdapterRadioButton.this.selectedPos = i;
-									checked = true;
 							}
 						}
 			        }
@@ -220,8 +223,10 @@ public class ExportProcessActivity extends Activity {
 					notifyDataSetChanged();
 				}
 			});
-
+	        
 	        return convertView;
 		}
 	}
+	
+	
 }
