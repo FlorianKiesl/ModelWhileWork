@@ -245,7 +245,7 @@ public class Process extends Modus {
 			}
 
 	        dom.appendChild(elProcess);
-	        return this.writeXML(dom, new File(filePath, getFileTitle()), true);
+	        return this.writeXML(dom, new File(filePath, getFileTitle()));
 	        
 	    } catch (ParserConfigurationException pce) {
 	    	pce.printStackTrace();
@@ -305,20 +305,18 @@ public class Process extends Modus {
 	        elProcess.appendChild(elSubject);
 	        
 	        dom.appendChild(elProcess);
-	        return writeXML(dom, file, false);
+	        return writeXML(dom, file);
 	    }catch (ParserConfigurationException pce) {
 	        return false;
 	    }
 	}
 	
-	private boolean writeXML(Document dom, File file, boolean bDoctype){
+	private boolean writeXML(Document dom, File file){
         try {
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.setOutputProperty(OutputKeys.METHOD, "xml");
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            //TODO: FK: Könnten wir eventuell weglassen, Besprechen mit Johannes
-            if (bDoctype) tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
             tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
             // write DOM to file
