@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import javax.xml.parsers.*;
@@ -16,13 +17,19 @@ import javax.xml.transform.stream.*;
 import org.xml.sax.*;
 import org.w3c.dom.*;
 
+import ce.modelwhilework.data.contextinfo.Audio;
+import ce.modelwhilework.data.contextinfo.ContextInformation;
+import ce.modelwhilework.data.contextinfo.Location;
+import ce.modelwhilework.data.contextinfo.Picture;
+import ce.modelwhilework.data.contextinfo.Text;
+import ce.modelwhilework.data.contextinfo.Video;
 import ce.modelwhilework.data.xml.XmlHelper;
 
 
 
 public class Process extends Modus {
 	
-	private final String fileExtension = ".mwyw";
+	private final static String fileExtension = ".mwyw";
 	
 	private Stack<Card> mainStack;
 	private Stack<Card> sideStack;
@@ -30,17 +37,18 @@ public class Process extends Modus {
 	private Message messageCard;
 	private String userRole;
 	
-	public Process(String title) {
+	public Process(String title, String role) {
 		super(title);
 		
 		mainStack = new Stack<Card>();
 		sideStack = new Stack<Card>();	
 		taskCard = new Task("");
 		messageCard = new Message("", "", true);
-		userRole = "";
+		userRole = role;
 	}
 	
 	public String getFileTitle() { return getTitle() + fileExtension; }
+	public static String getFileExtension() { return fileExtension; }
 	
 	public boolean addCard(Card card) { return mainStack.add(card);	}
 	
@@ -145,6 +153,21 @@ public class Process extends Modus {
 			dom = db.parse(file);
 			
 			Element doc = dom.getDocumentElement();
+			
+			NodeList nlProcess = doc.getElementsByTagName("Process");
+			
+			/*boolean ok = false;
+			for(int i = 0; i < nlProcess.getLength(); i++) {
+				
+				e = (Element)nlProcess.item(i);
+				addContextInformations2Element(this, e);
+				this.setUserRole(e.getAttribute("role"));
+				ok = true;
+            }		
+			
+			if(!ok)
+				return false;*/
+			
 			NodeList nlStacks = doc.getElementsByTagName("Stack");
 			
 			for(int i = 0; i < nlStacks.getLength(); i++) {
@@ -194,12 +217,57 @@ public class Process extends Modus {
 	
 	private boolean addElement2Stack(Stack<Card> s, Element e) {
 		
+		Card card;
+		
 		if(e.getAttribute("type").equals(CardType.Task.toString()))
-			return s.add(new Task(e.getAttribute("title")));
+			card = new Task(e.getAttribute("title"));
 		else if(e.getAttribute("type").equals(CardType.Message.toString()))
-			return s.add(new Message(e.getAttribute("title"), e.getAttribute("communicationPartner"), Boolean.parseBoolean(e.getAttribute("sender"))));
+			card = new Message(e.getAttribute("title"), e.getAttribute("communicationPartner"), Boolean.parseBoolean(e.getAttribute("sender")));
+		else
+			return false;
 
-		return false;
+		addContextInformations2Element(card, e);
+		
+		return s.add(card);
+	}
+	
+	private boolean addContextInformations2Element(Modus m, Element e) {
+		
+		boolean bRet = true;
+		
+		TreeSet<ContextInformation> contextInformations = new TreeSet<ContextInformation>();
+		NodeList childs = e.getChildNodes();
+		for(int n = 0; n < childs.getLength(); n++) {
+			
+			if (childs.item(n).getNodeType() == Node.ELEMENT_NODE) {
+				
+				if(e.getAttribute("type").equals(Picture.class.getName())) {
+					if(!contextInformations.add(new Picture(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+						bRet = false;
+				}
+				else if(e.getAttribute("type").equals(Video.class.getName())) {
+					if(!contextInformations.add(new Video(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+						bRet = false;
+				}
+				else if(e.getAttribute("type").equals(Text.class.getName())) {
+					if(!contextInformations.add(new Text(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+						bRet = false;
+				}
+				else if(e.getAttribute("type").equals(Audio.class.getName())) {
+					if(!contextInformations.add(new Audio(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+						bRet = false;
+				}
+				else if(e.getAttribute("type").equals(Location.class.getName())) {
+					if(!contextInformations.add(new Location(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+						bRet = false;
+				}
+				else
+					bRet = false;
+			}										
+		}
+		
+		m.setContextInformations(contextInformations);
+		return bRet;
 	}
 	
 	public boolean storeXML(File filePath) {
@@ -219,7 +287,10 @@ public class Process extends Modus {
 	        dom = db.newDocument();
 
 	        elProcess = dom.createElement("Process");
-
+	        elProcess.setAttribute("user", Settings.getInstance().getUser());
+	        elProcess.setAttribute("role", this.getUserRole());
+	        super.getContextInformationsXML(dom, elProcess);
+	        
 	        //add main stack
 	        elStack = dom.createElement("Stack");
 	        elStack.setAttribute("id", "Main");

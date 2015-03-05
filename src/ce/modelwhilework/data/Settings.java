@@ -15,7 +15,7 @@ public class Settings {
 
     private Settings(String configurationPath){
 		configuration = new Properties();
-		this.configurationFile = configurationPath + "⁄Settings";
+		this.configurationFile = configurationPath + ".settings";
 	}
 	
 	public static Settings getInstance(){
@@ -81,7 +81,7 @@ public class Settings {
     }
     
     public String getUser() {
-    	return get("user", "Error");
+    	return get("user", "DefaultUser");
     }
     
     public boolean setServerMetasonic(String server) {
@@ -97,7 +97,7 @@ public class Settings {
     }
     
     public String getOffsetX() {
-    	return get("offset_x", "Error");
+    	return get("offset_x", "0");
     }
     
     public boolean setOffsetY(String offset) {
@@ -105,6 +105,6 @@ public class Settings {
     }
     
     public String getOffsetY() {
-    	return get("offset_y", "Error");
+    	return get("offset_y", "100");
     }
 }

@@ -66,7 +66,6 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 		SurfaceView cameraView = (SurfaceView) findViewById(R.id.surfaceviewCamera);
 		cameraViewHolder = cameraView.getHolder();
 		cameraViewHolder.addCallback(this);
-		// setType() ist ab Android 4.x �berfl�ssig und wird ignoriert
 		cameraViewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		cameraCallbackPreView = new Camera.PictureCallback() {
 			public void onPictureTaken(byte[] data, Camera c) {

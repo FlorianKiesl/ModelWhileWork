@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.data.Process;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -47,9 +48,8 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 	}
 
 	private void loadProcesses() {
-		
 		processes.clear();
-		processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage());
+		processes.addAll(new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage()));
 	}
 	
 	private void showAlert(String msg) {
@@ -76,12 +76,24 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 			                                 public void onClick(DialogInterface dialog, int whichButton) {			                                	 
 
 			                                	 for(String f : listAdapter.getSelectedItems()) {
-			                                		 File file = new File(getFilesDir(), f);
-			                                		 if(!file.delete())
-			                                			 showAlert("Can't delete file: " + f);
-			                                	 }	
-			                                	 loadProcesses();
+			                                		 
+			                                		 boolean del = true;
+			                                		 for(Process p : ProcessManager.getInstance().getProcesses()) {
+			                                			 if(p.getFileTitle().equals(f)) {
+			                                				 showAlert("Can't delete file: " + f + "!\nPlease close process first!");
+			                                				 del = false;
+			                                				 break;
+			                                			 }
+			                                		 }
+			                                		 
+			                                		 if(del) {
+			                                			 File file = new File(getFilesDir(), f);
+			                                			 if(!file.delete())
+			                                				 showAlert("Can't delete file: " + f);
+			                                		 }
+			                                	 }				                                	 
 			                                	 listAdapter.resetSelectedItems();
+			                                	 loadProcesses();
 			                                	 listAdapter.notifyDataSetChanged(); 
 			                                 }
 			                           }

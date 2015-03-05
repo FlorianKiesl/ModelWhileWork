@@ -1,6 +1,7 @@
 package ce.modelwhilework.presentation;
 
 import ce.modelwhilework.data.ProcessManager;
+import ce.modelwhilework.data.Settings;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -33,7 +34,7 @@ public class NewProcessActivity extends Activity implements DialogInterface.OnCl
 				if(title.length() == 0)
 					showAlert("Please enter a process title!!!");
 				else {
-					if(ProcessManager.getInstance().addProcess(new Process(title)))
+					if(ProcessManager.getInstance().addProcess(new Process(title, Settings.getInstance().getUser())))
 						activity.finish();
 					else
 						showAlert("Can't create process!!!\nUse a different name or load/delete the existing process.");

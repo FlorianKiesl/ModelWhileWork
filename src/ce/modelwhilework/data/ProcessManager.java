@@ -90,7 +90,7 @@ public class ProcessManager {
 		
 		File[] files = getInternalStoreage().listFiles();
 		for(File f : files) {
-			if(f.getName().endsWith(".mwyw"))
+			if(f.getName().endsWith(Process.getFileExtension()))
 				processes.add(f.getName());
 		}
 		
@@ -135,7 +135,7 @@ public class ProcessManager {
 	
 	public boolean openProcess(String processName){
 		
-		Process p = new Process(processName);
+		Process p = new Process(processName, Settings.getInstance().getUser());
 		File file = new File(getInternalStoreage().toString());
 		if(p.loadXML(file)) {
 			

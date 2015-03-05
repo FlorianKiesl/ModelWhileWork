@@ -50,7 +50,7 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 				else if(ProcessManager.getInstance().openProcess(processName))
 					activity.finish();
 				else
-					showAlert("Load process fail!!!");
+					showAlert("Open process fail!!!");
 			}
 		});
 	}

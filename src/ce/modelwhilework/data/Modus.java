@@ -2,7 +2,11 @@ package ce.modelwhilework.data;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.TreeSet;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
@@ -25,10 +29,35 @@ public abstract class Modus implements Comparable<Modus> {
 	public TreeSet<ContextInformation> getContextInformations() {
 		return contextInformations;
 	}
+	
+	public boolean hasContextInformation() { return contextInformations.size() > 0; }
 
 	public void setContextInformations(
 			TreeSet<ContextInformation> contextInformations) {
 		this.contextInformations = contextInformations;
+	}
+	
+	protected Element getContextInformationsXML(Document dom, Element parent) {
+		
+		if(this.hasContextInformation()) {
+			
+			Element contextInfoElement;
+			ContextInformation ci;
+			
+			Iterator<ContextInformation> it;
+			it = this.getContextInformations().iterator();
+			while(it.hasNext()){
+				
+				ci = it.next();
+				contextInfoElement = dom.createElement("ContextInformation");
+				contextInfoElement.setAttribute("id", Integer.toString(ci.getID()));
+				contextInfoElement.setAttribute("path", ci.getPath());
+				contextInfoElement.setAttribute("type", ci.getClass().getName());
+				parent.appendChild(contextInfoElement);
+			}
+		}
+		
+		return parent;
 	}
 	
 	abstract protected String getTypeID();
