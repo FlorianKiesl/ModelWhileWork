@@ -68,6 +68,11 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
+            android:name="ce.modelwhilework.presentation.contextinfo.TextActivity"
+            android:label="@string/title_activity_text"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name="ce.modelwhilework.presentation.contextinfo.AudioRecordActivity"
             android:label="@string/title_activity_audio"
             android:screenOrientation="landscape" >

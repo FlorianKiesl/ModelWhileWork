@@ -13,6 +13,7 @@ import android.util.Log;
 import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
+import ce.modelwhilework.data.contextinfo.Text;
 import ce.modelwhilework.data.contextinfo.Video;
 
 public abstract class Modus implements Comparable<Modus> {
@@ -98,10 +99,20 @@ public abstract class Modus implements Comparable<Modus> {
 		return false;
 	}
 	
+	public boolean addContextInformationText(byte[] data){
+		int id = getFreeID();
+		String path = this.getContextInfoFilePath(id);
+		if (writeByteArrFile(data, path)){
+			contextInformations.add(new Text(id, path));		
+			return true;			
+		}
+		return false;
+	}
+
 	public boolean addContextInformationPicture(byte[] data) {
 		int id = getFreeID();
 		String path = this.getContextInfoFilePath(id);
-		if (writeByteArrFile(data, path, id)){
+		if (writeByteArrFile(data, path)){
 			contextInformations.add(new Picture(id, path));		
 			return true;			
 		}
@@ -113,7 +124,7 @@ public abstract class Modus implements Comparable<Modus> {
 		
 		int id = getFreeID();
 		String path = this.getContextInfoFilePath(id);
-		if (writeByteArrFile(data, path, id)){
+		if (writeByteArrFile(data, path)){
 			contextInformations.add(new Video(id, path));		
 			return true;			
 		}
@@ -124,14 +135,14 @@ public abstract class Modus implements Comparable<Modus> {
 		
 		int id = getFreeID();
 		String path = this.getContextInfoFilePath(id);
-		if (writeByteArrFile(data, path, id)){
+		if (writeByteArrFile(data, path)){
 			contextInformations.add(new Audio(id, path));		
 			return true;			
 		}
 		return false;
 	}
 	
-	private boolean writeByteArrFile(byte[] data, String path, int id){
+	private boolean writeByteArrFile(byte[] data, String path){
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(path);

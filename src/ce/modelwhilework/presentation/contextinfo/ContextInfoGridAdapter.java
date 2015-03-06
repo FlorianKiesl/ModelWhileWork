@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -94,34 +95,6 @@ public class ContextInfoGridAdapter extends BaseAdapter {
 				text.setText("Title");
 				imgView.setImageResource(R.drawable.contextfile_48);
 			}
-			
-			grid.setOnTouchListener(new OnTouchListener() {
-				
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					if (event.getAction() == MotionEvent.ACTION_DOWN) {
-						
-						ClipData data = ClipData.newPlainText("", "");
-						DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
-								v);
-
-						v.startDrag(data, shadowBuilder, v, 0);
-						return true;
-					} else {
-						return false;
-					}
-				}
-			});
-//			
-//			imgButton.setOnClickListener(new OnClickListener() {
-//				
-//				@Override
-//				public void onClick(View v) {
-//					Toast msg = Toast.makeText(v.getContext().getApplicationContext(), "Test " + v.getTag().toString(), Toast.LENGTH_LONG);
-////					msg.setView(v);
-//					msg.show();
-//				}
-//			});
 		}
 		else{
 			grid = (View) convertView;

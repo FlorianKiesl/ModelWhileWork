@@ -26,6 +26,7 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="title_activity_audio">AudioActivity</string>
     <string name="title_activity_camera">PictureActivity</string>
+    <string name="title_activity_text">TextActivity</string>
     <string name="action_makePicutre">make picture</string>
     <string name="title_activity_open_process">OpenProcessActivity</string>
     <string name="cancel">cancel</string>

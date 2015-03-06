@@ -12,6 +12,7 @@ import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
+import ce.modelwhilework.data.contextinfo.Text;
 import ce.modelwhilework.data.contextinfo.Video;
 import ce.modelwhilework.presentation.R;
 import ce.modelwhilework.presentation.R.id;
@@ -39,6 +40,7 @@ import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,7 +51,10 @@ import android.widget.VideoView;
 public class ContextInfoActivity extends Activity {
 
 	private Modus modus;
-
+	
+	private ContextInfoGridAdapter adapterInfoGrid;
+	private GridView grid;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,8 +69,7 @@ public class ContextInfoActivity extends Activity {
 			}
 		}
 	}
-	private ContextInfoGridAdapter adapterInfoGrid;
-	private GridView grid;
+
 	@Override
 	protected void onPostResume() {
 		super.onPostResume();
@@ -92,12 +96,33 @@ public class ContextInfoActivity extends Activity {
 						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 						intent.putExtra("Path", contextInfo.getPath());
 						startActivity(intent);
-					}	
+					}
 					else if (contextInfo instanceof Audio){
 						ContextInfoActivity.this.playAudio(contextInfo.getPath());
 					}
+					else if (contextInfo instanceof Text){
+						Intent intent = new Intent(ContextInfoActivity.this, TextActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						intent.putExtra("Path", contextInfo.getPath());
+					    startActivity(intent);
+					}
 				}
 			}
+		});
+		
+		grid.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				view.performClick();
+				ClipData data = ClipData.newPlainText("", "");
+				DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+
+				view.startDrag(data, shadowBuilder, view, 0);
+				return false;
+			}
+			
 		});
 		
 		ImageView btnDel = (ImageView) this.findViewById(R.id.activity_contextinfo_iv_del);
@@ -139,6 +164,11 @@ public class ContextInfoActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_newDescription){
+			Intent intent = new Intent(this, TextActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			if(this.modus instanceof Card)
+				intent.putExtra("CARD_ID", ((Card) this.modus).getTitle());
+		    startActivity(intent);
 		}
 		else if (id == R.id.action_newPicture){
 			
@@ -158,7 +188,6 @@ public class ContextInfoActivity extends Activity {
 		else if (id == R.id.action_newVideo){
 			Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//			intent.putExtra(MediaStore.EXTRA_OUTPUT, new File(ProcessManager.getInstance().getExternalCacheStorage(), "videoCache").toURI());
 			startActivityForResult(intent, 0);
 		}
 		return super.onOptionsItemSelected(item);
