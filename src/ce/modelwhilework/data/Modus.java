@@ -1,5 +1,6 @@
 package ce.modelwhilework.data;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.TreeSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import android.util.Log;
 import ce.modelwhilework.data.contextinfo.Audio;
 import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.contextinfo.Picture;
@@ -69,7 +71,33 @@ public abstract class Modus implements Comparable<Modus> {
 		
 		return  contextInformations.last().getID() + 1;
 	}
-
+	
+	public boolean removeContextInfo(int id){
+		if (this.contextInformations != null){
+			int i = 0;
+			Iterator<ContextInformation> iterator = this.contextInformations.iterator();
+			ContextInformation remItem = null;
+			
+			while (iterator.hasNext()){
+				remItem = iterator.next();
+				if (id == remItem.getID()){
+					
+					if (this.contextInformations.remove(remItem)){
+						File fileCI = new File(remItem.getPath());
+						if (fileCI.exists()){
+							if (!fileCI.delete()){
+								//TODO: View bescheid geben wenn etwas schiefgegangen ist....
+								Log.i("Löschvorgang", "Fehlgeschlagen");
+							}
+						}
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	public boolean addContextInformationPicture(byte[] data) {
 		int id = getFreeID();
 		String path = this.getContextInfoFilePath(id);

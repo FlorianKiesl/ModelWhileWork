@@ -13,11 +13,15 @@ import ce.modelwhilework.presentation.R;
 import ce.modelwhilework.presentation.R.drawable;
 import ce.modelwhilework.presentation.R.id;
 import ce.modelwhilework.presentation.R.layout;
+import android.content.ClipData;
 import android.content.Context;
 import android.support.v4.util.Pools.Pool;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.DragShadowBuilder;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -56,7 +60,7 @@ public class ContextInfoGridAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return ((ContextInformation) this.getItem(position)).getID();
 	}
-
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
@@ -65,31 +69,49 @@ public class ContextInfoGridAdapter extends BaseAdapter {
 		if (convertView == null){
 			grid = new View(context);
 			grid = inflater.inflate(R.layout.list_contextinfo, null);
+			grid.setTag(((ContextInformation) this.getItem(position)).getID());
 			TextView text = (TextView) grid.findViewById(R.id.list_contextinfo_grid_text);
-			ImageView imgButton = (ImageView) grid.findViewById(R.id.list_contextinfo_grid_image);
+			ImageView imgView = (ImageView) grid.findViewById(R.id.list_contextinfo_grid_image);
 			ContextInformation curContextInfo = (ContextInformation) this.getItem(position);
-			imgButton.setTag(position);
+//			imgView.setTag(position);
 			if (curContextInfo instanceof Picture){
 				text.setText("Picture");
-				imgButton.setImageResource(R.drawable.contextfile_picture48);
+				imgView.setImageResource(R.drawable.contextfile_picture48);
 			}
 			else if (curContextInfo instanceof Video){
 				text.setText("Video");
-				imgButton.setImageResource(R.drawable.contextfile_video48);
+				imgView.setImageResource(R.drawable.contextfile_video48);
 			}
 			else if (curContextInfo instanceof Audio){
 				text.setText("Audio");
-				imgButton.setImageResource(R.drawable.contextfile_audio48);				
+				imgView.setImageResource(R.drawable.contextfile_audio48);				
 			}
 			else if (curContextInfo instanceof Text){
 				text.setText("Text");
-				imgButton.setImageResource(R.drawable.contextfile_text48);				
+				imgView.setImageResource(R.drawable.contextfile_text48);				
 			}
 			else{
 				text.setText("Title");
-				imgButton.setImageResource(R.drawable.contextfile_48);
+				imgView.setImageResource(R.drawable.contextfile_48);
 			}
 			
+			grid.setOnTouchListener(new OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if (event.getAction() == MotionEvent.ACTION_DOWN) {
+						
+						ClipData data = ClipData.newPlainText("", "");
+						DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(
+								v);
+
+						v.startDrag(data, shadowBuilder, v, 0);
+						return true;
+					} else {
+						return false;
+					}
+				}
+			});
 //			
 //			imgButton.setOnClickListener(new OnClickListener() {
 //				

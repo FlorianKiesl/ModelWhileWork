@@ -18,6 +18,9 @@ import ce.modelwhilework.presentation.R.id;
 import ce.modelwhilework.presentation.R.layout;
 import ce.modelwhilework.presentation.R.menu;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -25,12 +28,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.DragShadowBuilder;
+import android.view.View.OnDragListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -53,20 +65,20 @@ public class ContextInfoActivity extends Activity {
 		}
 	}
 	private ContextInfoGridAdapter adapterInfoGrid;
-	
+	private GridView grid;
 	@Override
 	protected void onPostResume() {
 		super.onPostResume();
 		
 		adapterInfoGrid = new ContextInfoGridAdapter(this, this.modus.getContextInformations());
-		GridView grid = (GridView) this.findViewById(R.id.grid);
+		
+		grid = (GridView) this.findViewById(R.id.grid);
 		grid.setAdapter(adapterInfoGrid);
 		grid.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Bundle contextInfoBundle;
 				ContextInformation contextInfo = (ContextInformation) adapterInfoGrid.getItem(position);
 				if (contextInfo != null){
 					if (contextInfo instanceof Picture){
@@ -85,6 +97,31 @@ public class ContextInfoActivity extends Activity {
 						ContextInfoActivity.this.playAudio(contextInfo.getPath());
 					}
 				}
+			}
+		});
+		
+		ImageView btnDel = (ImageView) this.findViewById(R.id.activity_contextinfo_iv_del);
+		
+		btnDel.setOnDragListener(new OnDragListener() {
+			
+			@Override
+			public boolean onDrag(View v, DragEvent event) {
+				
+				switch(event.getAction()){
+					case DragEvent.ACTION_DROP:
+						if (event.getLocalState() instanceof LinearLayout){
+							
+							
+							
+							LinearLayout item = (LinearLayout) event.getLocalState();
+							int id = Integer.parseInt(item.getTag().toString());
+							
+							ContextInfoActivity.this.showDeleteQuestion("Are you sure to delete this contextinformation?", id);
+
+						}
+						break;
+				}
+				return true;
 			}
 		});
 	}
@@ -185,5 +222,32 @@ public class ContextInfoActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private void showDeleteQuestion(String msg, final int dropTagId) {
+		
+		AlertDialog.Builder alertDialog =	new AlertDialog.Builder(this);
+		alertDialog.setTitle("question");
+		alertDialog.setMessage(msg);
+		alertDialog.setNegativeButton("No",
+				   new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int whichButton) {
+                    	  dialog.dismiss();
+                      }
+                }
+		);
+		alertDialog.setPositiveButton("Yes",
+									   new DialogInterface.OnClickListener() {
+			                                 public void onClick(DialogInterface dialog, int whichButton) {			                                	 
+			         							
+			         							ContextInfoActivity.this.modus.removeContextInfo(dropTagId);
+			         							ContextInfoActivity.this.adapterInfoGrid.notifyDataSetChanged();
+			         							grid.setAdapter(ContextInfoActivity.this.adapterInfoGrid);
+			         							
+			         							dialog.dismiss();
+			                                 }
+			                           }
+	    );
+	    alertDialog.show();
 	}
 }

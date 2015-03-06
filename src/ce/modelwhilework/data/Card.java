@@ -1,10 +1,7 @@
 package ce.modelwhilework.data;
 
-import java.util.Iterator;
-
 import org.w3c.dom.*;
 
-import ce.modelwhilework.data.contextinfo.ContextInformation;
 import ce.modelwhilework.data.xml.XmlHelper;
 
 public abstract class Card extends Modus {
