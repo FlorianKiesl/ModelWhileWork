@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ProcessFragment extends Fragment implements DialogInterface.OnClickListener {
@@ -101,6 +102,17 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), FavoriteActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			    startActivity(intent);
+			}
+		});
+		
+		ImageButton ib_Webservice = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_webservice);
+		ib_Webservice.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+
+				Toast.makeText(getActivity(), "todo: execute web service!", Toast.LENGTH_LONG).show();
+				//execute web service
 			}
 		});
 		

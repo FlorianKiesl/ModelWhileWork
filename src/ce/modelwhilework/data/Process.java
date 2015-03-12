@@ -156,7 +156,7 @@ public class Process extends Modus {
 			
 			NodeList nlProcess = doc.getElementsByTagName("Process");
 			
-			/*boolean ok = false;
+			boolean ok = false;
 			for(int i = 0; i < nlProcess.getLength(); i++) {
 				
 				e = (Element)nlProcess.item(i);
@@ -166,7 +166,7 @@ public class Process extends Modus {
             }		
 			
 			if(!ok)
-				return false;*/
+				return false;
 			
 			NodeList nlStacks = doc.getElementsByTagName("Stack");
 			
@@ -286,6 +286,7 @@ public class Process extends Modus {
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 	        dom = db.newDocument();
 
+	        Element elProcessesElement = dom.createElement("Processes");
 	        elProcess = dom.createElement("Process");
 	        elProcess.setAttribute("user", Settings.getInstance().getUser());
 	        elProcess.setAttribute("role", this.getUserRole());
@@ -315,7 +316,8 @@ public class Process extends Modus {
 				id++;
 			}
 
-	        dom.appendChild(elProcess);
+			elProcessesElement.appendChild(elProcess);
+	        dom.appendChild(elProcessesElement);
 	        return this.writeXML(dom, new File(filePath, getFileTitle()));
 	        
 	    } catch (ParserConfigurationException pce) {

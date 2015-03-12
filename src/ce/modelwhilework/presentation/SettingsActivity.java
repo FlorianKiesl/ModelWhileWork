@@ -25,6 +25,9 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_metasonic_server_path);
 		tv.setText(Settings.getInstance().getServerMetasonic());
 		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_path);
+		tv.setText(Settings.getInstance().getWebservic());
+		
 		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);
 		tv.setText(Settings.getInstance().getOffsetX());
 		
@@ -44,6 +47,10 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_metasonic_server_path);	
 				if(!Settings.getInstance().setServerMetasonic(tv.getText().toString()))
 					showAlert("Error by save Metasonic server path!!!");
+				
+				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_path);	
+				if(!Settings.getInstance().setWebservic(tv.getText().toString()))
+					showAlert("Error by save Webservice path!!!");
 				
 				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);	
 				if(!Settings.getInstance().setOffsetX(tv.getText().toString()))
