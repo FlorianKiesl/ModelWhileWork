@@ -27,10 +27,10 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 		
 		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_path);
 		tv.setText(Settings.getInstance().getWebservic());
-		
-		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_parameter);
-		tv.setText(Settings.getInstance().getParameterWebservice());
-		
+//		
+//		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_parameter);
+//		tv.setText(Settings.getInstance().getParameterWebservice());
+//		
 		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);
 		tv.setText(Settings.getInstance().getOffsetX());
 		
@@ -54,11 +54,11 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_path);	
 				if(!Settings.getInstance().setWebservice(tv.getText().toString()))
 					showAlert("Error by save Webservice path!!!");
-				
-				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_parameter);	
-				if(!Settings.getInstance().setParameterWebservice(tv.getText().toString()))
-					showAlert("Error by save Webservice Parameter!!!");
-				
+//				
+//				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_parameter);	
+//				if(!Settings.getInstance().setParameterWebservice(tv.getText().toString()))
+//					showAlert("Error by save Webservice Parameter!!!");
+//				
 				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);	
 				if(!Settings.getInstance().setOffsetX(tv.getText().toString()))
 					showAlert("Error by save offset x!!!");

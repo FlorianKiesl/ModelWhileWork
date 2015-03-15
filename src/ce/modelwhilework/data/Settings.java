@@ -99,15 +99,15 @@ public class Settings {
     public String getWebservic() {
     	return get("webservice", "<IP>:8080/import/exml/store");
     }
-    
-    public boolean setParameterWebservice(String name){
-    	return set("parameterWS", name);
-    }
-    
-    public String getParameterWebservice(){
-    	return get("parameterWS", "xmlFileData");
-    }
-    
+//    
+//    public boolean setParameterWebservice(String name){
+//    	return set("parameterWS", name);
+//    }
+//    
+//    public String getParameterWebservice(){
+//    	return get("parameterWS", "xmlFileData");
+//    }
+//    
     public boolean setOffsetX(String offset) {
     	return set("offset_x", offset);
     }

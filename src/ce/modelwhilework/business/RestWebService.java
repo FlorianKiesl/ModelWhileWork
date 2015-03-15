@@ -33,9 +33,9 @@ public class RestWebService {
 
 	public void invokeExportXML(String xmlFileData, Context ctx){
 		AsyncHttpClient client = new AsyncHttpClient();
-		RequestParams params = new RequestParams();
-		params.put(Settings.getInstance().getParameterWebservice(), xmlFileData);
-		params.setContentEncoding("UTF-8");
+//		RequestParams params = new RequestParams();
+//		params.put(Settings.getInstance().getParameterWebservice(), xmlFileData);
+//		params.setContentEncoding("UTF-8");
 		try {
 			HttpEntity entity = null;
 			try {
@@ -77,39 +77,37 @@ public class RestWebService {
 		}
 
 	}
-	
-	public void postExportXML(String xmlFileData){
-		new Task().execute(xmlFileData);
-	}
-	
-	class Task extends AsyncTask<String, String, String>{
+//	
+//	public void postExportXML(String xmlFileData){
+//		new Task().execute(xmlFileData);
+//	}
+//	
+//	class Task extends AsyncTask<String, String, String>{
+//
+//		@Override
+//		protected String doInBackground(String... params) {
+//			HttpPost postMethod;
+//			HttpClient httpClient;
+//			httpClient = new DefaultHttpClient();
+//			
+//			postMethod = new HttpPost(Settings.getInstance().getWebservic());
+//			try{
+//				List<NameValuePair> params1 = new ArrayList<NameValuePair>();
+//	            params1.add(new BasicNameValuePair(Settings.getInstance().getParameterWebservice(), "Test"));
+//	            UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params1,HTTP.UTF_8);
+//	            
+//				postMethod.setEntity(ent);
+//				HttpResponse response = httpClient.execute(postMethod);
+//				HttpEntity entity = response.getEntity();
+//				
+//			} catch (Exception exc){
+//				exc.printStackTrace();
+//			}
+//			finally{
+////				postMethod.abort();
+////				postMethod.
+//			}
+//			return "";
+//		}
 
-		@Override
-		protected String doInBackground(String... params) {
-			HttpPost postMethod;
-			HttpClient httpClient;
-			httpClient = new DefaultHttpClient();
-			
-			postMethod = new HttpPost(Settings.getInstance().getWebservic());
-			try{
-				List<NameValuePair> params1 = new ArrayList<NameValuePair>();
-	            params1.add(new BasicNameValuePair(Settings.getInstance().getParameterWebservice(), "Test"));
-	            UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params1,HTTP.UTF_8);
-	            
-				postMethod.setEntity(ent);
-				HttpResponse response = httpClient.execute(postMethod);
-				HttpEntity entity = response.getEntity();
-				
-			} catch (Exception exc){
-				exc.printStackTrace();
-			}
-			finally{
-//				postMethod.abort();
-//				postMethod.
-			}
-			return "";
-		}
-
-		
-	}
 }
