@@ -29,13 +29,6 @@
             android:src="@drawable/favorite"
             android:contentDescription="@drawable/favorite" />
 
-        <ImageButton
-            android:id="@+id/fragment_process_imageButton_webservice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/webservice" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

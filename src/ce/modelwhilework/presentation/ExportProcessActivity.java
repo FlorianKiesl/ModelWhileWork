@@ -60,6 +60,7 @@ public class ExportProcessActivity extends Activity {
 			adapterLv.add(new AbstractMap.SimpleEntry<String,String>("SDExt", "External SD-Card"));
 		}
 		adapterLv.add(new AbstractMap.SimpleEntry<String,String>("Webserver", "PHP-Server (" + Settings.getInstance().getServerMetasonic() + ")"));
+		adapterLv.add(new AbstractMap.SimpleEntry<String, String>("Webservice", "Webservice (" + Settings.getInstance().getWebservic() + ")"));
 		lvExportPath.setAdapter(adapterLv);
 		
 		Button btnExport = (Button) this.findViewById(R.id.activity_export_process_btnSenden);
@@ -78,13 +79,20 @@ public class ExportProcessActivity extends Activity {
 						if(selectedPath.getKey() == "SDExt"){
 							ProcessManager.getInstance().exportProcessMetasonicExternal(ProcessManager.getInstance().getCurrentProcess().getTitle());
 						}
+						else if(selectedPath.getKey() == "Webservice"){
+							ProcessManager.getInstance().exportProcessWebservice(ProcessManager.getInstance().getCurrentProcess().getTitle(), ExportProcessActivity.this);
+						}
 						else{
 							UploadMetasonicProcess uploadProcess = new UploadMetasonicProcess();
 							uploadProcess.execute(ProcessManager.getInstance().getCurrentProcess().getTitle());
 						}
-					} else{
+					} 
+					else{
 						if(selectedPath.getKey() == "SDExt"){
 							ProcessManager.getInstance().exportProcessExternal(ProcessManager.getInstance().getCurrentProcess().getTitle());
+						}
+						else if(selectedPath.getKey() == "Webservice"){
+							//ProcessManager.getInstance().exportProcessWebservice(ProcessManager.getInstance().getCurrentProcess().getTitle());
 						}
 						else{
 							UploadProcess uploadProcess = new UploadProcess();

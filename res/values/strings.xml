@@ -45,6 +45,7 @@
     <string name="Settings_User">User:</string>
     <string name="Settings_MetasonicPath">Metasonic Server Path:</string>
     <string name="Settings_WebservicePath">Webservice Path:</string>
+    <string name="Settings_WebserviceParameter">Webservice Parameter:</string>
     <string name="Settings_XOffset">Metasonic Offset X</string>
     <string name="Settings_YOffset">Metasonic Offset Y</string>
     <string name="Settings_Save">Save</string>

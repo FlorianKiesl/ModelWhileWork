@@ -105,17 +105,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			}
 		});
 		
-		ImageButton ib_Webservice = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_webservice);
-		ib_Webservice.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-				Toast.makeText(getActivity(), "todo: execute web service!", Toast.LENGTH_LONG).show();
-				//execute web service
-			}
-		});
-		
 		ib_MsgCardMain = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg_MainStack);		
 		addtOnClickListener4Card(ib_MsgCardMain, process.getTopCardMainStack());
 		

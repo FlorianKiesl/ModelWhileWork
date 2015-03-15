@@ -3,6 +3,7 @@ package ce.modelwhilework.data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
@@ -327,12 +328,46 @@ public class Process extends Modus {
 	}
 	
 	protected boolean storeMetasonicXML(File file){
+		Document dom;
+		try{
+			dom = this.getXMLMetasonicDoc();
+			if(dom != null){
+				return writeXML(dom, file);
+			}
+			return false;
+	    }catch (Exception exc) {
+	        return false;
+	    }
+	}
+	
+	protected String getMetasonicXML(){
+		Document doc = this.getXMLMetasonicDoc();
+		
+		if (doc != null){
+			try {
+				TransformerFactory tf = TransformerFactory.newInstance();
+				Transformer transformer = tf.newTransformer();
+				transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+				StringWriter sw = new StringWriter();
+				transformer.transform(new DOMSource(doc), new StreamResult(sw));
+				String output = sw.getBuffer().toString().replaceAll("\n|\r", "");
+				return output;
+			} catch (TransformerException e) {
+				e.printStackTrace();
+			}			
+		}
+
+		
+		return "";
+	}
+	
+	private Document getXMLMetasonicDoc(){
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    Document dom;
 	    Element elProcess;
 	    Element elSubject;
 	    ArrayList<Card> alCards;
-		try{
+	    try{
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 	        dom = db.newDocument();
 	        elProcess = dom.createElement("EntireModel");
@@ -378,9 +413,10 @@ public class Process extends Modus {
 	        elProcess.appendChild(elSubject);
 	        
 	        dom.appendChild(elProcess);
-	        return writeXML(dom, file);
+	        
+	        return dom;
 	    }catch (ParserConfigurationException pce) {
-	        return false;
+	        return null;
 	    }
 	}
 	

@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import ce.modelwhilework.business.RestWebService;
 import ce.modelwhilework.data.Process;
 
 import org.apache.http.HttpResponse;
@@ -171,6 +172,16 @@ public class ProcessManager {
 		String fileName = Settings.getInstance().getUser() + "_" 
 			+ p.getUserRole() + "_" + p.getTitle() + ".xml";
 		return p.storeMetasonicXML(new File(getExternalStoreage(), fileName));
+	}
+	
+	public boolean exportProcessWebservice(String name, Context ctx){
+		Process p = getProcess(name);
+		if (p == null)
+			return false;
+		RestWebService rWS = new RestWebService();
+		rWS.invokeExportXML(p.getMetasonicXML(), ctx);
+//		rWS.postExp/ortXML(p.getMetasonicXML());
+		return true;
 	}
 	
 	public boolean uploadProcess(String name){

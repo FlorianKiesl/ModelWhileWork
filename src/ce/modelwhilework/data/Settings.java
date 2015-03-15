@@ -92,12 +92,20 @@ public class Settings {
     	return get("server", "http://www.stefanoppl.net/fellner");
     }
     
-    public boolean setWebservic(String server) {
+    public boolean setWebservice(String server) {
     	return set("webservice", server);
     }
     
     public String getWebservic() {
     	return get("webservice", "<IP>:8080/import/exml/store");
+    }
+    
+    public boolean setParameterWebservice(String name){
+    	return set("parameterWS", name);
+    }
+    
+    public String getParameterWebservice(){
+    	return get("parameterWS", "xmlFileData");
     }
     
     public boolean setOffsetX(String offset) {
