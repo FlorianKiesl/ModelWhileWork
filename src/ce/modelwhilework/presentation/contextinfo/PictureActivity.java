@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,11 +19,13 @@ public class PictureActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_picture);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null){
-			Toast msg = Toast.makeText(getBaseContext(), bundle.getString("Path"), Toast.LENGTH_LONG);
-			msg.show();
-			
+//			TODO: Löschen?
+//			Toast msg = Toast.makeText(getBaseContext(), bundle.getString("Path"), Toast.LENGTH_LONG);
+//			msg.show();
+//			
 			File file = new File(bundle.getString("Path"));
 			if (file.exists()){
 				Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -32,5 +35,14 @@ public class PictureActivity extends Activity {
 		}
 		
 	}
-
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean erg = super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+		case android.R.id.home:
+			this.finish();
+		}
+		return erg;
+	}
 }

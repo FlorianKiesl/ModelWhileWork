@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -30,6 +31,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		modus = ProcessManager.getInstance().getCurrentProcess();
 		Bundle bundle = getIntent().getExtras();
@@ -160,5 +162,15 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback, 
 	public void onClick(DialogInterface dialog, int which) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean erg = super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+		case android.R.id.home:
+			this.finish();
+		}
+		return erg;
 	}
 }

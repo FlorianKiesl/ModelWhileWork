@@ -13,6 +13,7 @@ import ce.modelwhilework.data.ProcessManager;
 import ce.modelwhilework.presentation.R;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class TextActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_text);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		modus = ProcessManager.getInstance().getCurrentProcess();
 		Bundle bundle = getIntent().getExtras();
@@ -111,5 +113,15 @@ public class TextActivity extends Activity {
         }
         return datax.toString() ;
     }
-
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean erg = super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+		case android.R.id.home:
+			this.finish();
+		}
+		return erg;
+	}
+	
 }

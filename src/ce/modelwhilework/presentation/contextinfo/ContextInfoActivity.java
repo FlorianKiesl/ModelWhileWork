@@ -85,27 +85,23 @@ public class ContextInfoActivity extends Activity {
 					int position, long id) {
 				ContextInformation contextInfo = (ContextInformation) adapterInfoGrid.getItem(position);
 				if (contextInfo != null){
+					Intent intent = null;
 					if (contextInfo instanceof Picture){
-						Intent intent = new Intent(ContextInfoActivity.this.getBaseContext(), PictureActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						intent.putExtra("Path", contextInfo.getPath());
-						startActivity(intent);
+						intent = new Intent(ContextInfoActivity.this.getBaseContext(), PictureActivity.class);
 					}
 					else if (contextInfo instanceof Video){
-						Intent intent = new Intent(ContextInfoActivity.this.getBaseContext(), VideoActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						intent.putExtra("Path", contextInfo.getPath());
-						startActivity(intent);
+						intent = new Intent(ContextInfoActivity.this.getBaseContext(), VideoActivity.class);
 					}
 					else if (contextInfo instanceof Audio){
-						ContextInfoActivity.this.playAudio(contextInfo.getPath());
+						intent = new Intent(ContextInfoActivity.this, AudioActivity.class);
+
 					}
 					else if (contextInfo instanceof Text){
-						Intent intent = new Intent(ContextInfoActivity.this, TextActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						intent.putExtra("Path", contextInfo.getPath());
-					    startActivity(intent);
+						intent = new Intent(ContextInfoActivity.this, TextActivity.class);
 					}
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("Path", contextInfo.getPath());
+				    startActivity(intent);
 				}
 			}
 		});
@@ -190,15 +186,17 @@ public class ContextInfoActivity extends Activity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivityForResult(intent, 0);
 		}
+		else if (id == android.R.id.home){
+			this.finish();
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data.getData() != null){
+		if (data != null && data.getData() != null){
 			File file = new File(this.getFilePathFromContentUri(data.getData()));
-			Toast.makeText(getApplicationContext(), data.getData().getPath(), Toast.LENGTH_LONG).show();
 			if (file.exists()){
 				byte[] byteArrVideo = null;
 				try {
@@ -206,11 +204,9 @@ public class ContextInfoActivity extends Activity {
 					if (byteArrVideo != null){
 						if (this.modus.addContextInformationVideo(byteArrVideo)){
 							file.delete();
-							Toast.makeText(getApplicationContext(), "Video erfolgreich gespeichert", Toast.LENGTH_LONG).show();
 						}
 					}
 				} catch (IOException e) {
-					Toast.makeText(getApplicationContext(), "Video konnte nicht gespeichert werden!", Toast.LENGTH_LONG).show();
 					e.printStackTrace();
 				}				
 			}			
@@ -230,27 +226,6 @@ public class ContextInfoActivity extends Activity {
 	    filePath = cursor.getString(columnIndex);
 	    cursor.close();
 	    return filePath;
-	}
-	
-	private void playAudio(String path){
-		MediaPlayer myPlayer = new MediaPlayer();
-		try {
-			myPlayer.setDataSource(path);
-			myPlayer.prepare();
-			myPlayer.start();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	private void showDeleteQuestion(String msg, final int dropTagId) {

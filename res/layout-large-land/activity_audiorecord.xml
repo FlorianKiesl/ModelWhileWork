@@ -9,7 +9,7 @@
       	android:layout_width="wrap_content"
       	android:layout_height="wrap_content"
       	android:layout_marginTop="10dp"
-      	android:text="Recording Point: -"
+      	android:text="@string/title_recPoint_activity_audio"
       	android:textAppearance="?android:attr/textAppearanceMedium" />
 
    <ImageView
@@ -19,7 +19,8 @@
       	android:layout_below="@+id/text1"
       	android:layout_centerHorizontal="true"
       	android:layout_marginTop="20dp"
-      	android:src="@drawable/contextinfo_microphone128" />
+      	android:src="@drawable/contextinfo_microphone128"
+      	android:contentDescription="@string/title_activity_audio" />
    
    <LinearLayout  android:layout_width="match_parent"
    		android:layout_height="wrap_content"
@@ -29,18 +30,20 @@
    		android:orientation="horizontal" >
 
 	   <Button
-	      	android:id="@+id/start"
-	      	android:layout_width="wrap_content"
-	      	android:layout_height="wrap_content"
-	      	android:text="start" />
+	       android:id="@+id/start"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_weight="1"
+	       android:text="@string/recordBtn_activity_audio" />
 	
 	   <Button
-	      	android:id="@+id/stop"
-	      	android:layout_width="wrap_content"
-	      	android:layout_height="wrap_content"
-	      	android:layout_marginLeft="10dp"
-	      	android:enabled="false"
-	      	android:text="stop" />
+	       android:id="@+id/stop"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_marginLeft="10dp"
+	       android:layout_weight="1"
+	       android:enabled="false"
+	       android:text="@string/stopBtn_activity_audio" />
    
    </LinearLayout>
 

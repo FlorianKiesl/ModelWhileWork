@@ -22,7 +22,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/program"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name="ce.modelwhilework.presentation.contextinfo.ContextInfoActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_context"
             android:screenOrientation="landscape" />
         <activity
             android:name="ce.modelwhilework.presentation.contextinfo.CameraActivity"
@@ -73,8 +73,13 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.AudioRecordActivity"
+            android:name="ce.modelwhilework.presentation.contextinfo.AudioActivity"
             android:label="@string/title_activity_audio"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="ce.modelwhilework.presentation.contextinfo.AudioRecordActivity"
+            android:label="@string/title_activity_audioRec"
             android:screenOrientation="landscape" >
         </activity>
         <activity

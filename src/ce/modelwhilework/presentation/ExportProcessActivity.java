@@ -52,15 +52,43 @@ public class ExportProcessActivity extends Activity {
 		spinnerExportType.setSelection(0);
 		
 		ListView lvExportPath = (ListView) ExportProcessActivity.this.findViewById(R.id.activity_export_process_exportPath);
-		File sdCard = Environment.getExternalStorageDirectory();
+		final File sdCard = Environment.getExternalStorageDirectory();
 
 		final ListAdapterRadioButton adapterLv = new ListAdapterRadioButton(getBaseContext(),
 				R.layout.list_radiobutton);
-		if (sdCard.exists() && sdCard.canWrite()){
-			adapterLv.add(new AbstractMap.SimpleEntry<String,String>("SDExt", "External SD-Card"));
-		}
-		adapterLv.add(new AbstractMap.SimpleEntry<String,String>("Webserver", "PHP-Server (" + Settings.getInstance().getServerMetasonic() + ")"));
-		adapterLv.add(new AbstractMap.SimpleEntry<String, String>("Webservice", "Webservice (" + Settings.getInstance().getWebservic() + ")"));
+		
+		spinnerExportType.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				adapterLv.clear();
+
+				Entry<String,String> selectedType = (Entry<String,String>) ((Spinner) parent).getItemAtPosition(position);
+				
+				if (sdCard.exists() && sdCard.canWrite()){
+					adapterLv.add(new AbstractMap.SimpleEntry<String,String>("SDExt", "External SD-Card"));
+				}
+				if (selectedType.getKey().compareToIgnoreCase("Metasonic") == 0){
+					
+					adapterLv.add(new AbstractMap.SimpleEntry<String,String>("Webserver", "PHP-Server (" + Settings.getInstance().getServerMetasonic() + ")"));
+					adapterLv.add(new AbstractMap.SimpleEntry<String, String>("Webservice", "Webservice (" + Settings.getInstance().getWebservic() + ")"));
+										
+				}
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				adapterLv.clear();
+				if (sdCard.exists() && sdCard.canWrite()){
+					adapterLv.add(new AbstractMap.SimpleEntry<String,String>("SDExt", "External SD-Card"));
+				}
+				adapterLv.add(new AbstractMap.SimpleEntry<String,String>("Webserver", "PHP-Server (" + Settings.getInstance().getServerMetasonic() + ")"));
+				adapterLv.add(new AbstractMap.SimpleEntry<String, String>("Webservice", "Webservice (" + Settings.getInstance().getWebservic() + ")"));
+			}
+		});
+
 		lvExportPath.setAdapter(adapterLv);
 		
 		Button btnExport = (Button) this.findViewById(R.id.activity_export_process_btnSenden);

@@ -8,6 +8,7 @@ import ce.modelwhilework.presentation.R.id;
 import ce.modelwhilework.presentation.R.layout;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -20,6 +21,8 @@ public class VideoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		this.setContentView(R.layout.activity_video);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null){
 			
@@ -46,5 +49,14 @@ public class VideoActivity extends Activity {
 			}			
 		}
 	}
-
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean erg = super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+		case android.R.id.home:
+			this.finish();
+		}
+		return erg;
+	}
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,7 +18,8 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-	
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		activity = this;
 		TextView tv = (TextView) activity.findViewById(R.id.activity_settings_editText_user);
 		tv.setText(Settings.getInstance().getUser());
@@ -43,31 +45,31 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 			@Override
 			public void onClick(View v) {
 				
-				TextView tv = (TextView) activity.findViewById(R.id.activity_settings_editText_user);	
-				if(!Settings.getInstance().setUser(tv.getText().toString()))
-					showAlert("Error by save user!!!");
-				
-				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_metasonic_server_path);	
-				if(!Settings.getInstance().setServerMetasonic(tv.getText().toString()))
-					showAlert("Error by save Metasonic server path!!!");
-				
-				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_path);	
-				if(!Settings.getInstance().setWebservice(tv.getText().toString()))
-					showAlert("Error by save Webservice path!!!");
-//				
-//				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_parameter);	
-//				if(!Settings.getInstance().setParameterWebservice(tv.getText().toString()))
-//					showAlert("Error by save Webservice Parameter!!!");
-//				
-				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);	
-				if(!Settings.getInstance().setOffsetX(tv.getText().toString()))
-					showAlert("Error by save offset x!!!");
-				
-				tv = (TextView) activity.findViewById(R.id.activity_settings_editText_yoffset);	
-				if(!Settings.getInstance().setOffsetY(tv.getText().toString()))
-					showAlert("Error by save offset y!!!");
+				save();
 			}
 		});
+	}
+	
+	private void save() {
+		TextView tv = (TextView) activity.findViewById(R.id.activity_settings_editText_user);	
+		if(!Settings.getInstance().setUser(tv.getText().toString()))
+			showAlert("Error by save user!!!");
+		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_metasonic_server_path);	
+		if(!Settings.getInstance().setServerMetasonic(tv.getText().toString()))
+			showAlert("Error by save Metasonic server path!!!");
+		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_webservice_path);	
+		if(!Settings.getInstance().setWebservice(tv.getText().toString()))
+			showAlert("Error by save Webservice path!!!");
+
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_xoffset);	
+		if(!Settings.getInstance().setOffsetX(tv.getText().toString()))
+			showAlert("Error by save offset x!!!");
+		
+		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_yoffset);	
+		if(!Settings.getInstance().setOffsetY(tv.getText().toString()))
+			showAlert("Error by save offset y!!!");
 	}
 	
 	@Override
@@ -91,5 +93,16 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 	public void onClick(DialogInterface dialog, int which) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean erg = super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+		case android.R.id.home:
+			save();
+			this.finish();
+		}
+		return erg;
 	}
 }

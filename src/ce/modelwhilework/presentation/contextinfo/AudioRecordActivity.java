@@ -15,6 +15,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,18 +29,17 @@ public class AudioRecordActivity extends Activity {
 	private Button stopBtn;
 	private TextView text;
 	private Modus modus;
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_audiorecord);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		this.text = (TextView) findViewById(R.id.text1);
 		
 		outputFile = ProcessManager.getInstance().getExternalCacheStorage() + "/ModelWhileYouWorkAudioRec.3gpp";
-//		outputFile = Environment.getExternalStorageDirectory().
-//	    		  getAbsolutePath() + "/javacodegeeksRecording.3gpp";
-		
 		modus = ProcessManager.getInstance().getCurrentProcess();
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -73,6 +73,20 @@ public class AudioRecordActivity extends Activity {
 		});
 	      	    
 	    
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (this.myRecorder != null){
+        	try{
+        		myRecorder.stop();
+        	} catch (IllegalStateException exc){
+        		exc.printStackTrace();
+        	}
+			this.myRecorder.release();
+			this.myRecorder = null;
+		}
 	}
 	
 	private void startRecord(View view){
@@ -127,5 +141,13 @@ public class AudioRecordActivity extends Activity {
 		return false;
 	}
 	
-
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean erg = super.onOptionsItemSelected(item);
+		switch(item.getItemId()){
+		case android.R.id.home:
+			this.finish();
+		}
+		return erg;
+	}
 }
