@@ -10,7 +10,7 @@
     tools:context="ce.modelwhilework.presentation.SettingsActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/fragment_process_mainStack_textView_Count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Settings_User" />

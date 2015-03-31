@@ -96,8 +96,12 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			    startActivity(intent);
 			}
-//			if(!adapter.exportProcess(ProcessManager.getInstance().getCurrentProcess().getTitle()))
-//				showAlert("export file failed!");
+		}
+		else if ( id == R.id.action_import){
+			Intent intent = new Intent(getBaseContext(), LoadProcessActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			intent.putExtra("IMPORT", "IMPORT");
+		    startActivity(intent);			
 		}
 		else if (id == R.id.action_open){
 			

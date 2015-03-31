@@ -90,296 +90,337 @@
             android:id="@+id/LayoutCardStacks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical" >
 
-            <FrameLayout
-                android:id="@+id/LayoutMainStack"
+            <LinearLayout
+                android:id="@+id/fragment_process_mainStack_ll_Count"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/stack"
-                android:gravity="center"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/LayoutMainStackTaskCard"
+                <TextView
+                    android:id="@+id/fragment_process_mainStack_textView_Count"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/withbackground"
+                    android:gravity="right|center_vertical"
+                    android:text="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:id="@+id/LayoutMainStack"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/task"
-                    android:gravity="top"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
-                        android:id="@+id/LinearLayout01"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal" >
-
-                        <ImageView
-                            android:id="@+id/ImageView01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:contentDescription="@drawable/work32"
-                            android:src="@drawable/work32" />
-
-                        <TextView
-                            android:id="@+id/TextView01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="4"
-                            android:gravity="center_horizontal"
-                            android:text="@string/fragment_process_what_i_do" />
-
-                        <ImageButton
-                            android:id="@+id/fragment_process_imageButton_ContextInfoCardTask_MainStack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:contentDescription="@drawable/context32"
-                            android:src="@drawable/context32" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/editTextWorkCardTitleMainStack"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="20dp"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="text" >
-
-                        <requestFocus />
-                    </EditText>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/LayoutMainStackMsgCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/message"
+                    android:background="@drawable/stack"
                     android:gravity="center"
                     android:orientation="vertical" >
 
                     <LinearLayout
-                        android:id="@+id/LinearLayout03"
+                        android:id="@+id/LayoutMainStackTaskCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1" >
+                        android:layout_weight="1"
+                        android:background="@drawable/task"
+                        android:gravity="top"
+                        android:orientation="vertical" >
 
-                        <ImageView
-                            android:id="@+id/ImageView03"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                        <LinearLayout
+                            android:id="@+id/LinearLayout01"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
                             android:layout_weight="1"
-                            android:contentDescription="@drawable/msg32"
-                            android:src="@drawable/msg32" />
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/ImageView01"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/work32"
+                                android:src="@drawable/work32" />
+
+                            <TextView
+                                android:id="@+id/TextView01"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="4"
+                                android:gravity="center_horizontal"
+                                android:text="@string/fragment_process_what_i_do" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_process_imageButton_ContextInfoCardTask_MainStack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/context32"
+                                android:src="@drawable/context32" />
+                        </LinearLayout>
 
                         <EditText
-                            android:id="@+id/editTextMsgCardTitleMainStack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/editTextWorkCardTitleMainStack"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_weight="2"
+                            android:layout_marginBottom="20dp"
+                            android:layout_weight="1"
                             android:ems="10"
                             android:inputType="text" />
-
-                        <ImageButton
-                            android:id="@+id/fragment_process_imageButton_ContextInfoCardMsg_MainStack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:contentDescription="@drawable/context32"
-                            android:src="@drawable/context32" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/LinearLayout04"
+                        android:id="@+id/LayoutMainStackMsgCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4" >
-
-                        <CheckBox
-                            android:id="@+id/checkBoxMsgCardSendMainstack"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="@string/fragment_process_send_to" />
-
-                        <CheckBox
-                            android:id="@+id/checkBoxMsgCardReciveMainStack"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="@string/fragment_process_receive_from" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/editTextMsgCardReciverSenderMainStack"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </LinearLayout>
+                        android:background="@drawable/message"
+                        android:gravity="center"
+                        android:orientation="vertical" >
 
-            </FrameLayout>
+                        <LinearLayout
+                            android:id="@+id/LinearLayout03"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1" >
 
-            <FrameLayout
-                android:id="@+id/LayoutSideStack"
+                            <ImageView
+                                android:id="@+id/ImageView03"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/msg32"
+                                android:src="@drawable/msg32" />
+
+                            <EditText
+                                android:id="@+id/editTextMsgCardTitleMainStack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="2"
+                                android:ems="10"
+                                android:inputType="text" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_process_imageButton_ContextInfoCardMsg_MainStack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/context32"
+                                android:src="@drawable/context32" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/LinearLayout04"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.4" >
+
+                            <CheckBox
+                                android:id="@+id/checkBoxMsgCardSendMainstack"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="@string/fragment_process_send_to" />
+
+                            <CheckBox
+                                android:id="@+id/checkBoxMsgCardReciveMainStack"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="@string/fragment_process_receive_from" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/editTextMsgCardReciverSenderMainStack"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_process_sideStack_ll_Count"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/stack"
-                android:gravity="center"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/LayoutSideStackTaskCard"
+                <TextView
+                    android:id="@+id/fragment_process_sideStack_textView_Count"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:text="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:id="@+id/LayoutSideStack"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/task"
-                    android:gravity="top"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
-                        android:id="@+id/LinearLayout02"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal" >
-
-                        <ImageView
-                            android:id="@+id/ImageView02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:contentDescription="@drawable/work32"
-                            android:src="@drawable/work32" />
-
-                        <TextView
-                            android:id="@+id/TextView02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="4"
-                            android:gravity="center_horizontal"
-                            android:text="@string/fragment_process_what_i_do" />
-
-                        <ImageButton
-                            android:id="@+id/fragment_process_imageButton_ContextInfoCardTask_SideStack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:contentDescription="@drawable/context32"
-                            android:src="@drawable/context32" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/editTextWorkCardTitleSideStack"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignLeft="@+id/LinearLayout02"
-                        android:layout_alignRight="@+id/LinearLayout02"
-                        android:layout_below="@+id/LinearLayout02"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="20dp"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="text" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/LayoutSideStackMsgCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/message"
+                    android:background="@drawable/stack"
                     android:gravity="center"
                     android:orientation="vertical" >
 
                     <LinearLayout
-                        android:id="@+id/LinearLayout05"
+                        android:id="@+id/LayoutSideStackTaskCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1" >
+                        android:layout_weight="1"
+                        android:background="@drawable/task"
+                        android:gravity="top"
+                        android:orientation="vertical" >
 
-                        <ImageView
-                            android:id="@+id/ImageView04"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                        <LinearLayout
+                            android:id="@+id/LinearLayout02"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
                             android:layout_weight="1"
-                            android:src="@drawable/msg32" />
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/ImageView02"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/work32"
+                                android:src="@drawable/work32" />
+
+                            <TextView
+                                android:id="@+id/TextView02"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="4"
+                                android:gravity="center_horizontal"
+                                android:text="@string/fragment_process_what_i_do" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_process_imageButton_ContextInfoCardTask_SideStack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/context32"
+                                android:src="@drawable/context32" />
+                        </LinearLayout>
 
                         <EditText
-                            android:id="@+id/editTextMsgCardTitleSideStack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/editTextWorkCardTitleSideStack"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignLeft="@+id/LinearLayout02"
+                            android:layout_alignRight="@+id/LinearLayout02"
+                            android:layout_below="@+id/LinearLayout02"
                             android:layout_gravity="center"
-                            android:layout_weight="2"
+                            android:layout_marginBottom="20dp"
+                            android:layout_weight="1"
                             android:ems="10"
-                            android:inputType="text" />
+                            android:inputType="text" >
 
-                        <ImageButton
-                            android:id="@+id/fragment_process_imageButton_ContextInfoCardMsg_SideStack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:contentDescription="@drawable/context32"
-                            android:src="@drawable/context32" />
+                            <requestFocus />
+                        </EditText>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/LinearLayout06"
+                        android:id="@+id/LayoutSideStackMsgCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1.4" >
-
-                        <CheckBox
-                            android:id="@+id/checkBoxMsgCardSendSideStack"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="@string/fragment_process_send_to" />
-
-                        <CheckBox
-                            android:id="@+id/checkBoxMsgCardReciveSideStack"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="@string/fragment_process_receive_from" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/editTextMsgCardReciverSenderSideStack"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
-                </LinearLayout>
-            </FrameLayout>
+                        android:background="@drawable/message"
+                        android:gravity="center"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:id="@+id/LinearLayout05"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1" >
+
+                            <ImageView
+                                android:id="@+id/ImageView04"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:src="@drawable/msg32" />
+
+                            <EditText
+                                android:id="@+id/editTextMsgCardTitleSideStack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="2"
+                                android:ems="10"
+                                android:inputType="text" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_process_imageButton_ContextInfoCardMsg_SideStack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:contentDescription="@drawable/context32"
+                                android:src="@drawable/context32" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/LinearLayout06"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1.4" >
+
+                            <CheckBox
+                                android:id="@+id/checkBoxMsgCardSendSideStack"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="@string/fragment_process_send_to" />
+
+                            <CheckBox
+                                android:id="@+id/checkBoxMsgCardReciveSideStack"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="@string/fragment_process_receive_from" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/editTextMsgCardReciverSenderSideStack"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </LinearLayout>
+                </FrameLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -387,7 +428,10 @@
             android:id="@+id/LayoutCardInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical" >
@@ -396,7 +440,7 @@
                 android:id="@+id/LayoutTaskCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="22.5dp"
                 android:layout_weight="1"
                 android:background="@drawable/task"
                 android:gravity="center"
@@ -452,7 +496,7 @@
                 android:id="@+id/LayoutMsgCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:background="@drawable/message"
                 android:gravity="center"

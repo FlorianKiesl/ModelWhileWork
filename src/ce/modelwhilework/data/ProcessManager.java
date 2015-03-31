@@ -1,7 +1,10 @@
 package ce.modelwhilework.data;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -14,7 +17,9 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import ce.modelwhilework.business.RestWebService;
 import ce.modelwhilework.data.Process;
+import ce.modelwhilework.data.contextinfo.ContextInformation;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -73,9 +78,9 @@ public class ProcessManager {
 		this.dirExternalCache = dir;
 	}
 	
-	public File getInternalStoreage() { return this.dirInternal; }
+	public File getInternalStorage() { return this.dirInternal; }
 	
-	public File getExternalStoreage() { return this.dirExternal; }
+	public File getExternalStorage() { return this.dirExternal; }
 
 	public File getExternalCacheStorage(){
 		return this.dirExternalCache;
@@ -89,7 +94,20 @@ public class ProcessManager {
 		
 		TreeSet<String> processes = new TreeSet<String>();
 		
-		File[] files = getInternalStoreage().listFiles();
+		File[] files = getInternalStorage().listFiles();
+		for(File f : files) {
+			if(f.getName().endsWith(Process.getFileExtension()))
+				processes.add(f.getName());
+		}
+		
+		return processes;
+	}
+	
+	public TreeSet<String> getProcessesFromExternalStoreage() {
+		
+		TreeSet<String> processes = new TreeSet<String>();
+		
+		File[] files = getExternalStorage().listFiles();
 		for(File f : files) {
 			if(f.getName().endsWith(Process.getFileExtension()))
 				processes.add(f.getName());
@@ -120,7 +138,7 @@ public class ProcessManager {
 		String titleUC = process.getFileTitle();
 		titleUC = titleUC.toUpperCase(Locale.getDefault());
 		
-		File[] files = getInternalStoreage().listFiles();
+		File[] files = getInternalStorage().listFiles();
 		for(File f : files) {
 			if(f.getName().toUpperCase(Locale.getDefault()).equals(titleUC))
 				return false;
@@ -137,7 +155,7 @@ public class ProcessManager {
 	public boolean openProcess(String processName){
 		
 		Process p = new Process(processName, Settings.getInstance().getUser());
-		File file = new File(getInternalStoreage().toString());
+		File file = new File(getInternalStorage().toString());
 		if(p.loadXML(file)) {
 			
 			if(this.processSet.add(p)) {
@@ -146,6 +164,68 @@ public class ProcessManager {
 			}
 		}
 		return false;		
+	}
+	
+	public boolean importProcess(String processName){
+		
+		ArrayList<String> tmpProcesses = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage());
+		
+		if(tmpProcesses.contains(processName + Process.getFileExtension()))
+			return false;
+		
+		Process p = new Process(processName, Settings.getInstance().getUser());
+		File file = new File(getExternalStorage().toString());
+		if(!p.loadXML(file))
+			return false;
+		
+		String strExport;
+		File sourceFile, destFile;
+		FileChannel source = null, destination = null;
+		TreeSet<ContextInformation> tmpCI = p.getAllContextInformations();
+		for(ContextInformation ci : tmpCI) {
+			strExport = ci.getPath();
+			strExport = strExport.replace(getInternalStorage().toString(), getExternalStorage().toString());
+			
+			destFile = new File(ci.getPath());
+			sourceFile = new File(strExport);
+
+		    try {
+		    	if(!destFile.exists()) {
+			        destFile.createNewFile();
+			    }
+		    	
+		        source = new FileInputStream(sourceFile).getChannel();
+		        destination = new FileOutputStream(destFile).getChannel();
+		        destination.transferFrom(source, 0, source.size());
+		    } catch (IOException e) {
+				e.printStackTrace();
+			}
+		    finally {
+		        if(source != null) {
+		            try {
+						source.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		        if(destination != null) {
+		            try {
+						destination.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		    }
+		}
+		
+		if(this.processSet.add(p)) {
+			this.curProcess = this.getProcess(p.getTitle());
+			return this.curProcess.storeXML(this.getInternalStorage());
+		}
+		
+		return false;
 	}
 	
 	/*
@@ -162,7 +242,49 @@ public class ProcessManager {
 		if(p == null)
 			return false;
 		
-		return p.storeXML(getExternalStoreage());
+		String strExport;
+		File sourceFile, destFile;
+		FileChannel source = null, destination = null;
+		TreeSet<ContextInformation> tmpCI = p.getAllContextInformations();
+		for(ContextInformation ci : tmpCI) {
+			strExport = ci.getPath();
+			strExport = strExport.replace(getInternalStorage().toString(), getExternalStorage().toString());
+			
+			sourceFile = new File(ci.getPath());
+			destFile = new File(strExport);
+
+		    try {
+		    	if(!destFile.exists()) {
+			        destFile.createNewFile();
+			    }
+		    	
+		        source = new FileInputStream(sourceFile).getChannel();
+		        destination = new FileOutputStream(destFile).getChannel();
+		        destination.transferFrom(source, 0, source.size());
+		    } catch (IOException e) {
+				e.printStackTrace();
+			}
+		    finally {
+		        if(source != null) {
+		            try {
+						source.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		        if(destination != null) {
+		            try {
+						destination.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		    }
+		}
+		
+		return p.storeXML(getExternalStorage());
 	}
 	
 	public boolean exportProcessMetasonicExternal(String name){
@@ -171,7 +293,7 @@ public class ProcessManager {
 			return false;
 		String fileName = Settings.getInstance().getUser() + "_" 
 			+ p.getUserRole() + "_" + p.getTitle() + ".xml";
-		return p.storeMetasonicXML(new File(getExternalStoreage(), fileName));
+		return p.storeMetasonicXML(new File(getExternalStorage(), fileName));
 	}
 	
 	public boolean exportProcessWebservice(String name, Context ctx){

@@ -92,10 +92,29 @@ public class Process extends Modus {
 		return mainStack.peek();
 	}
 	
+	public Card getCardAfterTopCardMainStack() { 
+		if(getMainStackCount() < 2) { return null; }
+		Card f = mainStack.pop();
+		Card s = mainStack.peek();
+		mainStack.add(f);
+		return s;
+	}
+	
 	public Card getTopCardSideStack() { 
 		if(isSideStackEmpty()) { return null; }
 		return sideStack.peek();
 	}
+	
+	public Card getCardAfterTopCardSideStack() { 
+		if(getSideStackCount() < 2) { return null; }
+		Card f = sideStack.pop();
+		Card s = sideStack.peek();
+		sideStack.add(f);
+		return s;
+	}
+	
+	public int getMainStackCount() { return mainStack.size(); }
+	public int getSideStackCount() { return sideStack.size(); }
 	
 	public String getUserRole() {
 		return userRole;
@@ -232,38 +251,45 @@ public class Process extends Modus {
 		return s.add(card);
 	}
 	
-	private boolean addContextInformations2Element(Modus m, Element e) {
+	private boolean addContextInformations2Element(Modus m, Element modus) {
 		
 		boolean bRet = true;
 		
 		TreeSet<ContextInformation> contextInformations = new TreeSet<ContextInformation>();
-		NodeList childs = e.getChildNodes();
+		//NodeList childs = modus.getElementsByTagName("ContextInformation");
+		NodeList childs = modus.getChildNodes();
 		for(int n = 0; n < childs.getLength(); n++) {
 			
 			if (childs.item(n).getNodeType() == Node.ELEMENT_NODE) {
 				
-				if(e.getAttribute("type").equals(Picture.class.getName())) {
-					if(!contextInformations.add(new Picture(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
-						bRet = false;
+				Element e = (Element)childs.item(n);
+				
+				if(e.getTagName().equals("ContextInformation")) {
+					if(e.getAttribute("type").equals(Picture.class.getName())) {
+						if(!contextInformations.add(new Picture(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+							bRet = false;
+					}
+					else if(e.getAttribute("type").equals(Video.class.getName())) {
+						if(!contextInformations.add(new Video(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+							bRet = false;
+					}
+					else if(e.getAttribute("type").equals(Text.class.getName())) {
+						if(!contextInformations.add(new Text(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+							bRet = false;
+					}
+					else if(e.getAttribute("type").equals(Audio.class.getName())) {
+						if(!contextInformations.add(new Audio(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+							bRet = false;
+					}
+					else if(e.getAttribute("type").equals(Location.class.getName())) {
+						if(!contextInformations.add(new Location(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
+							bRet = false;
+					}
+					else
+						bRet = false;					
 				}
-				else if(e.getAttribute("type").equals(Video.class.getName())) {
-					if(!contextInformations.add(new Video(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
-						bRet = false;
-				}
-				else if(e.getAttribute("type").equals(Text.class.getName())) {
-					if(!contextInformations.add(new Text(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
-						bRet = false;
-				}
-				else if(e.getAttribute("type").equals(Audio.class.getName())) {
-					if(!contextInformations.add(new Audio(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
-						bRet = false;
-				}
-				else if(e.getAttribute("type").equals(Location.class.getName())) {
-					if(!contextInformations.add(new Location(Integer.parseInt(e.getAttribute("id")), e.getAttribute("path"))))
-						bRet = false;
-				}
-				else
-					bRet = false;
+				else if(e.getTagName().equals("Card"))
+					break;				
 			}										
 		}
 		
@@ -466,6 +492,46 @@ public class Process extends Modus {
         return alCards;
 	}
 
+	public TreeSet<ContextInformation> getAllContextInformations() {
+		
+		TreeSet<ContextInformation> ci = new TreeSet<ContextInformation>();
+		
+		ci.addAll(this.getContextInformations());
+		
+		for(Card c : this.mainStack)
+			ci.addAll(c.getContextInformations());
+		
+		for(Card c : this.sideStack)
+			ci.addAll(c.getContextInformations());
+				
+		ci.addAll(taskCard.getContextInformations());
+		ci.addAll(messageCard.getContextInformations());
+		
+		return ci;
+	}
+	
+	public static boolean deleteProcess(String name) {
+		
+		boolean bRet = true;
+		
+		Process p = new Process(name, "?");
+		if(!p.loadXML(ProcessManager.getInstance().getInternalStorage()))
+			return false;
+		
+		File file = new File(ProcessManager.getInstance().getInternalStorage(), p.getFileTitle());
+		if(!file.delete())
+			return false;
+		
+		TreeSet<ContextInformation> tmpCI = p.getAllContextInformations();
+		for(ContextInformation ci : tmpCI) {
+			file = new File(ci.getPath());
+			if(!file.delete())
+				bRet = false;
+		}
+		
+		return bRet;
+	}
+	
 	@Override
 	protected String getTypeID() {
 		

@@ -145,6 +145,7 @@ public abstract class Modus implements Comparable<Modus> {
 	private boolean writeByteArrFile(byte[] data, String path){
 		FileOutputStream fos = null;
 		try {
+			
 			fos = new FileOutputStream(path);
 			fos.write(data);			
 		} catch (IOException e) {
@@ -163,7 +164,7 @@ public abstract class Modus implements Comparable<Modus> {
 	
 	private String getContextInfoFilePath(int id){
 		
-		return ProcessManager.getInstance().getInternalStoreage() + "\\" + ProcessManager.getInstance().getCurrentProcess().getTitle() + "\\CI_" + getTypeID() + "_" + id;
+		return ProcessManager.getInstance().getInternalStorage() + "/" + ProcessManager.getInstance().getCurrentProcess().getTitle() + "-CI_" + getTypeID() + "_" + id;
 	}
 	
 	@Override

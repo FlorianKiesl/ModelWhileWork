@@ -19,6 +19,9 @@ public abstract class ContextInformation implements Comparable<ContextInformatio
 
 	@Override
 	public int compareTo(ContextInformation another) {
-		return this.id - another.getID();
+		int ret = this.path.compareTo(another.path);
+		if(ret == 0)
+			ret = this.id - another.getID();			
+		return ret;
 	}
 }

@@ -87,9 +87,8 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 			                                		 }
 			                                		 
 			                                		 if(del) {
-			                                			 File file = new File(getFilesDir(), f);
-			                                			 if(!file.delete())
-			                                				 showAlert("Can't delete file: " + f);
+			                                			 if(!Process.deleteProcess(f.substring(0, f.indexOf("."))))
+			                                				 showAlert("Error occured by process: " + f);
 			                                		 }
 			                                	 }				                                	 
 			                                	 listAdapter.resetSelectedItems();

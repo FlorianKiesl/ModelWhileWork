@@ -20,7 +20,7 @@ public class Settings {
 	
 	public static Settings getInstance(){
 		if (instance == null){
-			instance = new Settings(ProcessManager.getInstance().getInternalStoreage().toString());
+			instance = new Settings(ProcessManager.getInstance().getInternalStorage().toString());
 		}
 		return instance;
 	}

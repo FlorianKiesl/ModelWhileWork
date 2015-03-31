@@ -42,7 +42,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
 					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver,
 					 te_Role;
-	private TextView tv_processTitle;
+	private TextView tv_processTitle, tv_MainStackCount, tv_SideStackCount;
 	private ImageButton ib_Process, ib_TaskCard, ib_MsgCard, ib_TaskCardMain, ib_MsgCardMain, ib_TaskCardSide, ib_MsgCardSide;
 	Process process;
 	
@@ -61,7 +61,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		l_SideStack = (View) fragment.findViewById(R.id.LayoutSideStack);
 		l_SideStackTaskCard = (View) fragment.findViewById(R.id.LayoutSideStackTaskCard);
 		l_SideStackMsgCard = (View) fragment.findViewById(R.id.LayoutSideStackMsgCard);
-		
+				
 		ImageView iv_bin = (ImageView) fragment.findViewById(R.id.imageViewBin);
 
 		// set tag definitions
@@ -124,7 +124,10 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		addtOnClickListener4Card(ib_TaskCard, process.getTaskCard());
 
 		tv_processTitle = (TextView) fragment.findViewById(R.id.textViewProcessTitle);	
-		te_Role = (EditText) fragment.findViewById(R.id.fragment_process_textEdit_role);					
+		te_Role = (EditText) fragment.findViewById(R.id.fragment_process_textEdit_role);	
+		
+		tv_MainStackCount = (TextView) fragment.findViewById(R.id.fragment_process_mainStack_textView_Count);
+		tv_SideStackCount = (TextView) fragment.findViewById(R.id.fragment_process_sideStack_textView_Count);
 		
 		te_TaskTitle = (EditText) fragment.findViewById (R.id.editTextWorkCardTitle);
 		te_MsgTitle = (EditText) fragment.findViewById (R.id.editTextMsgCardTitle);
@@ -150,7 +153,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		      public void onClick(View v) {
 		    	  if(cb_Sender.isChecked() != process.getMessageCard().isSender()) {
 		    		  process.getMessageCard().setSender(cb_Sender.isChecked());
-		    		  process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+		    		  process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	  updateView();
 		    	  }
 		    			 
@@ -163,7 +166,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		      public void onClick(View v) {
 		    	  if(cb_Reciver.isChecked() == process.getMessageCard().isSender()) {
 		    		  process.getMessageCard().setSender(!cb_Reciver.isChecked());
-		    		  process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+		    		  process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	  updateView();
 		    	  }
 		      }
@@ -177,7 +180,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		    	  if(process.getTopCardMainStack() != null) {
 		    		  if(cb_SenderMainStack.isChecked() != ((Message)process.getTopCardMainStack()).isSender()) {
 			    		  ((Message)process.getTopCardMainStack()).setSender(cb_SenderMainStack.isChecked());
-			    		  process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			    		  process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	  updateView();
 			    	  }
 		    	  }
@@ -191,7 +194,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				 if(process.getTopCardMainStack() != null) {
 					 if(cb_ReciverMainStack.isChecked() == ((Message)process.getTopCardMainStack()).isSender()) {
 						 ((Message)process.getTopCardMainStack()).setSender(!cb_ReciverMainStack.isChecked());
-						 process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						 process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	  updateView();
 					 }
 				 }
@@ -206,7 +209,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				 if(process.getTopCardSideStack() != null) {
 					 if(cb_SenderSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
 						 ((Message)process.getTopCardSideStack()).setSender(cb_SenderSideStack.isChecked());
-						 process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						 process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	  updateView();
 					 }		
 				 }		 
@@ -220,7 +223,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				 
 				 if(cb_ReciverSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
 					 ((Message)process.getTopCardSideStack()).setSender(!cb_ReciverSideStack.isChecked());
-					 process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+					 process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	  updateView();
 				 }				 
 			 }
@@ -234,7 +237,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				if(!hasFocus) {
 					
 					process.getTaskCard().setTitle(te_TaskTitle.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+					process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	updateView();
 				}				
 			}
@@ -248,7 +251,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				if(!hasFocus) {
 					
 					process.getMessageCard().setTitle(te_MsgTitle.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+					process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	updateView();
 				}				
 			}
@@ -263,7 +266,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				if(!hasFocus) {
 				
 					process.getMessageCard().setSenderReceiver(te_MsgSenderReciver.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+					process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	updateView();
 				}				
 			}
@@ -277,7 +280,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				if(!hasFocus) {
 				
 					process.setUserRole(te_Role.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+					process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	updateView();
 				}				
 			}
@@ -297,7 +300,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 						else
 							showAlert("You have to enter a valid title!!!");
 						
-						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	updateView();
 					}
 				}				
@@ -318,7 +321,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 						else
 							showAlert("You have to enter a valid title!!!");
 						
-						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	updateView();
 					}					
 				}				
@@ -338,7 +341,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 						else
 							showAlert("You have to enter a valid title!!!");
 						
-						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	updateView();
 					}
 				}				
@@ -358,7 +361,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 						else
 							showAlert("You have to enter a valid title!!!");
 						
-						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	updateView();
 					}					
 				}				
@@ -382,7 +385,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 								showAlert("You have to enter a sender/receiver!!!");
 							
 						}
-						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	updateView();
 					}
 				}				
@@ -405,7 +408,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 								showAlert("You have to enter a sender/receiver!!!");
 							
 						}
-						process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+						process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	updateView();
 					}	
 				}				
@@ -417,7 +420,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	
 	public void onPause() {
 		   super.onPause();	   
-		   process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+		   process.storeXML(ProcessManager.getInstance().getInternalStorage());
 	};  
 
 	public void onResume() {
@@ -565,7 +568,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 					}
 				}
 				
-				process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+				process.storeXML(ProcessManager.getInstance().getInternalStorage());
 		    	updateView();
 
 				break;
@@ -742,6 +745,34 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		} else {
 			showAlert("general error update view!!!");
 		}
+		
+		card = process.getCardAfterTopCardMainStack();
+		if(card != null) {
+			if(card instanceof Message)
+				tv_MainStackCount.setBackgroundResource(R.drawable.messagebackcard);
+			else
+				tv_MainStackCount.setBackgroundResource(R.drawable.taskbackcard);
+			tv_MainStackCount.setText(Integer.toString(process.getMainStackCount()) + " ");
+		}
+		else
+		{
+			tv_MainStackCount.setBackgroundResource(R.drawable.withbackground);
+			tv_MainStackCount.setText("");
+		}
+		
+		card = process.getCardAfterTopCardSideStack();
+		if(card != null) {
+			if(card instanceof Message)
+				tv_SideStackCount.setBackgroundResource(R.drawable.messagebackcard);
+			else
+				tv_SideStackCount.setBackgroundResource(R.drawable.taskbackcard);
+			tv_SideStackCount.setText(Integer.toString(process.getSideStackCount()) + " ");
+		}
+		else
+		{
+			tv_SideStackCount.setBackgroundResource(R.drawable.withbackground);
+			tv_SideStackCount.setText("");
+		}
 	}
 	
 	private void showAlert(String msg) {
@@ -760,7 +791,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		alertDialog.setNegativeButton("cancel",
 				   new DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {
-                    	process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+                    	process.storeXML(ProcessManager.getInstance().getInternalStorage());
       			    	updateView();
                       }
                 }
@@ -779,7 +810,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			                     					}
 			                     				}
 			                                	                         				
-			                                	process.storeXML(ProcessManager.getInstance().getInternalStoreage());
+			                                	process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			                 			    	updateView();
 			                                 }
 			                           }

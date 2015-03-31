@@ -16,6 +16,7 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 	private ListAdapterRadioButton listAdapter;
 	private ArrayList<String> processes;
 	private Activity activity;
+	private boolean internal = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,42 +24,63 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 		setContentView(R.layout.activity_load_process);
 		activity = this;
 		
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			if(bundle.getString("IMPORT") != null) 
+				internal = false;
+		}
+		
 		ListView lv_processes = (ListView) this.findViewById(R.id.activity_load_process_listView);
 		
 		processes = new ArrayList<String>();
 		loadProcesses();
 		
-		 listAdapter = new ListAdapterRadioButton(this.getBaseContext(), R.layout.list_radiobutton, processes);
-
-		lv_processes.setAdapter(listAdapter);
-		
-		Button button_load = (Button) this.findViewById(R.id.activity_load_process_load);
-		button_load.setOnClickListener(new View.OnClickListener() {
+		if(processes.size() > 0) {
 			
-			@Override
-			public void onClick(View v) {
+			listAdapter = new ListAdapterRadioButton(this.getBaseContext(), R.layout.list_radiobutton, processes);
+			lv_processes.setAdapter(listAdapter);
+			
+			Button button_load = (Button) this.findViewById(R.id.activity_load_process_load);
+			button_load.setOnClickListener(new View.OnClickListener() {
 				
-				String processName = listAdapter.getSelectedItem();
-				int pos;
-				if((pos = processName.indexOf(".")) > 0)
-					processName = processName.substring(0, pos);
-				
-				if(processName.length() == 0)
-					showAlert("Please select a file!");
-				else if(ProcessManager.getInstance().getProcess(processName) != null)
-					showAlert("Process is already open!!!");				
-				else if(ProcessManager.getInstance().openProcess(processName))
-					activity.finish();
-				else
-					showAlert("Open process fail!!!");
-			}
-		});
+				@Override
+				public void onClick(View v) {
+					
+					String processName = listAdapter.getSelectedItem();
+					int pos;
+					if((pos = processName.indexOf(".")) > 0)
+						processName = processName.substring(0, pos);
+					
+					if(processName.length() == 0)
+						showAlert("Please select a file!");
+					else if(ProcessManager.getInstance().getProcess(processName) != null)
+						showAlert("Process is already open!!!");				
+					else if(internal && ProcessManager.getInstance().openProcess(processName))
+						activity.finish();
+					else if(!internal && ProcessManager.getInstance().importProcess(processName))
+						activity.finish();
+					else if(!internal)
+						showAlert("Import process fail!!! Please remove process from internal store before importing from external!");
+					else
+						showAlert("Open process fail!!!");
+					
+					if(processes.size() == 0)
+						activity.finish();
+				}
+			});
+		}
+		else {
+			showAlert("No processes to load available!");
+		}	
 	}
 	
 	private void loadProcesses() {
 		
 		processes.clear();
-		processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage());
+		if(internal)
+			processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage());
+		else
+			processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromExternalStoreage());
 	}
 
 	private void showAlert(String msg) {
