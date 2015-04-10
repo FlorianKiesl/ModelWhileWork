@@ -37,8 +37,9 @@ public class Process extends Modus {
 	private Task taskCard;
 	private Message messageCard;
 	private String userRole;
+	private File autoSavePath = null;
 	
-	public Process(String title, String role) {
+	public Process(String title, String role, File autoSavePath) {
 		super(title);
 		
 		mainStack = new Stack<Card>();
@@ -46,42 +47,141 @@ public class Process extends Modus {
 		taskCard = new Task("");
 		messageCard = new Message("", "", true);
 		userRole = role;
+		this.autoSavePath = autoSavePath;
+	}
+	
+	public boolean activateAutoSave(File autoSavePath)
+	{
+		this.autoSavePath = autoSavePath;
+		return autoSave();
+	}
+	
+	private boolean autoSave() { 
+		
+		if(this.autoSavePath != null)
+			return storeXML(this.autoSavePath); 
+		return true;
+	}
+	
+	public boolean setTopCardTitleMainStack(String title) {
+		
+		if(title.length() <= 0)
+			return false;
+		else if(this.getTopCardMainStack().getTitle().equals(title))
+			return true;
+
+		if(isTitleUnique(title)) {
+			this.getTopCardMainStack().setTitle(title);
+			return autoSave();
+		}
+		
+		return false;
+	}
+	
+	public boolean setTopCardSenderReceiverMainStack(String name) { 
+		
+		if(name.length() <= 0)
+			return false;
+		
+		if(this.getTopCardMainStack() instanceof Message) {
+			((Message)this.getTopCardMainStack()).setSenderReceiver(name);
+			return autoSave();
+		}
+		
+		return autoSave();
+	}
+	
+	public boolean setTopCardTitleSideStack(String title) {
+
+		if(title.length() <= 0)
+			return false;
+		else if(this.getTopCardSideStack().getTitle().equals(title))
+			return true;		
+		
+		if(isTitleUnique(title)) {
+			this.getTopCardSideStack().setTitle(title);
+			return autoSave();
+		}
+		
+		return false;
+	}
+	
+	public boolean setTopCardSenderReceiverSideStack(String name) { 
+		
+		if(name.length() <= 0)
+			return false;
+		
+		if(this.getTopCardSideStack() instanceof Message) {
+			((Message)this.getTopCardSideStack()).setSenderReceiver(name);
+			return autoSave();
+		}
+		
+		return autoSave();
+	}
+	
+	private boolean isTitleUnique(String title) {
+		
+		for(Card i : mainStack) {
+			if(i.getTitle().equals(title))
+				return false;
+		}
+		
+		for(Card i : sideStack) {
+			if(i.getTitle().equals(title))
+				return false;					
+		}
+		
+		return true;
 	}
 	
 	public String getFileTitle() { return getTitle() + fileExtension; }
 	public static String getFileExtension() { return fileExtension; }
 	
-	public boolean addCard(Card card) { return mainStack.add(card);	}
+	public boolean addCard(Card card) { 
+		
+		if(isTitleUnique(card.getTitle())) {
+			if(mainStack.add(card))
+				return autoSave();
+		}		
+		
+		return false;		
+	}
 	
 	public boolean putCardAside() {
 		
 		try {
-			sideStack.add(mainStack.pop());			
+			sideStack.add(mainStack.pop());
+			return autoSave();
 		} catch (Exception e) {
 			return false;
 		}
-		return true;
 	}
 	
 	public boolean putBackFromAside() {
 		
-		try { mainStack.add(sideStack.pop()); }
+		try { 
+			mainStack.add(sideStack.pop());
+			return autoSave();
+		}
 		catch (Exception e) { return false;	}
-		return true;
 	}
 	
 	public boolean removeCardFromMainStack() {
 		
-		try { mainStack.pop();}
+		try { 
+			mainStack.pop();
+			return autoSave();
+		}
 		catch (Exception e) { return false;	}
-		return true;
 	}
 	
 	public boolean removeCardFromSideStack() {
 		
-		try { sideStack.pop();}
+		try { 
+			sideStack.pop();
+			return autoSave();
+		}
 		catch (Exception e) { return false;	}
-		return true;
 	}
 	
 	public boolean isMainStackEmpty() { return mainStack.size() == 0; }
@@ -120,24 +220,42 @@ public class Process extends Modus {
 		return userRole;
 	}
 
-	public void setUserRole(String userRole) {
+	public boolean setUserRole(String userRole) {
 		this.userRole = userRole;
+		return autoSave();
 	}
 
 	public Task getTaskCard() { 
 		return taskCard;
 	}
 	
-	public void setTaskCard(Task t) { 
+	public boolean setTaskCard(Task t) { 
 		taskCard = t;
+		return autoSave();
+	}
+	
+	public boolean setTaskCardTitle(String t) { 
+		taskCard.setTitle(t);
+		return autoSave();
 	}
 	
 	public Message getMessageCard() { 
 		return messageCard;
 	}
 	
-	public void setMessageCard(Message m) { 
+	public boolean setMessageCard(Message m) { 
 		messageCard = m;
+		return autoSave();
+	}
+	
+	public boolean setMessageCardTitle(String t) { 
+		messageCard.setTitle(t);
+		return autoSave();
+	}
+	
+	public boolean setMessagekCardSenderReceiver(String name) { 
+		messageCard.setTitle(name);
+		return autoSave();
 	}
 	
 	public Card getTopCard(String title) {
@@ -297,7 +415,7 @@ public class Process extends Modus {
 		return bRet;
 	}
 	
-	public boolean storeXML(File filePath) {
+	protected boolean storeXML(File filePath) {
 			
 		//http://stackoverflow.com/questions/7373567/java-how-to-read-and-write-xml-files
 		
@@ -514,7 +632,7 @@ public class Process extends Modus {
 		
 		boolean bRet = true;
 		
-		Process p = new Process(name, "?");
+		Process p = new Process(name, "?", ProcessManager.getInstance().getInternalStorage());
 		if(!p.loadXML(ProcessManager.getInstance().getInternalStorage()))
 			return false;
 		

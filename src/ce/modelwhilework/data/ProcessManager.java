@@ -154,7 +154,7 @@ public class ProcessManager {
 	
 	public boolean openProcess(String processName){
 		
-		Process p = new Process(processName, Settings.getInstance().getUser());
+		Process p = new Process(processName, Settings.getInstance().getUser(), getInternalStorage());
 		File file = new File(getInternalStorage().toString());
 		if(p.loadXML(file)) {
 			
@@ -173,7 +173,7 @@ public class ProcessManager {
 		if(tmpProcesses.contains(processName + Process.getFileExtension()))
 			return false;
 		
-		Process p = new Process(processName, Settings.getInstance().getUser());
+		Process p = new Process(processName, Settings.getInstance().getUser(), getInternalStorage());
 		File file = new File(getExternalStorage().toString());
 		if(!p.loadXML(file))
 			return false;

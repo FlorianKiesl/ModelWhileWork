@@ -21,12 +21,12 @@ public abstract class Modus implements Comparable<Modus> {
 	private String title;
 	private TreeSet<ContextInformation> contextInformations;
 	
-	public Modus(String title) {  //todo: unique check
+	public Modus(String title) {
 		this.title = title;
 		this.contextInformations = new TreeSet<ContextInformation>();
 	}
 	
-	public void setTitle(String title) { this.title = title; } //todo: unique check
+	public void setTitle(String title) { this.title = title; }
 	public String getTitle() { return this.title; }
 
 	public TreeSet<ContextInformation> getContextInformations() {

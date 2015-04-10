@@ -53,9 +53,12 @@
     <string name="fragment_process_what_i_do">What I do</string>
     <string name="fragment_process_send_to">send to:</string>
     <string name="fragment_process_receive_from">receive from:</string>
-	<string name="title_recPoint_activity_audio">Recording Point: -</string>
-	<string name="recordBtn_activity_audio">Start</string>
-	<string name="stopBtn_activity_audio">Stop</string>
-	<string name="playBtn_activity_audio">Play</string>
-	<string name="title_activity_context">ContextActivity</string>
+    <string name="title_recPoint_activity_audio">Recording Point: -</string>
+    <string name="recordBtn_activity_audio">Start</string>
+    <string name="stopBtn_activity_audio">Stop</string>
+    <string name="playBtn_activity_audio">Play</string>
+    <string name="title_activity_context">ContextActivity</string>
+    <string name="title_activity_text_input">Enter text:</string>
+    <string name="OK">ok</string>
+
 </resources>

@@ -1,6 +1,7 @@
 package ce.modelwhilework.presentation;
 
 import ce.modelwhilework.data.Card;
+import ce.modelwhilework.data.CardAttribute;
 import ce.modelwhilework.data.Message;
 import ce.modelwhilework.data.Process;
 import ce.modelwhilework.data.ProcessManager;
@@ -27,13 +28,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class ProcessFragment extends Fragment implements DialogInterface.OnClickListener {
-
-	final String MAINSTACK = "MAINSTACK", SIDESTACK = "SIDESTACK",
-			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
 	
 	private View fragment;
 	private View l_MainStack, l_MainStackTaskCard, l_MainStackMsgCard, l_SideStack,
@@ -41,10 +38,11 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	private CheckBox cb_Sender, cb_Reciver, cb_SenderMainStack, cb_ReciverMainStack, cb_SenderSideStack, cb_ReciverSideStack;
 	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
 					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver,
-					 te_Role;
+					 te_Role, te_invisible;
 	private TextView tv_processTitle, tv_MainStackCount, tv_SideStackCount;
 	private ImageButton ib_Process, ib_TaskCard, ib_MsgCard, ib_TaskCardMain, ib_MsgCardMain, ib_TaskCardSide, ib_MsgCardSide;
-	Process process;
+	private Process process;
+	private boolean dragAndDropActive = false;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -65,10 +63,10 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		ImageView iv_bin = (ImageView) fragment.findViewById(R.id.imageViewBin);
 
 		// set tag definitions
-		l_TaskCard.setTag(TASKCARD);
-		l_MsgCard.setTag(MSGCARD);
-		l_MainStack.setTag(MAINSTACK);
-		l_SideStack.setTag(SIDESTACK);
+		l_TaskCard.setTag(CardAttribute.TASKCARD.toString());
+		l_MsgCard.setTag(CardAttribute.MSGCARD.toString());
+		l_MainStack.setTag(CardAttribute.MAINSTACK.toString());
+		l_SideStack.setTag(CardAttribute.SIDESTACK.toString());
 
 		// Current Process
 		Bundle args = this.getArguments();
@@ -139,6 +137,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		te_SideStackMsgTitle = (EditText) fragment.findViewById (R.id.editTextMsgCardTitleSideStack);
 		te_MainStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderMainStack);
 		te_SideStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderSideStack);
+		te_invisible = (EditText) fragment.findViewById (R.id.fragment_process_textEdit_invisible);
 		
 		cb_Sender = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSend);
 		cb_Reciver = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardRecive);		
@@ -147,16 +146,72 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		cb_SenderSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSendSideStack);
 		cb_ReciverSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardReciveSideStack);
 		
+		te_Role.setKeyListener(null);
+		te_Role.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.USERROLE.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_Role.getText().toString());					
+				    startActivity(intent);
+				}
+			}
+		});
+		
+		//######################### task card input #######################################################
+		
+		te_TaskTitle.setKeyListener(null);
+		te_TaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.TITLETASK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_TaskTitle.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});
+		
+				
+		//#################################################################################################
+				
+		//######################### msg card input ########################################################
+		
+		te_MsgTitle.setKeyListener(null);
+		te_MsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.TITLEMSG.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_MsgTitle.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});		
+		
 		cb_Sender.setOnClickListener(new OnClickListener() {
 
 		      @Override
 		      public void onClick(View v) {
 		    	  if(cb_Sender.isChecked() != process.getMessageCard().isSender()) {
 		    		  process.getMessageCard().setSender(cb_Sender.isChecked());
-		    		  process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	  updateView();
-		    	  }
-		    			 
+		    	  }		    			 
 		      }
 		  });
 		
@@ -166,12 +221,71 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		      public void onClick(View v) {
 		    	  if(cb_Reciver.isChecked() == process.getMessageCard().isSender()) {
 		    		  process.getMessageCard().setSender(!cb_Reciver.isChecked());
-		    		  process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	  updateView();
 		    	  }
 		      }
 		  });
+		
+		te_MsgSenderReciver.setKeyListener(null);
+		te_MsgSenderReciver.setOnFocusChangeListener( new OnFocusChangeListener() {
 
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.PERSONMSG.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_MsgSenderReciver.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});		
+		
+		//#################################################################################################		
+		
+		//######################### task card main stack ##################################################
+
+		te_MainStackTaskTitle.setKeyListener(null);
+		te_MainStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.TITLEMAINSTACK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_MainStackTaskTitle.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});
+		
+		//#################################################################################################
+		
+		
+		//########################## msg card main stack ##################################################
+		
+		te_MainStackMsgTitle.setKeyListener(null);
+		te_MainStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.TITLEMAINSTACK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_MainStackMsgTitle.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});
+		
 		cb_SenderMainStack.setOnClickListener(new OnClickListener() {
 
 		      @Override
@@ -180,7 +294,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		    	  if(process.getTopCardMainStack() != null) {
 		    		  if(cb_SenderMainStack.isChecked() != ((Message)process.getTopCardMainStack()).isSender()) {
 			    		  ((Message)process.getTopCardMainStack()).setSender(cb_SenderMainStack.isChecked());
-			    		  process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	  updateView();
 			    	  }
 		    	  }
@@ -194,12 +307,70 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				 if(process.getTopCardMainStack() != null) {
 					 if(cb_ReciverMainStack.isChecked() == ((Message)process.getTopCardMainStack()).isSender()) {
 						 ((Message)process.getTopCardMainStack()).setSender(!cb_ReciverMainStack.isChecked());
-						 process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	  updateView();
 					 }
 				 }
 			 }
 		  });
+		
+		te_MainStackMsgPerson.setKeyListener(null);
+		te_MainStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.PERSONMAINSTACK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_MainStackMsgPerson.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});
+		
+		//#################################################################################################
+
+		//######################### task card side stack ##################################################
+		
+		te_SideStackTaskTitle.setKeyListener(null);
+		te_SideStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.TITLESIDESTACK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_SideStackTaskTitle.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});
+		
+		//#################################################################################################
+		
+		//########################## msg card side stack ##################################################
+		
+		te_SideStackMsgTitle.setKeyListener(null);
+		te_SideStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.TITLESIDESTACK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_SideStackMsgTitle.getText().toString());	
+				    startActivity(intent);
+				}
+			}
+		});
 		
 		cb_SenderSideStack.setOnClickListener(new OnClickListener() {
 
@@ -209,7 +380,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				 if(process.getTopCardSideStack() != null) {
 					 if(cb_SenderSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
 						 ((Message)process.getTopCardSideStack()).setSender(cb_SenderSideStack.isChecked());
-						 process.storeXML(ProcessManager.getInstance().getInternalStorage());
 				    	  updateView();
 					 }		
 				 }		 
@@ -223,204 +393,35 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				 
 				 if(cb_ReciverSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
 					 ((Message)process.getTopCardSideStack()).setSender(!cb_ReciverSideStack.isChecked());
-					 process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			    	  updateView();
 				 }				 
 			 }
 		  });
-
-		te_TaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					process.getTaskCard().setTitle(te_TaskTitle.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStorage());
-			    	updateView();
-				}				
-			}
-		}); 
 		
-		te_MsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					process.getMessageCard().setTitle(te_MsgTitle.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStorage());
-			    	updateView();
-				}				
-			}
-		}); 
-		
-		
-		te_MsgSenderReciver.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-				
-					process.getMessageCard().setSenderReceiver(te_MsgSenderReciver.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStorage());
-			    	updateView();
-				}				
-			}
-		}); 
-		
-		te_Role.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-				
-					process.setUserRole(te_Role.getText().toString());
-					process.storeXML(ProcessManager.getInstance().getInternalStorage());
-			    	updateView();
-				}				
-			}
-		}); 
-		
-		te_MainStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					if(process.getTopCardMainStack() instanceof Task) {
-						
-						if(te_MainStackTaskTitle.getText().length() > 0)
-							process.getTopCardMainStack().setTitle(te_MainStackTaskTitle.getText().toString());
-						else
-							showAlert("You have to enter a valid title!!!");
-						
-						process.storeXML(ProcessManager.getInstance().getInternalStorage());
-				    	updateView();
-					}
-				}				
-			}
-		}); 
-		
-		te_SideStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					if(process.getTopCardSideStack() instanceof Task) {
-					
-						if(te_SideStackTaskTitle.getText().length() > 0)
-							process.getTopCardSideStack().setTitle(te_SideStackTaskTitle.getText().toString());
-						else
-							showAlert("You have to enter a valid title!!!");
-						
-						process.storeXML(ProcessManager.getInstance().getInternalStorage());
-				    	updateView();
-					}					
-				}				
-			}
-		}); 
-		
-		te_MainStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					if(process.getTopCardMainStack() instanceof Message) {
-						if(te_MainStackMsgTitle.getText().length() > 0)
-							process.getTopCardMainStack().setTitle(te_MainStackMsgTitle.getText().toString());
-						else
-							showAlert("You have to enter a valid title!!!");
-						
-						process.storeXML(ProcessManager.getInstance().getInternalStorage());
-				    	updateView();
-					}
-				}				
-			}
-		}); 
-		
-		te_SideStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					if(process.getTopCardSideStack() instanceof Message) {
-						if(te_SideStackMsgTitle.getText().length() > 0)
-							process.getTopCardSideStack().setTitle(te_SideStackMsgTitle.getText().toString());
-						else
-							showAlert("You have to enter a valid title!!!");
-						
-						process.storeXML(ProcessManager.getInstance().getInternalStorage());
-				    	updateView();
-					}					
-				}				
-			}
-		}); 
-		
-		te_MainStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(!hasFocus) {
-					
-					if(process.getTopCardMainStack() instanceof Message) {
-						Message m = (Message)process.getTopCardMainStack();
-						if(!te_MainStackMsgPerson.getText().toString().equals(m.getSenderReceiver())) {
-							
-							if(te_MainStackMsgPerson.getText().length() > 0)
-								m.setSenderReceiver(te_MainStackMsgPerson.getText().toString());
-							else
-								showAlert("You have to enter a sender/receiver!!!");
-							
-						}
-						process.storeXML(ProcessManager.getInstance().getInternalStorage());
-				    	updateView();
-					}
-				}				
-			}
-		});
-		
+		te_SideStackMsgPerson.setKeyListener(null);
 		te_SideStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				
-				if(!hasFocus) {
-					
-					if(process.getTopCardSideStack() instanceof Message) {
-						Message m = (Message)process.getTopCardSideStack();
-						if(!te_SideStackMsgPerson.getText().toString().equals(m.getSenderReceiver())) {
-							if(te_SideStackMsgPerson.getText().length() > 0)
-								m.setSenderReceiver(te_SideStackMsgPerson.getText().toString());
-							else
-								showAlert("You have to enter a sender/receiver!!!");
-							
-						}
-						process.storeXML(ProcessManager.getInstance().getInternalStorage());
-				    	updateView();
-					}	
-				}				
+				if(hasFocus && !dragAndDropActive) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.PERSONSIDESTACK.toString());
+					intent.putExtra("ProcessName", process.getTitle());
+					intent.putExtra("DefaultText", te_SideStackMsgPerson.getText().toString());	
+				    startActivity(intent);
+				}
 			}
-		}); 
+		});
+		
+		//#################################################################################################
 		
 		return fragment;
 	}
 	
 	public void onPause() {
-		   super.onPause();	   
-		   process.storeXML(ProcessManager.getInstance().getInternalStorage());
+		   super.onPause();
 	};  
 
 	public void onResume() {
@@ -458,6 +459,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 						view);
 
 				view.startDrag(data, shadowBuilder, view, 0);
+				dragAndDropActive = true;
 				return true;
 			} else {
 				return false;
@@ -505,12 +507,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				// is this a card of a stack or a ney one?
 				String dropTag = (String) dropElement.getTag();
 				String targetTag = (String) targetElement.getTag();
-				if (dropTag.equals(MSGCARD) || dropTag.equals(TASKCARD)) {
+				if (dropTag.equals(CardAttribute.MSGCARD.toString()) || dropTag.equals(CardAttribute.TASKCARD.toString())) {
 
 					// new card
 					Card dataCard = null;
 					String title = "";
-					if (dropTag.equals(MSGCARD)) {			
+					if (dropTag.equals(CardAttribute.MSGCARD.toString())) {			
 						
 						title = te_MsgTitle.getText().toString();
 						String senderReciver = te_MsgSenderReciver.getText().toString();
@@ -549,18 +551,18 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 								process.setTaskCard(new Task(""));
 						}
 						else
-							showAlert("add card to stack fail!!!");
+							showAlert("add card to stack fail... title must be unique!");
 					}
 
-				} else if (dropTag.equals(MAINSTACK)
-						&& targetTag.equals(SIDESTACK)) {
+				} else if (dropTag.equals(CardAttribute.MAINSTACK.toString())
+						&& targetTag.equals(CardAttribute.SIDESTACK.toString())) {
 
 					// card from main stack --> move it to side stack
 					if (!process.putCardAside()) {
 						showAlert("move card fail!!!");
 					}
-				} else if (dropTag.equals(SIDESTACK)
-						&& targetTag.equals(MAINSTACK)) {
+				} else if (dropTag.equals(CardAttribute.SIDESTACK.toString())
+						&& targetTag.equals(CardAttribute.MAINSTACK.toString())) {
 
 					// card from main stack --> move it to side stack
 					if (!process.putBackFromAside()) {
@@ -568,7 +570,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 					}
 				}
 				
-				process.storeXML(ProcessManager.getInstance().getInternalStorage());
+				dragAndDropActive = false;
 		    	updateView();
 
 				break;
@@ -605,6 +607,8 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 				//set question: do you really want to delete the card?
 				String dropTag = (String) dropElement.getTag();
 				showDeleteQuestion("Are you positive to delete the card?", dropTag);
+				
+				dragAndDropActive = false;
 
 				break;
 			case DragEvent.ACTION_DRAG_ENDED:
@@ -618,7 +622,25 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		}
 	}
 	
+	private void FocusAble(EditText te, boolean b) {
+		
+		te.setFocusable(b);             
+		te.setFocusableInTouchMode(b);             
+		te.setClickable(b); 
+	}
+	
 	private void updateView() {
+		
+		FocusAble(te_MainStackTaskTitle, false);
+		FocusAble(te_SideStackTaskTitle, false);
+		FocusAble(te_MainStackMsgTitle, false);
+		FocusAble(te_SideStackMsgTitle, false);
+		FocusAble(te_MainStackMsgPerson, false);
+		FocusAble(te_SideStackMsgPerson, false);
+		FocusAble(te_TaskTitle , false);
+		FocusAble( te_MsgTitle, false);
+		FocusAble(te_MsgSenderReciver, false);
+		FocusAble(te_Role, false);		
 		
 		tv_processTitle.setText(process.getTitle());
 		te_Role.setText(process.getUserRole());
@@ -773,6 +795,19 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			tv_SideStackCount.setBackgroundResource(R.drawable.withbackground);
 			tv_SideStackCount.setText("");
 		}
+		
+		te_invisible.requestFocus();
+		te_invisible.setVisibility(View.INVISIBLE);
+		FocusAble(te_MainStackTaskTitle, true);
+		FocusAble(te_SideStackTaskTitle, true);
+		FocusAble(te_MainStackMsgTitle, true);
+		FocusAble(te_SideStackMsgTitle, true);
+		FocusAble(te_MainStackMsgPerson, true);
+		FocusAble(te_SideStackMsgPerson, true);
+		FocusAble(te_TaskTitle , true);
+		FocusAble( te_MsgTitle, true);
+		FocusAble(te_MsgSenderReciver, true);
+		FocusAble(te_Role, true);			
 	}
 	
 	private void showAlert(String msg) {
@@ -791,7 +826,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		alertDialog.setNegativeButton("cancel",
 				   new DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {
-                    	process.storeXML(ProcessManager.getInstance().getInternalStorage());
       			    	updateView();
                       }
                 }
@@ -799,18 +833,17 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		alertDialog.setPositiveButton("OK",
 									   new DialogInterface.OnClickListener() {
 			                                 public void onClick(DialogInterface dialog, int whichButton) {			                                	 
-			                                	 if (dropTag.equals(MAINSTACK)) {
+			                                	 if (dropTag.equals(CardAttribute.MAINSTACK.toString())) {
 			                     					if (!process.removeCardFromMainStack()) {
 			                     						showAlert("card remove fail!!!");
 			                     					}
-			                     				} else if (dropTag.equals(SIDESTACK)) {
+			                     				} else if (dropTag.equals(CardAttribute.SIDESTACK.toString())) {
 
 			                     					if (!process.removeCardFromSideStack()) {
 			                     						showAlert("card remove fail!!!");
 			                     					}
 			                     				}
 			                                	                         				
-			                                	process.storeXML(ProcessManager.getInstance().getInternalStorage());
 			                 			    	updateView();
 			                                 }
 			                           }

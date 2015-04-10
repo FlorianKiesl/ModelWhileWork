@@ -25,7 +25,6 @@
         android:icon="@drawable/program"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -37,11 +36,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.ContextInfoActivity"
+            android:name=".contextinfo.ContextInfoActivity"
             android:label="@string/title_activity_context"
             android:screenOrientation="landscape" />
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.CameraActivity"
+            android:name=".contextinfo.CameraActivity"
             android:label="@string/title_activity_camera"
             android:screenOrientation="landscape" >
         </activity>
@@ -64,27 +63,27 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.PictureActivity"
+            android:name=".contextinfo.PictureActivity"
             android:label="@string/title_activity_picture"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.TextActivity"
+            android:name=".contextinfo.TextActivity"
             android:label="@string/title_activity_text"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.AudioActivity"
+            android:name=".contextinfo.AudioActivity"
             android:label="@string/title_activity_audio"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.AudioRecordActivity"
+            android:name=".contextinfo.AudioRecordActivity"
             android:label="@string/title_activity_audioRec"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="ce.modelwhilework.presentation.contextinfo.VideoActivity"
+            android:name=".contextinfo.VideoActivity"
             android:label="@string/title_activity_video"
             android:screenOrientation="landscape" >
         </activity>
@@ -102,6 +101,11 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".TextInputActivity"
+            android:label="@string/title_activity_text_input"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
     </application>
 
