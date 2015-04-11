@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 public class ListAdapterTask extends ArrayAdapter<Task> {
 	
@@ -36,7 +35,7 @@ public class ListAdapterTask extends ArrayAdapter<Task> {
 		
 		convertView = ( LinearLayout ) inflater.inflate( resourceId, null );
         
-        Task task = getItem( position );
+		Task task = getItem( position );
         
         EditText et = (EditText) convertView.findViewById(R.id.activity_favorite_task_editTextWorkCardTitle);
         et.setText(task.getTitle());

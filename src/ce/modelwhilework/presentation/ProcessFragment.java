@@ -545,10 +545,15 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 					if(dataCard != null) {
 						if (process.addCard(dataCard)) {
 							
-							if(dataCard instanceof Message)
+							if(dataCard instanceof Message){
 								process.setMessageCard(new Message("", "", true));
-							else if(dataCard instanceof Task)
+								ProcessManager.getInstance().getFavorite().setFavoriteMessageCard((Message) dataCard);
+							}
+							
+							else if(dataCard instanceof Task){
 								process.setTaskCard(new Task(""));
+								ProcessManager.getInstance().getFavorite().setFavoriteTaskCard((Task) dataCard);
+							}	
 						}
 						else
 							showAlert("add card to stack fail... title must be unique!");

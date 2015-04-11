@@ -36,28 +36,13 @@ public class ProcessManager {
 
 	private static ProcessManager instance;
 	private TreeSet<Process> processSet;
-	private TreeSet<Task> favoriteTaskSet;
-	private TreeSet<Message> favoriteMessageSet;
+	private Favorite favorite;
 	private Process curProcess;
 	private File dirInternal, dirExternal, dirExternalCache;
 	
 	private ProcessManager(){
 		this.processSet = new TreeSet<Process>();
-		this.favoriteTaskSet = new TreeSet<Task>();
-		this.favoriteMessageSet = new TreeSet<Message>();
-		
-		///only for testing!!!
-		favoriteTaskSet.add(new Task("default favorite 1"));
-		favoriteTaskSet.add(new Task("default favorite 2"));
-		favoriteTaskSet.add(new Task("default favorite 3"));
-		favoriteTaskSet.add(new Task("default favorite 4"));
-		favoriteTaskSet.add(new Task("default favorite 5"));
-		
-		favoriteMessageSet.add(new Message("default favorite msg 1", "person", true));
-		favoriteMessageSet.add(new Message("default favorite msg 2", "person", false));
-		favoriteMessageSet.add(new Message("default favorite msg 3", "person", true));
-		favoriteMessageSet.add(new Message("default favorite msg 4", "person", false));
-		favoriteMessageSet.add(new Message("default favorite msg 5", "person", true));
+		this.favorite = new Favorite();
 	}
 	
 	public static ProcessManager getInstance(){
@@ -302,7 +287,6 @@ public class ProcessManager {
 			return false;
 		RestWebService rWS = new RestWebService();
 		rWS.invokeExportXML(p.getMetasonicXML(), ctx);
-//		rWS.postExp/ortXML(p.getMetasonicXML());
 		return true;
 	}
 	
@@ -410,26 +394,26 @@ public class ProcessManager {
 		}
 		return process;
 	}
-	
-	public ArrayList<Task> getFavoriteTasks() { return new ArrayList<Task>(this.favoriteTaskSet); }
-	
+
+	public Favorite getFavorite() {
+		return favorite;
+	}
+
 	public Task getFavoriteTask(String title) { 
 		
-		for(Task t : favoriteTaskSet) {
-			if(t.getTitle().equals(title))
-				return t;
+		for(FavoriteCard t : this.favorite.getFavoriteTaskSet()) {
+			if(t.getCard().getTitle().equals(title))
+				return (Task) t.getCard();
 		}
 		
 		return null;
 	}
-	
-	public ArrayList<Message> getFavoriteMessages() { return new ArrayList<Message>(this.favoriteMessageSet); }
-	
+
 	public Message getFavoriteMessage(String title) { 
 		
-		for(Message m : favoriteMessageSet) {
-			if(m.getTitle().equals(title))
-				return m;
+		for(FavoriteCard m : this.favorite.getFavoriteMessageSet()) {
+			if(m.getCard().getTitle().equals(title))
+				return (Message) m.getCard();
 		}
 		
 		return null;
