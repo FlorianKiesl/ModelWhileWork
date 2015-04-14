@@ -48,8 +48,16 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 		});
 		FragmentManager fm = this.getSupportFragmentManager();
 		adapter = new ProcessFragmentStatePageAdapter(fm);
+		ProcessManager.getInstance().loadFavorites();
 	}
 	
+	@Override
+	protected void onStop() {
+		ProcessManager.getInstance().storeFavorites();
+		super.onStop();
+		
+	}
+
 	protected void onResume() {
 		super.onResume();
 		viewPager.setAdapter(adapter);

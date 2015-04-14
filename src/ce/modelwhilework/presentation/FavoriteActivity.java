@@ -27,8 +27,8 @@ public class FavoriteActivity extends Activity implements DialogInterface.OnClic
 		ListView lv_tasks = (ListView) this.findViewById(R.id.activity_favorite_listView_task);
 		ListView lv_msg = (ListView) this.findViewById(R.id.activity_favorite_listView_msg);
 
-		listAdapterTask = new ListAdapterTask(this.getBaseContext(), R.layout.list_task, ProcessManager.getInstance().getFavorite().getFavoriteTasks());
-		listAdapterMsg = new ListAdapterMsg(this.getBaseContext(), R.layout.list_msg, ProcessManager.getInstance().getFavorite().getFavoriteMessages());
+		listAdapterTask = new ListAdapterTask(this.getBaseContext(), R.layout.list_task, ProcessManager.getInstance().getFavoriteTasks());
+		listAdapterMsg = new ListAdapterMsg(this.getBaseContext(), R.layout.list_msg, ProcessManager.getInstance().getFavoriteMessages());
 
 		lv_tasks.setAdapter(listAdapterTask);
 		lv_msg.setAdapter(listAdapterMsg);

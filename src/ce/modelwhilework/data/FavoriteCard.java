@@ -1,4 +1,5 @@
 package ce.modelwhilework.data;
+import org.w3c.dom.*;
 
 public class FavoriteCard implements Comparable<FavoriteCard> {
 	
@@ -31,6 +32,23 @@ public class FavoriteCard implements Comparable<FavoriteCard> {
 		}
 		return another.getCount() - this.getCount();
 		
+	}
+	
+	protected Element getXmlElement(Document dom){
+		Element elemCard;
+		
+		elemCard = dom.createElement("Card");
+		elemCard.setAttribute("type", this.card.getCardType().toString());
+		elemCard.setAttribute("title", this.card.getTitle());
+		elemCard.setAttribute("count", String.valueOf(this.count));
+		
+		if (this.card.getCardType() == CardType.Message){
+			Message msg = (Message) this.card;
+			elemCard.setAttribute("communicationPartner", msg.getSenderReceiver());
+			elemCard.setAttribute("sender", Boolean.toString(msg.isSender()));
+		}
+		
+		return elemCard;
 	}
 	
 }

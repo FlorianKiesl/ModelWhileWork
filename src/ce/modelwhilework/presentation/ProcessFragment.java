@@ -543,12 +543,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 							
 							if(dataCard instanceof Message){
 								process.setMessageCard(new Message("", "", true));
-								ProcessManager.getInstance().getFavorite().setFavoriteMessageCard((Message) dataCard);
+								ProcessManager.getInstance().addFavoriteMessage((Message) dataCard);
 							}
 							
 							else if(dataCard instanceof Task){
 								process.setTaskCard(new Task(""));
-								ProcessManager.getInstance().getFavorite().setFavoriteTaskCard((Task) dataCard);
+								ProcessManager.getInstance().addFavoriteTask((Task) dataCard);
 							}	
 						}
 						else

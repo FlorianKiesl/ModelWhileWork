@@ -395,11 +395,7 @@ public class ProcessManager {
 		}
 		return process;
 	}
-
-	public Favorite getFavorite() {
-		return favorite;
-	}
-
+	
 	public Task getFavoriteTask(String title) { 
 		
 		for(FavoriteCard t : this.favorite.getFavoriteTaskSet()) {
@@ -418,5 +414,45 @@ public class ProcessManager {
 		}
 		
 		return null;
+	}
+	
+	public boolean storeFavorites(){
+		this.favorite.storeXML(this.getInternalStorage());
+		this.favorite.storeXML(this.getExternalStorage());
+		return true;
+	}
+	
+	public boolean loadFavorites(){
+		return this.favorite.loadXML(this.getInternalStorage());
+	}
+	
+	public boolean addFavoriteTask(Task task){
+		return this.favorite.setFavoriteTaskCard(task);
+	}
+	
+	public boolean addFavoriteMessage(Message msg){
+		return this.favorite.setFavoriteMessageCard(msg);
+	}
+	
+	
+	public ArrayList<Task> getFavoriteTasks() {
+		ArrayList<Task> alTasks = new ArrayList<Task>();
+		if (this.favorite.getFavoriteTaskSet() != null){
+			for (FavoriteCard t : this.favorite.getFavoriteTaskSet()){
+				alTasks.add((Task) t.getCard());
+			}			
+		}
+		return alTasks; 
+	}
+	
+	public ArrayList<Message> getFavoriteMessages() { 
+		ArrayList<Message> alMessages = new ArrayList<Message>();
+		if (this.favorite.getFavoriteMessageSet() != null){
+			for (FavoriteCard m : this.favorite.getFavoriteMessageSet()){
+				alMessages.add((Message) m.getCard());
+			}			
+		}		
+		return alMessages; 
+		
 	}
 }
