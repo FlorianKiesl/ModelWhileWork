@@ -139,12 +139,13 @@ public class ProcessManager {
 	
 	public boolean openProcess(String processName){
 		
-		Process p = new Process(processName, Settings.getInstance().getUser(), getInternalStorage());
+		Process p = new Process(processName, Settings.getInstance().getUser(), null);
 		File file = new File(getInternalStorage().toString());
 		if(p.loadXML(file)) {
 			
 			if(this.processSet.add(p)) {
 				this.curProcess = this.getProcess(p.getTitle());
+				this.curProcess.activateAutoSave(getInternalStorage());
 				return true;
 			}
 		}

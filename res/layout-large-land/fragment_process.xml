@@ -67,13 +67,6 @@
                     android:ems="10"
                     android:inputType="text" />
 
-                <EditText
-                    android:id="@+id/fragment_process_textEdit_invisible"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10" />
-
             </LinearLayout>
 
         </LinearLayout>

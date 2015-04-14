@@ -64,7 +64,7 @@ public class TextInputActivity extends Activity implements DialogInterface.OnCli
 							else if(strCardAttribute.equals(CardAttribute.TITLEMSG.toString()))
 								process.setMessageCardTitle(te_text.getText().toString());
 							else if(strCardAttribute.equals(CardAttribute.PERSONMSG.toString()))
-								process.setMessagekCardSenderReceiver(te_text.getText().toString());
+								process.setMessageCardSenderReceiver(te_text.getText().toString());
 							else if(strCardAttribute.equals(CardAttribute.TITLEMAINSTACK.toString()))
 							{
 								if(!process.setTopCardTitleMainStack(te_text.getText().toString()))	{

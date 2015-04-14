@@ -47,7 +47,7 @@ public class Process extends Modus {
 		taskCard = new Task("");
 		messageCard = new Message("", "", true);
 		userRole = role;
-		this.autoSavePath = autoSavePath;
+		activateAutoSave(autoSavePath);
 	}
 	
 	public boolean activateAutoSave(File autoSavePath)
@@ -253,8 +253,8 @@ public class Process extends Modus {
 		return autoSave();
 	}
 	
-	public boolean setMessagekCardSenderReceiver(String name) { 
-		messageCard.setTitle(name);
+	public boolean setMessageCardSenderReceiver(String name) { 
+		messageCard.setSenderReceiver(name);
 		return autoSave();
 	}
 	
@@ -278,10 +278,12 @@ public class Process extends Modus {
 		Document dom;
 		Element e;
 		NodeList childs;
-		Stack<Card> main, side;
+		Stack<Card> main, side, inputTask, inputMsg;
 		
 		main = new Stack<Card>();
 		side = new Stack<Card>();
+		inputTask = new Stack<Card>();
+		inputMsg = new Stack<Card>();
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
@@ -333,7 +335,28 @@ public class Process extends Modus {
 								return false;	
 						}																			
 					}					
+				} else if(e.getAttribute("id").equals("InputMessage")) {
+					
+					childs = e.getChildNodes();
+					for(int n = 0; n < childs.getLength(); n++) {
+						
+						if (childs.item(n).getNodeType() == Node.ELEMENT_NODE) {
+							if(!addElement2Stack(inputMsg, (Element)childs.item(n)))
+								return false;
+						}
+					}
 				}
+				else if(e.getAttribute("id").equals("InputTask")) {
+					
+					childs = e.getChildNodes();
+					for(int n = 0; n < childs.getLength(); n++) {
+						
+						if (childs.item(n).getNodeType() == Node.ELEMENT_NODE) {
+							if(!addElement2Stack(inputTask, (Element)childs.item(n)))
+								return false;
+						}
+					}
+				}				
             }
 
         } catch (ParserConfigurationException pce) {
@@ -349,6 +372,12 @@ public class Process extends Modus {
 
 		mainStack = main;
 		sideStack = side;
+		
+		if(inputTask.size() > 0)
+			taskCard = (Task) inputTask.get(inputTask.size() - 1);
+		
+		if(inputMsg.size() > 0)
+			messageCard = (Message) inputMsg.get(inputTask.size() - 1);
 		
         return true;
 	}
@@ -454,12 +483,25 @@ public class Process extends Modus {
 	        elStack.setAttribute("id", "Side");
 	        elProcess.appendChild(elStack);
 	        
+	        id = 0;
 	        stackIterator = sideStack.iterator();
 			while(stackIterator.hasNext()){
 				
 				elStack.appendChild(stackIterator.next().getElementXML(dom, id));
 				id++;
 			}
+			
+			//add input task stack
+	        elStack = dom.createElement("Stack");
+	        elStack.setAttribute("id", "InputTask");
+	        elStack.appendChild(taskCard.getElementXML(dom, 0));
+	        elProcess.appendChild(elStack);
+	        
+	        //add input message stack
+	        elStack = dom.createElement("Stack");
+	        elStack.setAttribute("id", "InputMessage");
+	        elStack.appendChild(messageCard.getElementXML(dom, 0));
+	        elProcess.appendChild(elStack);
 
 			elProcessesElement.appendChild(elProcess);
 	        dom.appendChild(elProcessesElement);
@@ -565,8 +607,9 @@ public class Process extends Modus {
 	}
 	
 	private boolean writeXML(Document dom, File file){
-        try {
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
+        try {        	
+        	
+        	Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.setOutputProperty(OutputKeys.METHOD, "xml");
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");

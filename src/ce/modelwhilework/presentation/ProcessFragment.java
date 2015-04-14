@@ -38,7 +38,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	private CheckBox cb_Sender, cb_Reciver, cb_SenderMainStack, cb_ReciverMainStack, cb_SenderSideStack, cb_ReciverSideStack;
 	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
 					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver,
-					 te_Role, te_invisible;
+					 te_Role;
 	private TextView tv_processTitle, tv_MainStackCount, tv_SideStackCount;
 	private ImageButton ib_Process, ib_TaskCard, ib_MsgCard, ib_TaskCardMain, ib_MsgCardMain, ib_TaskCardSide, ib_MsgCardSide;
 	private Process process;
@@ -137,7 +137,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		te_SideStackMsgTitle = (EditText) fragment.findViewById (R.id.editTextMsgCardTitleSideStack);
 		te_MainStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderMainStack);
 		te_SideStackMsgPerson = (EditText) fragment.findViewById (R.id.editTextMsgCardReciverSenderSideStack);
-		te_invisible = (EditText) fragment.findViewById (R.id.fragment_process_textEdit_invisible);
 		
 		cb_Sender = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardSend);
 		cb_Reciver = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardRecive);		
@@ -147,38 +146,33 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		cb_ReciverSideStack = (CheckBox) fragment.findViewById (R.id.checkBoxMsgCardReciveSideStack);
 		
 		te_Role.setKeyListener(null);
-		te_Role.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_Role.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(hasFocus && !dragAndDropActive) {
-					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-					intent.putExtra("CardAttrib", CardAttribute.USERROLE.toString());
-					intent.putExtra("ProcessName", process.getTitle());
-					intent.putExtra("DefaultText", te_Role.getText().toString());					
-				    startActivity(intent);
-				}
+			public void onClick(View v) {
+				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				intent.putExtra("CardAttrib", CardAttribute.USERROLE.toString());
+				intent.putExtra("ProcessName", process.getTitle());
+				intent.putExtra("DefaultText", te_Role.getText().toString());	
+			    startActivity(intent);
 			}
+			
 		});
 		
 		//######################### task card input #######################################################
 		
 		te_TaskTitle.setKeyListener(null);
-		te_TaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_TaskTitle.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				if(hasFocus && !dragAndDropActive) {
-					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-					intent.putExtra("CardAttrib", CardAttribute.TITLETASK.toString());
-					intent.putExtra("ProcessName", process.getTitle());
-					intent.putExtra("DefaultText", te_TaskTitle.getText().toString());	
-				    startActivity(intent);
-				}
+			public void onClick(View v) {
+				Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				intent.putExtra("CardAttrib", CardAttribute.TITLETASK.toString());
+				intent.putExtra("ProcessName", process.getTitle());
+				intent.putExtra("DefaultText", te_TaskTitle.getText().toString());	
+			    startActivity(intent);					
 			}
 		});
 		
@@ -188,12 +182,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		//######################### msg card input ########################################################
 		
 		te_MsgTitle.setKeyListener(null);
-		te_MsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_MsgTitle.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.TITLEMSG.toString());
@@ -227,12 +221,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		  });
 		
 		te_MsgSenderReciver.setKeyListener(null);
-		te_MsgSenderReciver.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_MsgSenderReciver.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.PERSONMSG.toString());
@@ -248,12 +242,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		//######################### task card main stack ##################################################
 
 		te_MainStackTaskTitle.setKeyListener(null);
-		te_MainStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_MainStackTaskTitle.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.TITLEMAINSTACK.toString());
@@ -270,12 +264,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		//########################## msg card main stack ##################################################
 		
 		te_MainStackMsgTitle.setKeyListener(null);
-		te_MainStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_MainStackMsgTitle.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.TITLEMAINSTACK.toString());
@@ -314,12 +308,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		  });
 		
 		te_MainStackMsgPerson.setKeyListener(null);
-		te_MainStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_MainStackMsgPerson.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.PERSONMAINSTACK.toString());
@@ -335,12 +329,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		//######################### task card side stack ##################################################
 		
 		te_SideStackTaskTitle.setKeyListener(null);
-		te_SideStackTaskTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_SideStackTaskTitle.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.TITLESIDESTACK.toString());
@@ -356,12 +350,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		//########################## msg card side stack ##################################################
 		
 		te_SideStackMsgTitle.setKeyListener(null);
-		te_SideStackMsgTitle.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_SideStackMsgTitle.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.TITLESIDESTACK.toString());
@@ -399,12 +393,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		  });
 		
 		te_SideStackMsgPerson.setKeyListener(null);
-		te_SideStackMsgPerson.setOnFocusChangeListener( new OnFocusChangeListener() {
+		te_SideStackMsgPerson.setOnClickListener(new OnClickListener () {
 
 			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
+			public void onClick(View v) {
 				
-				if(hasFocus && !dragAndDropActive) {
+				if(!dragAndDropActive) {
 					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), TextInputActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					intent.putExtra("CardAttrib", CardAttribute.PERSONSIDESTACK.toString());
@@ -416,6 +410,8 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		});
 		
 		//#################################################################################################
+		
+		initializeEditTexts();
 		
 		return fragment;
 	}
@@ -627,14 +623,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		}
 	}
 	
-	private void FocusAble(EditText te, boolean b) {
-		
-		te.setFocusable(b);             
-		te.setFocusableInTouchMode(b);             
-		te.setClickable(b); 
-	}
-	
-	private void updateView() {
+	private void initializeEditTexts() {
 		
 		FocusAble(te_MainStackTaskTitle, false);
 		FocusAble(te_SideStackTaskTitle, false);
@@ -643,10 +632,20 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		FocusAble(te_MainStackMsgPerson, false);
 		FocusAble(te_SideStackMsgPerson, false);
 		FocusAble(te_TaskTitle , false);
-		FocusAble( te_MsgTitle, false);
+		FocusAble(te_MsgTitle, false);
 		FocusAble(te_MsgSenderReciver, false);
-		FocusAble(te_Role, false);		
+		FocusAble(te_Role, false);	
+	}
+	
+	private void FocusAble(EditText te, boolean b) {
 		
+		te.setFocusable(b);             
+		te.setFocusableInTouchMode(b);             
+		//te.setClickable(b); 
+	}
+	
+	private void updateView() {
+				
 		tv_processTitle.setText(process.getTitle());
 		te_Role.setText(process.getUserRole());
 		
@@ -800,19 +799,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			tv_SideStackCount.setBackgroundResource(R.drawable.withbackground);
 			tv_SideStackCount.setText("");
 		}
-		
-		te_invisible.requestFocus();
-		te_invisible.setVisibility(View.INVISIBLE);
-		FocusAble(te_MainStackTaskTitle, true);
-		FocusAble(te_SideStackTaskTitle, true);
-		FocusAble(te_MainStackMsgTitle, true);
-		FocusAble(te_SideStackMsgTitle, true);
-		FocusAble(te_MainStackMsgPerson, true);
-		FocusAble(te_SideStackMsgPerson, true);
-		FocusAble(te_TaskTitle , true);
-		FocusAble( te_MsgTitle, true);
-		FocusAble(te_MsgSenderReciver, true);
-		FocusAble(te_Role, true);			
 	}
 	
 	private void showAlert(String msg) {
