@@ -29,7 +29,7 @@ public abstract class Modus implements Comparable<Modus> {
 	}
 	
 	public void setTitle(String title) { 
-		this.title = title;
+		this.title = title;		
 		fireStoreListener();
 	}
 	
