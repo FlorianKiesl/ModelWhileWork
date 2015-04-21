@@ -17,34 +17,45 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 
 	private ListAdapterCheckBox listAdapter;
 	private ArrayList<String> processes;
+	private boolean closeActivity = false;
+	private Activity activity;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_delete_process);
 		
+		activity = this;
+		
 		ListView lv_processes = (ListView) this.findViewById(R.id.activity_delete_process_listView);
 		
 		processes = new ArrayList<String>();
 		loadProcesses();
 		
-		listAdapter = new ListAdapterCheckBox(
-			this.getBaseContext(), R.layout.list_checkbox, processes);
-
-		lv_processes.setAdapter(listAdapter);
-		
-		Button button_delete = (Button) this.findViewById(R.id.activity_delete_process_delete);
-		button_delete.setOnClickListener(new View.OnClickListener() {
+		if(processes.size() > 0) {
 			
-			@Override
-			public void onClick(View v) {
+			listAdapter = new ListAdapterCheckBox(
+					this.getBaseContext(), R.layout.list_checkbox, processes);
+
+				lv_processes.setAdapter(listAdapter);
 				
-				if(listAdapter.getSelectedItems().size() > 0)
-					showDeleteQuestion("Do you really want to delete the selected processes from the device?");
-				else
-					showAlert("Please select a file!");
-			}
-		});
+				Button button_delete = (Button) this.findViewById(R.id.activity_delete_process_delete);
+				button_delete.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						
+						if(listAdapter.getSelectedItems().size() > 0)
+							showDeleteQuestion("Do you really want to delete the selected processes from the device?");
+						else
+							showAlert("Please select a file!", false);
+					}
+				});			
+		}
+		else {
+			showAlert("No processes to delete available!", true);
+		}	
+		
 	}
 
 	private void loadProcesses() {
@@ -52,12 +63,14 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 		processes.addAll(new ArrayList<String>(ProcessManager.getInstance().getProcessesFromInternalStoreage()));
 	}
 	
-	private void showAlert(String msg) {
+	private void showAlert(String msg, boolean closeActivity) {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("error");
 		alertDialog.setNegativeButton("OK", this);
 		alertDialog.setMessage(msg);
 		alertDialog.show();	
+		
+		this.closeActivity = closeActivity;
 	}
 	
 	private void showDeleteQuestion(String msg) {
@@ -80,7 +93,7 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 			                                		 boolean del = true;
 			                                		 for(Process p : ProcessManager.getInstance().getProcesses()) {
 			                                			 if(p.getFileTitle().equals(f)) {
-			                                				 showAlert("Can't delete file: " + f + "!\nPlease close process first!");
+			                                				 showAlert("Can't delete file: " + f + "!\nPlease close process first!", false);
 			                                				 del = false;
 			                                				 break;
 			                                			 }
@@ -88,7 +101,7 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 			                                		 
 			                                		 if(del) {
 			                                			 if(!Process.deleteProcess(f.substring(0, f.indexOf("."))))
-			                                				 showAlert("Error occured by process: " + f);
+			                                				 showAlert("Error occured by process: " + f, false);
 			                                		 }
 			                                	 }				                                	 
 			                                	 listAdapter.resetSelectedItems();
@@ -102,7 +115,9 @@ public class DeleteProcessActivity extends Activity implements DialogInterface.O
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		// TODO Auto-generated method stub
+
+		if(this.closeActivity)
+			activity.finish();
 		
 	}
 }

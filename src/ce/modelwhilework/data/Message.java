@@ -14,10 +14,17 @@ public class Message extends Card {
 		this.sender = sender;
 	}
 	
-	public void setSenderReceiver(String sr) { this.senderReciver = sr; }
+	public void setSenderReceiver(String sr) {
+		this.senderReciver = sr;
+		fireStoreListener();
+	}
+	
 	public String getSenderReceiver() { return this.senderReciver; }
 	
-	public void setSender(boolean sender) { this.sender = sender; }
+	public void setSender(boolean sender) {
+		this.sender = sender;
+		fireStoreListener();
+	}
 	public boolean isSender() { return this.sender; }
 
 	@Override

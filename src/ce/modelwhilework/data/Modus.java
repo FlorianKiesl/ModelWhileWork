@@ -20,13 +20,19 @@ public abstract class Modus implements Comparable<Modus> {
 	
 	private String title;
 	private TreeSet<ContextInformation> contextInformations;
+	private TreeSet<Process> storeListener;
 	
 	public Modus(String title) {
 		this.title = title;
 		this.contextInformations = new TreeSet<ContextInformation>();
+		this.storeListener = new TreeSet<Process>();
 	}
 	
-	public void setTitle(String title) { this.title = title; }
+	public void setTitle(String title) { 
+		this.title = title;
+		fireStoreListener();
+	}
+	
 	public String getTitle() { return this.title; }
 
 	public TreeSet<ContextInformation> getContextInformations() {
@@ -35,9 +41,9 @@ public abstract class Modus implements Comparable<Modus> {
 	
 	public boolean hasContextInformation() { return contextInformations.size() > 0; }
 
-	public void setContextInformations(
-			TreeSet<ContextInformation> contextInformations) {
+	public void setContextInformations(TreeSet<ContextInformation> contextInformations) {
 		this.contextInformations = contextInformations;
+		fireStoreListener();
 	}
 	
 	protected Element getContextInformationsXML(Document dom, Element parent) {
@@ -91,6 +97,7 @@ public abstract class Modus implements Comparable<Modus> {
 								Log.i("Löschvorgang", "Fehlgeschlagen");
 							}
 						}
+						fireStoreListener();
 						return true;
 					}
 				}
@@ -103,7 +110,8 @@ public abstract class Modus implements Comparable<Modus> {
 		int id = getFreeID();
 		String path = this.getContextInfoFilePath(id);
 		if (writeByteArrFile(data, path)){
-			contextInformations.add(new Text(id, path));		
+			contextInformations.add(new Text(id, path));	
+			fireStoreListener();
 			return true;			
 		}
 		return false;
@@ -114,6 +122,7 @@ public abstract class Modus implements Comparable<Modus> {
 		String path = this.getContextInfoFilePath(id);
 		if (writeByteArrFile(data, path)){
 			contextInformations.add(new Picture(id, path));		
+			fireStoreListener();
 			return true;			
 		}
 		return false;
@@ -125,7 +134,8 @@ public abstract class Modus implements Comparable<Modus> {
 		int id = getFreeID();
 		String path = this.getContextInfoFilePath(id);
 		if (writeByteArrFile(data, path)){
-			contextInformations.add(new Video(id, path));		
+			contextInformations.add(new Video(id, path));	
+			fireStoreListener();
 			return true;			
 		}
 		return false;
@@ -137,6 +147,7 @@ public abstract class Modus implements Comparable<Modus> {
 		String path = this.getContextInfoFilePath(id);
 		if (writeByteArrFile(data, path)){
 			contextInformations.add(new Audio(id, path));		
+			fireStoreListener();
 			return true;			
 		}
 		return false;
@@ -170,5 +181,21 @@ public abstract class Modus implements Comparable<Modus> {
 	@Override
 	public int compareTo(Modus another) {
 		return this.getTitle().compareTo(another.getTitle());
+	}
+	
+	public boolean addStoreListener(Process p) {
+		
+		return storeListener.add(p);
+	}
+	
+	public void clearStoreListener() {
+		
+		storeListener.clear();
+	}
+
+	protected void fireStoreListener() {
+		
+		for(Process p : storeListener)
+			p.autoSave();
 	}
 }

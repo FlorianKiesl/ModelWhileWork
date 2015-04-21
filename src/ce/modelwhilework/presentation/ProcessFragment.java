@@ -104,22 +104,112 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		});
 		
 		ib_MsgCardMain = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg_MainStack);		
-		addtOnClickListener4Card(ib_MsgCardMain, process.getTopCardMainStack());
+		ib_MsgCardMain.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(process.getTopCardMainStack().getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", process.getTopCardMainStack().getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
+			}
+		});
 		
 		ib_TaskCardMain = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardTask_MainStack);
-		addtOnClickListener4Card(ib_TaskCardMain, process.getTopCardMainStack());
-		
+		ib_TaskCardMain.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(process.getTopCardMainStack().getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", process.getTopCardMainStack().getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
+			}
+		});
+
 		ib_MsgCardSide = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg_SideStack);
-		addtOnClickListener4Card(ib_MsgCardSide, process.getTopCardSideStack());
+		ib_MsgCardSide.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(process.getTopCardSideStack().getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", process.getTopCardSideStack().getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
+			}
+		});
 		
 		ib_TaskCardSide = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardTask_SideStack);
-		addtOnClickListener4Card(ib_TaskCardSide, process.getTopCardSideStack());
+		ib_TaskCardSide.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(process.getTopCardSideStack().getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", process.getTopCardSideStack().getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
+			}
+		});
 		
 		ib_MsgCard = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardMsg);
-		addtOnClickListener4Card(ib_MsgCard, process.getMessageCard());
+		ib_MsgCard.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(process.getMessageCard().getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", process.getMessageCard().getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
+			}
+		});
 		
 		ib_TaskCard = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoCardTask);
-		addtOnClickListener4Card(ib_TaskCard, process.getTaskCard());
+		ib_TaskCard.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(process.getTaskCard().getTitle().length() > 0) {
+					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CARD_ID", process.getTaskCard().getTitle());
+				    startActivity(intent);
+				}
+				else
+					showAlert("Please enter a valid title!!!");
+				
+			}
+		});
 
 		tv_processTitle = (TextView) fragment.findViewById(R.id.textViewProcessTitle);	
 		te_Role = (EditText) fragment.findViewById(R.id.fragment_process_textEdit_role);	
@@ -423,28 +513,7 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	public void onResume() {
 		   super.onResume();	   
 		   updateView();
-	};  
-	
-	private void addtOnClickListener4Card(ImageButton imgButtonContext, final Card card) {
-	
-		imgButtonContext.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				if(card.getTitle().length() > 0) {
-					Intent intent = new Intent(ProcessFragment.this.fragment.getContext(), ContextInfoActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-					intent.putExtra("CARD_ID", card.getTitle());
-				    startActivity(intent);
-				}
-				else
-					showAlert("Please enter a valid title!!!");
-				
-			}
-		});
-	}
-	
+	};	
 	
 	private final class ChoiceTouchListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -507,35 +576,23 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 
 					// new card
 					Card dataCard = null;
-					String title = "";
 					if (dropTag.equals(CardAttribute.MSGCARD.toString())) {			
-						
-						title = te_MsgTitle.getText().toString();
-						String senderReciver = te_MsgSenderReciver.getText().toString();
-						boolean sender = cb_Sender.isChecked();
-						boolean reciver = cb_Reciver.isChecked();
 												
-						if(title.length() == 0) {
-							showAlert("card has no title!");
-						}
-						else if(!sender && !reciver) {
-							showAlert("please select a sender or a reciver!");
-						}
-						else if(senderReciver.length() == 0) {
-							if(sender) { showAlert("card has no sender!"); }
+						if(process.getMessageCard().getTitle().length() == 0) {	showAlert("card has no title!"); }
+						else if( process.getMessageCard().getSenderReceiver().length() == 0) {
+							if(process.getMessageCard().isSender()) { showAlert("card has no sender!");	}
 							else { showAlert("card has no reciver!"); }
 						}
 						else
-							dataCard = new Message(title, senderReciver, sender);						
+							dataCard = process.getMessageCard();
 					} else {
 						
-						title = te_TaskTitle.getText().toString();
 						
-						if(title.length() == 0) {
+						if(process.getTaskCard().getTitle().length() == 0) {
 							showAlert("card has no title!");
 						}
 						else
-							dataCard = new Task(title);			
+							dataCard = process.getTaskCard();
 					}
 
 					if(dataCard != null) {

@@ -16,7 +16,7 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 	private ListAdapterRadioButton listAdapter;
 	private ArrayList<String> processes;
 	private Activity activity;
-	private boolean internal = true;
+	private boolean internal = true, closeActivity = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +52,17 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 						processName = processName.substring(0, pos);
 					
 					if(processName.length() == 0)
-						showAlert("Please select a file!");
+						showAlert("Please select a file!", false);
 					else if(ProcessManager.getInstance().getProcess(processName) != null)
-						showAlert("Process is already open!!!");				
+						showAlert("Process is already open!!!", false);				
 					else if(internal && ProcessManager.getInstance().openProcess(processName))
 						activity.finish();
 					else if(!internal && ProcessManager.getInstance().importProcess(processName))
 						activity.finish();
 					else if(!internal)
-						showAlert("Import process fail!!! Please remove process from internal store before importing from external!");
+						showAlert("Import process fail!!! Please remove process from internal store before importing from external!", false);
 					else
-						showAlert("Open process fail!!!");
+						showAlert("Open process fail!!!", false);
 					
 					if(processes.size() == 0)
 						activity.finish();
@@ -70,7 +70,7 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 			});
 		}
 		else {
-			showAlert("No processes to load available!");
+			showAlert("No processes to load available!", true);
 		}	
 	}
 	
@@ -83,17 +83,21 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 			processes = new ArrayList<String>(ProcessManager.getInstance().getProcessesFromExternalStoreage());
 	}
 
-	private void showAlert(String msg) {
+	private void showAlert(String msg, boolean closeActivity) {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 		alertDialog.setTitle("error");
 		alertDialog.setNegativeButton("OK", this);
 		alertDialog.setMessage(msg);
 		alertDialog.show();	
+		
+		this.closeActivity = closeActivity;
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		// TODO Auto-generated method stub
+
+		if(this.closeActivity)
+			activity.finish();
 		
 	}
 }

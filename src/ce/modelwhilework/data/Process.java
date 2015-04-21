@@ -44,8 +44,11 @@ public class Process extends Modus {
 		
 		mainStack = new Stack<Card>();
 		sideStack = new Stack<Card>();	
-		taskCard = new Task("");
+		taskCard = new Task("");	
+		taskCard.addStoreListener(this);		
 		messageCard = new Message("", "", true);
+		messageCard.addStoreListener(this);
+		this.addStoreListener(this);
 		userRole = role;
 		activateAutoSave(autoSavePath);
 	}
@@ -56,7 +59,7 @@ public class Process extends Modus {
 		return autoSave();
 	}
 	
-	private boolean autoSave() { 
+	protected boolean autoSave() { 
 		
 		if(this.autoSavePath != null)
 			return storeXML(this.autoSavePath); 
@@ -72,7 +75,7 @@ public class Process extends Modus {
 
 		if(isTitleUnique(title)) {
 			this.getTopCardMainStack().setTitle(title);
-			return autoSave();
+			return true;
 		}
 		
 		return false;
@@ -85,10 +88,10 @@ public class Process extends Modus {
 		
 		if(this.getTopCardMainStack() instanceof Message) {
 			((Message)this.getTopCardMainStack()).setSenderReceiver(name);
-			return autoSave();
+			return true;
 		}
 		
-		return autoSave();
+		return false;
 	}
 	
 	public boolean setTopCardTitleSideStack(String title) {
@@ -100,7 +103,7 @@ public class Process extends Modus {
 		
 		if(isTitleUnique(title)) {
 			this.getTopCardSideStack().setTitle(title);
-			return autoSave();
+			return true;
 		}
 		
 		return false;
@@ -113,10 +116,10 @@ public class Process extends Modus {
 		
 		if(this.getTopCardSideStack() instanceof Message) {
 			((Message)this.getTopCardSideStack()).setSenderReceiver(name);
-			return autoSave();
+			return true;
 		}
 		
-		return autoSave();
+		return false;
 	}
 	
 	private boolean isTitleUnique(String title) {
@@ -139,9 +142,14 @@ public class Process extends Modus {
 	
 	public boolean addCard(Card card) { 
 		
+		int test = card.getContextInformations().size();
+		
 		if(isTitleUnique(card.getTitle())) {
 			if(mainStack.add(card))
+			{
+				mainStack.peek().addStoreListener(this);
 				return autoSave();
+			}
 		}		
 		
 		return false;		
@@ -169,7 +177,7 @@ public class Process extends Modus {
 	public boolean removeCardFromMainStack() {
 		
 		try { 
-			mainStack.pop();
+			mainStack.pop().clearStoreListener();
 			return autoSave();
 		}
 		catch (Exception e) { return false;	}
@@ -178,7 +186,7 @@ public class Process extends Modus {
 	public boolean removeCardFromSideStack() {
 		
 		try { 
-			sideStack.pop();
+			sideStack.pop().clearStoreListener();
 			return autoSave();
 		}
 		catch (Exception e) { return false;	}
@@ -235,8 +243,12 @@ public class Process extends Modus {
 	}
 	
 	public boolean setTaskCardTitle(String t) { 
-		taskCard.setTitle(t);
-		return autoSave();
+		if(isTitleUnique(t))
+			taskCard.setTitle(t);
+		else
+			return false;
+		
+		return true;
 	}
 	
 	public Message getMessageCard() { 
@@ -249,13 +261,17 @@ public class Process extends Modus {
 	}
 	
 	public boolean setMessageCardTitle(String t) { 
-		messageCard.setTitle(t);
-		return autoSave();
+		if(isTitleUnique(t))
+			messageCard.setTitle(t);
+		else
+			return false;
+		
+		return true;
 	}
 	
 	public boolean setMessageCardSenderReceiver(String name) { 
 		messageCard.setSenderReceiver(name);
-		return autoSave();
+		return true;
 	}
 	
 	public Card getTopCard(String title) {
@@ -369,15 +385,22 @@ public class Process extends Modus {
             System.err.println(ioe.getMessage());
             return false;
         }
-
+		
 		mainStack = main;
 		sideStack = side;
 		
-		if(inputTask.size() > 0)
+		if(inputTask.size() > 0) {
+			taskCard.clearStoreListener();
 			taskCard = (Task) inputTask.get(inputTask.size() - 1);
+			taskCard.addStoreListener(this);
+		}
+			
 		
-		if(inputMsg.size() > 0)
+		if(inputMsg.size() > 0) {
+			messageCard.clearStoreListener();
 			messageCard = (Message) inputMsg.get(inputTask.size() - 1);
+			messageCard.addStoreListener(this);
+		}
 		
         return true;
 	}
@@ -393,6 +416,7 @@ public class Process extends Modus {
 		else
 			return false;
 
+		card.addStoreListener(this);
 		addContextInformations2Element(card, e);
 		
 		return s.add(card);

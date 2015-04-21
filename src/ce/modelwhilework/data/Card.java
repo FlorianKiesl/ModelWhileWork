@@ -103,4 +103,5 @@ public abstract class Card extends Modus {
 		
 		return "CARD_" + this.getTitle();
 	}
+	
 }

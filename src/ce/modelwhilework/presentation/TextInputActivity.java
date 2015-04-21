@@ -60,9 +60,15 @@ public class TextInputActivity extends Activity implements DialogInterface.OnCli
 							boolean alert = false;
 							
 							if(strCardAttribute.equals(CardAttribute.TITLETASK.toString()))
-								process.setTaskCardTitle(te_text.getText().toString());
+								if(!process.setTaskCardTitle(te_text.getText().toString())) {
+									alert = true;
+									showAlert("Error: You have to enter a valid and unique title!!!");		
+								}
 							else if(strCardAttribute.equals(CardAttribute.TITLEMSG.toString()))
-								process.setMessageCardTitle(te_text.getText().toString());
+								if(!process.setMessageCardTitle(te_text.getText().toString())) {
+									alert = true;
+									showAlert("Error: You have to enter a valid and unique title!!!");		
+								}
 							else if(strCardAttribute.equals(CardAttribute.PERSONMSG.toString()))
 								process.setMessageCardSenderReceiver(te_text.getText().toString());
 							else if(strCardAttribute.equals(CardAttribute.TITLEMAINSTACK.toString()))
