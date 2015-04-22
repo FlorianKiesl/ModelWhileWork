@@ -9,6 +9,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ce.modelwhilework.presentation.SettingsActivity" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp" >
+
+        <TextView
+            android:id="@+id/fragment_process_mainStack_textView_VersionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Version"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/fragment_process_mainStack_textView_Version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="???"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/fragment_process_mainStack_textView_Count"
         android:layout_width="wrap_content"

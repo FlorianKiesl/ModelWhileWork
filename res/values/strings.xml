@@ -60,5 +60,6 @@
     <string name="title_activity_context">ContextActivity</string>
     <string name="title_activity_text_input">Enter text:</string>
     <string name="OK">ok</string>
+    <string name="Version">Version:</string>
 
 </resources>

@@ -39,6 +39,9 @@ public class SettingsActivity extends Activity implements DialogInterface.OnClic
 		tv = (TextView) activity.findViewById(R.id.activity_settings_editText_yoffset);
 		tv.setText(Settings.getInstance().getOffsetY());
 		
+		tv = (TextView) activity.findViewById(R.id.fragment_process_mainStack_textView_Version);
+		tv.setText(Settings.getInstance().getVersion());
+		
 		Button buttonSave = (Button) this.findViewById(R.id.activity_settings_button_save);	
 		buttonSave.setOnClickListener(new View.OnClickListener() {
 			

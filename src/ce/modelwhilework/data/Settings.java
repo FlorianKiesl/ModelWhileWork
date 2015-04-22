@@ -12,6 +12,7 @@ public class Settings {
 	private static Settings instance;
 	private Properties configuration;
     private String configurationFile;
+    private String version = "V01.00.000";
 
     private Settings(String configurationPath){
 		configuration = new Properties();
@@ -123,4 +124,6 @@ public class Settings {
     public String getOffsetY() {
     	return get("offset_y", "100");
     }
+    
+    public String getVersion() { return version; }
 }
