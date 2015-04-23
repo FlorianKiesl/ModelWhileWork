@@ -38,15 +38,9 @@ public class Favorite {
 	public TreeSet<FavoriteCard> getFavoriteTaskSet() {
 		return favoriteTaskSet;
 	}
-	public void setFavoriteTaskSet(TreeSet<FavoriteCard> favoriteTaskSet) {
-		this.favoriteTaskSet = favoriteTaskSet;
-	}
 	
 	public TreeSet<FavoriteCard> getFavoriteMessageSet() {
 		return favoriteMessageSet;
-	}
-	public void setFavoriteMessageSet(TreeSet<FavoriteCard> favoriteMessageSet) {
-		this.favoriteMessageSet = favoriteMessageSet;
 	}
 	
 	public boolean setFavoriteTaskCard(Task card){

@@ -41,8 +41,10 @@ public class FavoriteActivity extends Activity implements DialogInterface.OnClic
 
 				Task t = ProcessManager.getInstance().getFavoriteTask(listAdapterTask.getSelectedItem());
 				if(t != null) {
-					ProcessManager.getInstance().getCurrentProcess().setTaskCard(t);
-					activity.finish();
+					if(!ProcessManager.getInstance().getCurrentProcess().setTaskCard(t))
+						showAlert("Error: title of card is not unique!!!");
+					else
+						activity.finish();
 				}
 				else
 					showAlert("Load task fail!");					
@@ -58,8 +60,10 @@ public class FavoriteActivity extends Activity implements DialogInterface.OnClic
 
 				Message m = ProcessManager.getInstance().getFavoriteMessage(listAdapterMsg.getSelectedItem());
 				if(m != null) {
-					ProcessManager.getInstance().getCurrentProcess().setMessageCard(m);
-					activity.finish();
+					if(!ProcessManager.getInstance().getCurrentProcess().setMessageCard(m))
+						showAlert("Error: title of card is not unique!!!");
+					else
+						activity.finish();
 				}
 				else
 					showAlert("Load message fail!");						

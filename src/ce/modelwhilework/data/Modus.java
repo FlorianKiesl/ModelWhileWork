@@ -29,7 +29,18 @@ public abstract class Modus implements Comparable<Modus> {
 	}
 	
 	public void setTitle(String title) { 
-		this.title = title;		
+				
+		this.title = title;	
+		
+		//change path of context information
+		for(ContextInformation c : contextInformations) {
+			
+			File oldFile = new File(c.getPath());
+			c.setPath(this.getContextInfoFilePath(c.getID()));
+			File newFile = new File(c.getPath());
+			oldFile.renameTo(newFile);
+		}
+
 		fireStoreListener();
 	}
 	

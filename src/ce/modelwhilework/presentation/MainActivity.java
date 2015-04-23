@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import ce.modelwhilework.data.ProcessManager;
 
 public class MainActivity extends FragmentActivity implements DialogInterface.OnClickListener {

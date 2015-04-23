@@ -475,10 +475,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			 @Override
 			 public void onClick(View v) {
 				 
-				 if(cb_ReciverSideStack.isChecked() != ((Message)process.getTopCardSideStack()).isSender()) {
-					 ((Message)process.getTopCardSideStack()).setSender(!cb_ReciverSideStack.isChecked());
-			    	  updateView();
-				 }				 
+				 if(process.getTopCardSideStack() != null) {
+					 if(cb_ReciverSideStack.isChecked() == ((Message)process.getTopCardSideStack()).isSender()) {
+						 ((Message)process.getTopCardSideStack()).setSender(!cb_ReciverSideStack.isChecked());
+				    	  updateView();
+					 }	
+				 }
 			 }
 		  });
 		
@@ -599,12 +601,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 						if (process.addCard(dataCard)) {
 							
 							if(dataCard instanceof Message){
-								process.setMessageCard(new Message("", "", true));
+								process.clearMessageCard();
 								ProcessManager.getInstance().addFavoriteMessage((Message) dataCard);
 							}
 							
 							else if(dataCard instanceof Task){
-								process.setTaskCard(new Task(""));
+								process.clearTaskCard();
 								ProcessManager.getInstance().addFavoriteTask((Task) dataCard);
 							}	
 						}

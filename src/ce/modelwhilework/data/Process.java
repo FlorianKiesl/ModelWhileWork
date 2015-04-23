@@ -124,13 +124,21 @@ public class Process extends Modus {
 	
 	private boolean isTitleUnique(String title) {
 		
+		String compare = title.toUpperCase();
+		
+		if(taskCard.getTitle().toUpperCase().equals(compare))
+			return false;
+		
+		if(messageCard.getTitle().toUpperCase().equals(compare))
+			return false;
+		
 		for(Card i : mainStack) {
-			if(i.getTitle().equals(title))
+			if(i.getTitle().toUpperCase().equals(compare))
 				return false;
 		}
 		
 		for(Card i : sideStack) {
-			if(i.getTitle().equals(title))
+			if(i.getTitle().toUpperCase().equals(compare))
 				return false;					
 		}
 		
@@ -142,15 +150,11 @@ public class Process extends Modus {
 	
 	public boolean addCard(Card card) { 
 		
-		int test = card.getContextInformations().size();
-		
-		if(isTitleUnique(card.getTitle())) {
-			if(mainStack.add(card))
-			{
-				mainStack.peek().addStoreListener(this);
-				return autoSave();
-			}
-		}		
+		if(mainStack.add(card))
+		{
+			mainStack.peek().addStoreListener(this);
+			return autoSave();
+		}
 		
 		return false;		
 	}
@@ -237,9 +241,15 @@ public class Process extends Modus {
 		return taskCard;
 	}
 	
-	public boolean setTaskCard(Task t) { 
-		taskCard = t;
-		return autoSave();
+	public void clearTaskCard() { taskCard = new Task(""); }
+	
+	public boolean setTaskCard(Task t) {
+		
+		if(isTitleUnique(t.getTitle())) {
+			taskCard = t;
+			return autoSave();
+		}
+		return false;
 	}
 	
 	public boolean setTaskCardTitle(String t) { 
@@ -255,9 +265,15 @@ public class Process extends Modus {
 		return messageCard;
 	}
 	
+	public void clearMessageCard() {	messageCard =  new Message("", "", true); }
+	
 	public boolean setMessageCard(Message m) { 
-		messageCard = m;
-		return autoSave();
+		
+		if(isTitleUnique(m.getTitle())) {
+			messageCard = m;
+			return autoSave();
+		}
+		return false;		
 	}
 	
 	public boolean setMessageCardTitle(String t) { 
