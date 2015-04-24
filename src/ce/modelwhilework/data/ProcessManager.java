@@ -120,14 +120,8 @@ public class ProcessManager {
 	
 	public boolean addProcess(Process process){
 		
-		String titleUC = process.getFileTitle();
-		titleUC = titleUC.toUpperCase(Locale.getDefault());
-		
-		File[] files = getInternalStorage().listFiles();
-		for(File f : files) {
-			if(f.getName().toUpperCase(Locale.getDefault()).equals(titleUC))
-				return false;
-		}
+		if(!isPtocessTitleFree(process.getFileTitle()))
+			return false;
 		 
 		if(this.processSet.add(process)) {
 			this.curProcess = this.getProcess(process.getTitle());
@@ -135,6 +129,21 @@ public class ProcessManager {
 		}
 		
 		return false;
+	}
+	
+	protected boolean isPtocessTitleFree(String title) {
+		
+		Process p = new Process(title, "", null);
+		String titleUC = p.getFileTitle();
+		titleUC = titleUC.toUpperCase(Locale.getDefault());
+		
+		File[] files = getInternalStorage().listFiles();
+		for(File f : files) {
+			if(f.getName().toUpperCase(Locale.getDefault()).equals(titleUC))
+				return false;
+		}
+		
+		return true;
 	}
 	
 	public boolean openProcess(String processName){
@@ -373,12 +382,17 @@ public class ProcessManager {
 		return this.processSet.removeAll(this.processSet);
 	}
 	
-	public Process getProcess(String title){
+	public Process getProcess(String title) {
+		
+		if(title.length() == 0)
+			return null;
+		
+		String compare = title.toUpperCase();
 		Process process;
 		Iterator<Process> iterator = this.processSet.iterator();
 		while(iterator.hasNext()){
 			process = iterator.next();
-			if (process.getTitle().compareTo(title)==0){
+			if (process.getTitle().toUpperCase().compareTo(compare)==0){
 				return process;
 			}
 		}

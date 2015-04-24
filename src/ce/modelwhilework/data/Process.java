@@ -53,6 +53,28 @@ public class Process extends Modus {
 		activateAutoSave(autoSavePath);
 	}
 	
+	public boolean changeTitle(String title) {
+		
+		File oldFile = new File(this.autoSavePath, this.getFileTitle());
+		
+		if(!ProcessManager.getInstance().isPtocessTitleFree(title))
+			return false;
+		
+		//change of title triggers a change of context information file paths
+		this.setTitle(title);
+		taskCard.setTitle(taskCard.getTitle());
+		messageCard.setTitle(messageCard.getTitle());
+		for(Card c : mainStack)
+			c.setTitle(c.getTitle());
+		for(Card c : sideStack)
+			c.setTitle(c.getTitle());
+		
+		autoSave();
+		oldFile.delete();
+		
+		return true;
+	}
+	
 	public boolean activateAutoSave(File autoSavePath)
 	{
 		this.autoSavePath = autoSavePath;

@@ -139,7 +139,6 @@ public abstract class Modus implements Comparable<Modus> {
 		return false;
 	}
 	
-	//TODO: Eventuell mit Picture vereinen
 	public boolean addContextInformationVideo(byte[] data) {
 		
 		int id = getFreeID();

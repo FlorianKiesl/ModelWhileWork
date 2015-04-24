@@ -16,25 +16,38 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Fragment fragment = new ProcessFragment();
 		
-		Bundle processData = new Bundle();
-		processData.putInt("page_postion", position);
-		processData.putString("ProcessName", ProcessManager.getInstance().getProcess(position).getTitle());
-		fragment.setArguments(processData);
+		Fragment fragment;
+		
+		if(ProcessManager.getInstance().getProcesses().size() > 0) {
+			
+			fragment = new ProcessFragment();
+			
+			Bundle processData = new Bundle();
+			processData.putInt("page_postion", position);
+			processData.putString("ProcessName", ProcessManager.getInstance().getProcess(position).getTitle());
+			fragment.setArguments(processData);
+		}
+		else
+			fragment = new EmptyFragment();		
 		
 		return fragment;
 	}
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		Process process = ProcessManager.getInstance().getProcess(position);
-		if (process != null){
-			return process.getTitle().toString();
+		
+		if(ProcessManager.getInstance().getProcesses().size() > 0) {
+			Process process = ProcessManager.getInstance().getProcess(position);
+			if (process != null){
+				return process.getTitle().toString();
+			}
+			else{
+				return "";
+			}			
 		}
-		else{
-			return "";
-		}
+		else 
+			return "welcome!!!";		
 	}
 
 	@Override
@@ -49,6 +62,10 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public int getCount() {
-		return ProcessManager.getInstance().getProcesses().size();
+		
+		if(ProcessManager.getInstance().getProcesses().size() > 0)
+			return ProcessManager.getInstance().getProcesses().size();
+		
+		return 1;
 	}
 }

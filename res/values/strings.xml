@@ -61,5 +61,7 @@
     <string name="title_activity_text_input">Enter text:</string>
     <string name="OK">ok</string>
     <string name="Version">Version:</string>
+    <string name="title_activity_emty_fragment">EmtyFragment</string>
+    <string name="welcome_text">Please use the context menu to create or load a process!</string>
 
 </resources>

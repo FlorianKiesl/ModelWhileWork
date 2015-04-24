@@ -39,8 +39,9 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	private EditText te_MainStackTaskTitle, te_SideStackTaskTitle, te_MainStackMsgTitle, te_SideStackMsgTitle,
 					 te_MainStackMsgPerson, te_SideStackMsgPerson, te_TaskTitle, te_MsgTitle, te_MsgSenderReciver,
 					 te_Role;
-	private TextView tv_processTitle, tv_MainStackCount, tv_SideStackCount;
+	private TextView tv_MainStackCount, tv_SideStackCount;
 	private ImageButton ib_Process, ib_TaskCard, ib_MsgCard, ib_TaskCardMain, ib_MsgCardMain, ib_TaskCardSide, ib_MsgCardSide;
+	private ImageView iv_bin, iv_move;
 	private Process process;
 	private boolean dragAndDropActive = false;
 	
@@ -60,7 +61,8 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		l_SideStackTaskCard = (View) fragment.findViewById(R.id.LayoutSideStackTaskCard);
 		l_SideStackMsgCard = (View) fragment.findViewById(R.id.LayoutSideStackMsgCard);
 				
-		ImageView iv_bin = (ImageView) fragment.findViewById(R.id.imageViewBin);
+		iv_bin = (ImageView) fragment.findViewById(R.id.imageViewBin);
+		iv_move = (ImageView) fragment.findViewById(R.id.imageViewMove);		
 
 		// set tag definitions
 		l_TaskCard.setTag(CardAttribute.TASKCARD.toString());
@@ -211,7 +213,6 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 			}
 		});
 
-		tv_processTitle = (TextView) fragment.findViewById(R.id.textViewProcessTitle);	
 		te_Role = (EditText) fragment.findViewById(R.id.fragment_process_textEdit_role);	
 		
 		tv_MainStackCount = (TextView) fragment.findViewById(R.id.fragment_process_mainStack_textView_Count);
@@ -704,8 +705,12 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 	}
 	
 	private void updateView() {
-				
-		tv_processTitle.setText(process.getTitle());
+		
+		if(ProcessManager.getInstance().getProcesses().size() >= 2)
+			iv_move.setVisibility(View.VISIBLE);
+		else
+			iv_move.setVisibility(View.INVISIBLE);
+			
 		te_Role.setText(process.getUserRole());
 		
 		if(process.hasContextInformation())

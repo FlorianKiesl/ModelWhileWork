@@ -95,8 +95,10 @@ public class TextInputActivity extends Activity implements DialogInterface.OnCli
 								}
 								else
 								{
-									if(!process.setTopCardSenderReceiverMainStack(te_text.getText().toString()))
+									if(!process.setTopCardSenderReceiverMainStack(te_text.getText().toString())) {
+										alert = true;
 										showAlert("Error: can't set sender/receiver!!!!");		
+									}
 								}
 							}
 							else if(strCardAttribute.equals(CardAttribute.PERSONSIDESTACK.toString()))
@@ -107,8 +109,24 @@ public class TextInputActivity extends Activity implements DialogInterface.OnCli
 								}
 								else
 								{
-									if(!process.setTopCardSenderReceiverSideStack(te_text.getText().toString()))
+									if(!process.setTopCardSenderReceiverSideStack(te_text.getText().toString())) {
+										alert = true;
 										showAlert("Error: can't set sender/receiver!!!!");	
+									}
+								}
+							}
+							else if(strCardAttribute.equals(CardAttribute.PROCESSTITLE.toString()))
+							{
+								if(te_text.getText().length() == 0) {
+									alert = true;
+									showAlert("Error: You have to enter a valid and unique title!!!");
+								}
+								else
+								{
+									if(!process.changeTitle(te_text.getText().toString())) {
+										alert = true;
+										showAlert("Error: You have to enter a valid and unique title!!!");
+									}
 								}
 							}
 							else if(strCardAttribute.equals(CardAttribute.USERROLE.toString()))

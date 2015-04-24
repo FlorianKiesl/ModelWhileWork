@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import ce.modelwhilework.data.CardAttribute;
 import ce.modelwhilework.data.ProcessManager;
 
 public class MainActivity extends FragmentActivity implements DialogInterface.OnClickListener {
@@ -26,6 +28,22 @@ public class MainActivity extends FragmentActivity implements DialogInterface.On
 		pm.setInternalDir(getFilesDir());
 		pm.setExternalDir(getExternalFilesDir(null));
 		pm.setExternalCacheDir(getExternalCacheDir());
+		
+		PagerTitleStrip pts = (PagerTitleStrip) this.findViewById(R.id.title);
+		pts.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(ProcessManager.getInstance().getCurrentProcess() != null) {
+					Intent intent = new Intent(getBaseContext(), TextInputActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+					intent.putExtra("CardAttrib", CardAttribute.PROCESSTITLE.toString());
+					intent.putExtra("ProcessName", ProcessManager.getInstance().getCurrentProcess().getTitle());
+					intent.putExtra("DefaultText", ProcessManager.getInstance().getCurrentProcess().getTitle());	
+				    startActivity(intent);
+				}
+			}
+		});
 		
 		viewPager = (CustomViewPager) this.findViewById(R.id.pager_process);
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {

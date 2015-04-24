@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_process_MainLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -29,30 +29,29 @@
             android:src="@drawable/favorite"
             android:contentDescription="@drawable/favorite" />
 
+        <ImageView
+            android:id="@+id/imageViewMove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/move" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="6"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textViewProcessTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:maxHeight="30dp"
-                android:minHeight="30dp"
-                android:text="@string/process_title"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="match_parent" >
 
                 <TextView
                     android:id="@+id/textViewProcessRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:gravity="center"
                     android:maxHeight="30dp"
                     android:minHeight="30dp"
@@ -63,6 +62,7 @@
                     android:id="@+id/fragment_process_textEdit_role"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="text" />

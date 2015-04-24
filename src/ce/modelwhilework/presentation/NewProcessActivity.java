@@ -33,13 +33,10 @@ public class NewProcessActivity extends Activity implements DialogInterface.OnCl
 				
 				if(title.length() == 0)
 					showAlert("Please enter a process title!!!");
-				else {
-					if(!ProcessManager.getInstance().addProcess(new Process(title, Settings.getInstance().getUser(), ProcessManager.getInstance().getInternalStorage()))) {
-						if(ProcessManager.getInstance().openProcess(title))
-							activity.finish();
-						else
-							showAlert("Can't open process!!!");
-					}
+				else
+				{
+					if(ProcessManager.getInstance().addProcess(new Process(title, Settings.getInstance().getUser(), ProcessManager.getInstance().getInternalStorage())))
+						activity.finish();
 					else
 						showAlert("Can't create process!!!\nUse a different name or load/delete the existing process.");
 				}					
