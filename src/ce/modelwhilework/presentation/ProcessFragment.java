@@ -81,7 +81,10 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 
 		// set drag listeners
 		l_MainStack.setOnDragListener(new ChoiceDragListener());
-		iv_bin.setOnDragListener(new BinDragListener());
+		l_TaskCard.setOnDragListener(new ChoiceDragListener());
+		l_MsgCard.setOnDragListener(new ChoiceDragListener());
+		iv_bin.setOnDragListener(new BinDragListener());		
+		
 		
 		ib_Process = (ImageButton) fragment.findViewById(R.id.fragment_process_imageButton_ContextInfoProcess);
 		ib_Process.setOnClickListener(new View.OnClickListener() {
@@ -615,19 +618,73 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 							showAlert("add card to stack fail... title must be unique!");
 					}
 
-				} else if (dropTag.equals(CardAttribute.MAINSTACK.toString())
+				} 
+				else if (dropTag.equals(CardAttribute.MAINSTACK.toString())
 						&& targetTag.equals(CardAttribute.SIDESTACK.toString())) {
 
 					// card from main stack --> move it to side stack
 					if (!process.putCardAside()) {
 						showAlert("move card fail!!!");
 					}
-				} else if (dropTag.equals(CardAttribute.SIDESTACK.toString())
+				} 
+				else if (dropTag.equals(CardAttribute.SIDESTACK.toString())
 						&& targetTag.equals(CardAttribute.MAINSTACK.toString())) {
 
 					// card from main stack --> move it to side stack
 					if (!process.putBackFromAside()) {
 						showAlert("move card fail!!!");
+					}
+				} 
+				else if(dropTag.equals(CardAttribute.MAINSTACK.toString())) {	
+					
+					if(targetTag.equals(CardAttribute.TASKCARD.toString()) && process.getTopCardMainStack() instanceof Task) {
+						
+						Task t = (Task)process.getTopCardMainStack();
+						if(process.removeCardFromMainStack()) {
+							if(!process.setTaskCard(t)) {
+								process.addCard(t);
+								process.clearTaskCard();
+								showAlert("move card fail!!!");
+							}	
+						}			
+					}
+					else if(targetTag.equals(CardAttribute.MSGCARD.toString()) && process.getTopCardMainStack() instanceof Message) {
+						
+						Message m = (Message)process.getTopCardMainStack();
+						if(process.removeCardFromMainStack()) {
+							if(!process.setMessageCard(m)) {
+								process.addCard(m);
+								process.clearMessageCard();
+								showAlert("move card fail!!!");
+							}	
+						}						
+					}
+				} 
+				else if(dropTag.equals(CardAttribute.SIDESTACK.toString())) {	
+					
+					if(targetTag.equals(CardAttribute.TASKCARD.toString()) && process.getTopCardSideStack() instanceof Task) {
+						
+						Task t = (Task)process.getTopCardSideStack();
+						if(process.removeCardFromSideStack()) {
+							if(!process.setTaskCard(t)) {
+								process.addCard(t);
+								process.putCardAside();
+								process.clearTaskCard();
+								showAlert("move card fail!!!");
+							}	
+						}			
+					}
+					else if(targetTag.equals(CardAttribute.MSGCARD.toString()) && process.getTopCardSideStack() instanceof Message) {
+						
+						Message m = (Message)process.getTopCardSideStack();
+						if(process.removeCardFromSideStack()) {
+							if(!process.setMessageCard(m)) {
+								process.addCard(m);
+								process.putCardAside();
+								process.clearMessageCard();
+								showAlert("move card fail!!!");
+							}	
+						}						
 					}
 				}
 				
