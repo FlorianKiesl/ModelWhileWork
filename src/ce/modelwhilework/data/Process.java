@@ -287,7 +287,7 @@ public class Process extends Modus {
 		return messageCard;
 	}
 	
-	public void clearMessageCard() {	messageCard =  new Message("", "", true); }
+	public void clearMessageCard() { messageCard =  new Message("", "", true); }
 	
 	public boolean setMessageCard(Message m) { 
 		

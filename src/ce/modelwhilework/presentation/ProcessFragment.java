@@ -945,16 +945,21 @@ public class ProcessFragment extends Fragment implements DialogInterface.OnClick
 		alertDialog.setPositiveButton("OK",
 									   new DialogInterface.OnClickListener() {
 			                                 public void onClick(DialogInterface dialog, int whichButton) {			                                	 
-			                                	 if (dropTag.equals(CardAttribute.MAINSTACK.toString())) {
+			                                	if (dropTag.equals(CardAttribute.MAINSTACK.toString())) {
 			                     					if (!process.removeCardFromMainStack()) {
 			                     						showAlert("card remove fail!!!");
 			                     					}
-			                     				} else if (dropTag.equals(CardAttribute.SIDESTACK.toString())) {
+			                     				}
+			                                	else if (dropTag.equals(CardAttribute.SIDESTACK.toString())) {
 
 			                     					if (!process.removeCardFromSideStack()) {
 			                     						showAlert("card remove fail!!!");
 			                     					}
 			                     				}
+			                     				else if (dropTag.equals(CardAttribute.TASKCARD.toString()))
+			                     					process.clearTaskCard();
+			                     				else if (dropTag.equals(CardAttribute.MSGCARD.toString()))
+			                     					process.clearMessageCard();		                                	 
 			                                	                         				
 			                 			    	updateView();
 			                                 }
