@@ -120,7 +120,7 @@ public class ProcessManager {
 	
 	public boolean addProcess(Process process){
 		
-		if(!isPtocessTitleFree(process.getFileTitle()))
+		if(!isPtocessTitleFree(process.getTitle()))
 			return false;
 		 
 		if(this.processSet.add(process)) {
