@@ -23,11 +23,14 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_load_process);
 		activity = this;
+		Button button_load = (Button) this.findViewById(R.id.activity_load_process_load);
 		
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			if(bundle.getString("IMPORT") != null) 
 				internal = false;
+				button_load.setText("Import");
+				this.setTitle("ImportProcessActivity");
 		}
 		
 		ListView lv_processes = (ListView) this.findViewById(R.id.activity_load_process_listView);
@@ -40,7 +43,7 @@ public class LoadProcessActivity extends Activity implements DialogInterface.OnC
 			listAdapter = new ListAdapterRadioButton(this.getBaseContext(), R.layout.list_radiobutton, processes);
 			lv_processes.setAdapter(listAdapter);
 			
-			Button button_load = (Button) this.findViewById(R.id.activity_load_process_load);
+			
 			button_load.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
